@@ -200,10 +200,10 @@
   </wsdl:binding>
   <wsdl:service name="Service">
     <wsdl:port name="ServiceSoap" binding="tns:ServiceSoap">
-      <soap:address location="http://172.20.131.245/auto_testing_service/Service.asmx"/>
+      <soap:address location="http://172.21.236.249/auto_testing_service/Service.asmx"/>
     </wsdl:port>
     <wsdl:port name="ServiceSoap12" binding="tns:ServiceSoap12">
-      <soap12:address location="http://172.20.131.245/auto_testing_service/Service.asmx"/>
+      <soap12:address location="http://172.21.236.249/auto_testing_service/Service.asmx"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="/CalculatorWSApplication">
-  <!--JTDS Driver-->
-  <Resource acquireIncrement="2" auth="Container" driverClass="net.sourceforge.jtds.jdbc.Driver" factory="org.apache.naming.factory.BeanFactory" idleConnectionTestPeriod="60" jdbcUrl="jdbc:jtds:sqlserver://M3-SERVER/TWM3" maxPoolSize="50" minPoolSize="2" name="jdbc/res2" password="m3server" preferredTestQuery="SELECT 1" testConnectionOnCheckin="true" testConnectionOnCheckout="false" type="com.mchange.v2.c3p0.ComboPooledDataSource" user="waychien"/>
-  <Resource acquireIncrement="2" auth="Container" driverClass="net.sourceforge.jtds.jdbc.Driver" factory="org.apache.naming.factory.BeanFactory" idleConnectionTestPeriod="60" jdbcUrl="jdbc:jtds:sqlserver://M3-SERVER/WebAccess;loginTimeout=15" maxPoolSize="50" minPoolSize="2" name="jdbc/res3" password="m3server" preferredTestQuery="SELECT 1" testConnectionOnCheckin="true" testConnectionOnCheckout="false" type="com.mchange.v2.c3p0.ComboPooledDataSource" user="waychien"/>
-  <Resource acquireIncrement="2" auth="Container" driverClass="net.sourceforge.jtds.jdbc.Driver" factory="org.apache.naming.factory.BeanFactory" idleConnectionTestPeriod="60" jdbcUrl="jdbc:jtds:sqlserver://M3-SERVER/Line_Balancing" maxPoolSize="50" minPoolSize="2" name="jdbc/res4" password="m3server" preferredTestQuery="SELECT 1" testConnectionOnCheckin="true" testConnectionOnCheckout="false" type="com.mchange.v2.c3p0.ComboPooledDataSource" user="waychien"/>
+    <!--JTDS Driver-->
+    <Resource 
+        auth="Container" 
+        factory="org.apache.naming.factory.BeanFactory" 
+        type="com.mchange.v2.c3p0.ComboPooledDataSource"
+        
+        driverClass="net.sourceforge.jtds.jdbc.Driver"
+        name="jdbc/res3" 
+        user="admin" 
+        password="mis" 
+        
+        idleConnectionTestPeriod="60"
+        maxPoolSize="50" 
+        minPoolSize="2"
+        acquireIncrement="2" 
+        jdbcUrl="jdbc:jtds:sqlserver://localhost:53041/WebAccess;loginTimeout=15" 
+        
+        testConnectionOnCheckout="false"
+        testConnectionOnCheckin="true"
+        preferredTestQuery="SELECT 1"
+    />
 </Context>

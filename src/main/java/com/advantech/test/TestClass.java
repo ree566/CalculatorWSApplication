@@ -59,21 +59,21 @@ public class TestClass {
 //        }
     }
 
-    private static void marshal(Marshaller marshaller, List<?> list, String name)
-            throws JAXBException {
-        QName qName = new QName(name);
-        Wrapper wrapper = new Wrapper(list);
-        JAXBElement<Wrapper> jaxbElement = new JAXBElement<>(qName,
-                Wrapper.class, wrapper);
-        marshaller.marshal(jaxbElement, new File("D://" + name + ".xml"));
-    }
-
-    private static <T> List<T> unmarshal(Unmarshaller unmarshaller,
-            Class<T> clazz, String xmlLocation) throws JAXBException {
-        StreamSource xml = new StreamSource(xmlLocation);
-        Wrapper<T> wrapper = (Wrapper<T>) unmarshaller.unmarshal(xml,
-                Wrapper.class).getValue();
-        return wrapper.getItems();
-    }
+//    private static void marshal(Marshaller marshaller, List<?> list, String name)
+//            throws JAXBException {
+//        QName qName = new QName(name);
+//        Wrapper wrapper = new Wrapper(list);
+//        JAXBElement<Wrapper> jaxbElement = new JAXBElement<>(qName,
+//                Wrapper.class, wrapper);
+//        marshaller.marshal(jaxbElement, new File("D://" + name + ".xml"));
+//    }
+//
+//    private static <T> List<T> unmarshal(Unmarshaller unmarshaller,
+//            Class<T> clazz, String xmlLocation) throws JAXBException {
+//        StreamSource xml = new StreamSource(xmlLocation);
+//        Wrapper<T> wrapper = (Wrapper<T>) unmarshaller.unmarshal(xml,
+//                Wrapper.class).getValue();
+//        return wrapper.getItems();
+//    }
 
 }
