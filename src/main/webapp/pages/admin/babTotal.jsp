@@ -193,7 +193,7 @@
                             "targets": 0,
                             "data": "TagName",
                             'render': function (data, type, row) {
-                                return ((data == 'L1' || data == 'LA' || data == 'LB' || data == 'L3' || data == 'L4') ? "ASSY" : "Packing");
+                                return ((data == 'LG') ? "ASSY" : "Packing");
                             }
                         },
                         {

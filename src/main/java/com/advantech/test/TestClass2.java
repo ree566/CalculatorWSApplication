@@ -5,25 +5,27 @@
  */
 package com.advantech.test;
 
+import com.advantech.helper.MailSend;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
+
 /**
  *
  * @author Wei.Cheng
  */
 public class TestClass2 {
-    
+
     static int i = 1, j = i;
 
     public static void main(String arg0[]) {
-        j = 5;
-        TestClass2 t = new TestClass2();
-        System.out.println(i);
-        System.out.println(j);
+        MailSend m = MailSend.getInstance();
+        try {
+            m.sendMail("Wei.Cheng", "test", "testMail");
+        } catch (MessagingException ex) {
+            System.out.println(ex);
+        }
+
     }
 
-    public static void Foo(StringBuilder fooSB){
-        fooSB.append("test");
-        fooSB = null;
-    }
 }
-
-
