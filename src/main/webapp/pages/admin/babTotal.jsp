@@ -193,7 +193,9 @@
                             "targets": 0,
                             "data": "TagName",
                             'render': function (data, type, row) {
-                                return ((data == 'LG') ? "ASSY" : "Packing");
+                                var ASSY = lineObject.ASSY;
+                                var Packing = lineObject.Packing;
+                                return $.inArray(data, ASSY) !== -1 ? 'ASSY' : ($.inArray(data, Packing) !== -1 ? 'Packing' : 'N/A');
                             }
                         },
                         {

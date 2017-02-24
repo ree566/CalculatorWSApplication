@@ -76,7 +76,7 @@ public class UserSelectFilter {
             } else {
                 break;
             }
-            if (value != null) {
+            if (obj != null && value != null) {
                 if (obj > value) {
                     newList.add(m);
                 }
