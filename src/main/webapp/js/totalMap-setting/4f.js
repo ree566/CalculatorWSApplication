@@ -3,7 +3,8 @@ var pYa = -0;
 
 var titleGroup = [
     {lineName: "LG", x: 50, y: 120},
-    {lineName: "LF", x: 870, y: 120}
+    {lineName: "LF", x: 870, y: 120},
+    {lineName: "L3-01", x: 550, y: 150}
 ];
 
 var testGroup = [

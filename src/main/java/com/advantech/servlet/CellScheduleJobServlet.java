@@ -86,15 +86,15 @@ public class CellScheduleJobServlet extends HttpServlet {
 
                         if (cellLine.isOpened()) {
                             if (cellService.getCellProcessing(line).isEmpty()) {
-                                if (BasicService.getBabService().getPoTotalQuantity(PO) != null) {
-                                    if (cellService.insert(new Cell(line, PO, modelname))) {
-                                        responseObject = this.schedNewJobs(line, PO) ? "success" : "fail";
-                                    } else {
-                                        responseObject = "fail";
-                                    }
+//                                if (BasicService.getBabService().getPoTotalQuantity(PO) != null) {
+                                if (cellService.insert(new Cell(line, PO, modelname))) {
+                                    responseObject = this.schedNewJobs(line, PO) ? "success" : "fail";
                                 } else {
-                                    responseObject = "PO is not exist";
+                                    responseObject = "fail";
                                 }
+//                                } else {
+//                                    responseObject = "PO is not exist";
+//                                }
                             } else {
                                 responseObject = "Some PO in this line is already processing";
                             }
