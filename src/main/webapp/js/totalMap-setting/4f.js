@@ -4,7 +4,7 @@ var pYa = -0;
 var titleGroup = [
     {lineName: "LG", x: 50, y: 120},
     {lineName: "LF", x: 870, y: 120},
-    {lineName: "L3-01", x: 550, y: 150}
+    {lineName: "L3-01", x: 180, y: 160}
 ];
 
 var testGroup = [
@@ -20,7 +20,8 @@ var testGroup = [
 
 var babGroup = [
     {people: 6, x: 160, y: 120, lineName: "LG"},
-    {people: 4, x: 975, y: 120, lineName: "LF"}
+    {people: 4, x: 975, y: 120, lineName: "LF"},
+    {people: 3, x: 250, y: 170, lineName: "L3-01"}
 ];
 
 var maxTestTableNo = 24;

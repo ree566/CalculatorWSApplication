@@ -20,7 +20,7 @@
         <link rel="stylesheet" href="../../css/tooltipster.bundle.min.css">
         <style>
             #screen-control{
-                transform: scale(0.8);
+                transform: scale(0.6);
                 transform-origin:0 0;  
             }
             .draggable { 
