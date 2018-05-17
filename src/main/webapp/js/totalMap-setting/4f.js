@@ -2,9 +2,11 @@ var pXa = -0;
 var pYa = -0;
 
 var titleGroup = [
-    {lineName: "LG", x: 50, y: 120},
+    {lineName: "L2", x: 50, y: 120},
     {lineName: "LF", x: 870, y: 120},
-    {lineName: "L3-01", x: 180, y: 160}
+    {lineName: "L3-01", x: 150, y: 160},
+    {lineName: "L3-02", x: 150, y: 250},
+    {lineName: "LJ", x: 870, y: 180}
 ];
 
 var testGroup = [
@@ -19,9 +21,11 @@ var testGroup = [
 ];
 
 var babGroup = [
-    {people: 6, x: 160, y: 120, lineName: "LG"},
+    {people: 6, x: 160, y: 120, lineName: "L2"},
     {people: 4, x: 975, y: 120, lineName: "LF"},
-    {people: 3, x: 250, y: 170, lineName: "L3-01"}
+    {people: 4, x: 250, y: 170, lineName: "L3-01"},
+    {people: 4, x: 250, y: 270, lineName: "L3-02"},
+    {people: 3, x: 940, y: 180, lineName: "LJ"}
 ];
 
 var maxTestTableNo = 24;

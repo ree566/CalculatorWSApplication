@@ -19,10 +19,6 @@
         <link rel="stylesheet" href="../../css/jquery-ui.css">
         <link rel="stylesheet" href="../../css/tooltipster.bundle.min.css">
         <style>
-            #screen-control{
-                transform: scale(0.6);
-                transform-origin:0 0;  
-            }
             .draggable { 
                 width: 25px; 
                 height: 25px; 
@@ -59,21 +55,19 @@
                 color: blue;
             }
             .lineTitle{
-                padding: 0 auto; 
-                width: 40px; 
-                height: 40px; 
+                padding: 3px; 
                 background-color: white;
                 font-size: 32px;
                 float: left;
                 border:5px green solid;
                 cursor: default;
+                overflow: auto;
             }
             .clearWiget{
                 clear: both;
             }
-            #mapGroup{
-                width: 1200px;
-                height: 500px;
+            #mapGroup-adjust{
+                position: absolute;
                 background-image: url(../../images/totalMap_${userSitefloor}f.png);
                 background-repeat: no-repeat;
                 -o-background-size: 100% 100%, auto;
@@ -81,9 +75,21 @@
                 -webkit-background-size: 100% 100%, auto;
                 background-size: 100% 100%, auto;
                 background-position:center center;
-                border:5px red solid;
+                opacity: 0.5; 
+                filter: alpha(opacity=20);
+            }
+            #mapGroup{
+                /*border:0px red solid;*/
                 /*讓最外層div不要隨視窗變動而改變(不然裏頭的子div會跑掉)*/
                 position: absolute; 
+            }
+            .mapGroup{
+                width: 1200px;
+                height: 500px;
+                transform: scaleX(0.85) scaleY(0.92);
+                transform-origin: 0% 0%;  
+                left: 0px;
+                top: 0px;
             }
             /*            body {
                             padding-top: 70px;
@@ -96,8 +102,9 @@
                 transition: none;
             }
             #wigetInfo{
-                border-bottom: 5px red solid;
-                border-right: 5px red solid;
+                /*border-bottom: 5px red solid;*/
+                /*border-right: 5px red solid;*/
+                border: 3px black solid;
                 background-color: white;
                 width: 25%; 
                 overflow: hidden;
@@ -176,9 +183,9 @@
 //                    }
 //                });
 
-                $("#fullBtn").click(function () {
-                    $("#wigetCtrl").fullScreen(true);
-                });
+//                $("#fullBtn").click(function () {
+//                    $("#wigetCtrl").fullScreen(true);
+//                });
 
                 function initTitleGroup() {
                     for (var i = 0; i < titleGroup.length; i++) {
@@ -552,42 +559,41 @@
         </script>
     </head>
     <body style="cursor: auto;">
-        <div id="screen-control">
-            <!--<button id="fullBtn">Full</button>-->
-            <div id="wigetCtrl">
-                <div id="mapGroup">
-                    <div id="wigetInfo">
-                        <label for="empty" style="float:left">空</label>
-                        <div class="draggable blub-empty divCustomBg"></div>
+        <!--<button id="fullBtn">Full</button>-->
+        <div id="wigetCtrl">
+            <div id="mapGroup-adjust" class="mapGroup"></div>
+            <div id="mapGroup" class="mapGroup">
+                <div id="wigetInfo">
+                    <label for="empty" style="float:left">空</label>
+                    <div class="draggable blub-empty divCustomBg"></div>
 
-                        <label for="normalSign" style="float:left">正常</label>
-                        <div class="draggable blub-normal divCustomBg"></div>
+                    <label for="normalSign" style="float:left">正常</label>
+                    <div class="draggable blub-normal divCustomBg"></div>
 
-                        <label for="normalSign" style="float:left">警告</label>
-                        <div class="draggable blub-alarm divCustomBg"></div>
+                    <label for="normalSign" style="float:left">警告</label>
+                    <div class="draggable blub-alarm divCustomBg"></div>
 
-                        <label for="normalSign" style="float:left">異常</label>
-                        <div class="draggable blub-abnormal divCustomBg"></div>
-                    </div>
-                    <!--<div class="clearWiget" /></div>-->
-
-                    <div id="titleArea"></div>
-                    <!--<div class="clearWiget" /></div>-->
-
-                    <div id="testArea"></div>
-                    <!--<div class="clearWiget" /></div>-->
-
-                    <div id="babArea"></div>
-                    <!--<div class="clearWiget"></div>-->
-
-                    <div id="numLampArea"></div>
-                    <!--<div class="clearWiget"></div>-->
-
-                    <div id="cellArea"></div>
-                    <!--<div class="clearWiget"></div>-->
+                    <label for="normalSign" style="float:left">異常</label>
+                    <div class="draggable blub-abnormal divCustomBg"></div>
                 </div>
+                <!--<div class="clearWiget" /></div>-->
+
+                <div id="titleArea"></div>
+                <!--<div class="clearWiget" /></div>-->
+
+                <div id="testArea"></div>
+                <!--<div class="clearWiget" /></div>-->
+
+                <div id="babArea"></div>
+                <!--<div class="clearWiget"></div>-->
+
+                <div id="numLampArea"></div>
+                <!--<div class="clearWiget"></div>-->
+
+                <div id="cellArea"></div>
+                <!--<div class="clearWiget"></div>-->
             </div>
-            <div class="clearWiget" />
         </div>
+        <div class="clearWiget" />
     </body>
 </html>
