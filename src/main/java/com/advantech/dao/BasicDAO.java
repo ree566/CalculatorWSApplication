@@ -51,7 +51,7 @@ public class BasicDAO {
     private SessionFactory sessionFactory;
 
     @Autowired
-    @Qualifier(value = "sessionFactory2")
+    @Qualifier(value = "sessionFactory")
     private SessionFactory sessionFactory2;
 
     public static enum SQL {

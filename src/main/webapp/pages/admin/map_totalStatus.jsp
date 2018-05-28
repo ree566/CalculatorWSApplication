@@ -300,12 +300,12 @@
                 function babObjectInit() {
                     $(".babWiget").each(function () {
                         var lineName = $(this).attr("id");
-                        var childAmount = $(this).children().length;
+                        var childAmount = 1;
                         $(this).children().each(function () {
                             $(this).attr({"id": (lineName + "-S-" + childAmount)})
                                     .addClass("draggable blub-empty divCustomBg")
                                     .tooltipster({updateAnimation: null});
-                            childAmount--;
+                            childAmount++;
                         });
                     });
                 }

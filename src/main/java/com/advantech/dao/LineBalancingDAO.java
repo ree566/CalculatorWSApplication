@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
  * @author Wei.Cheng
  */
 @Repository
-public class LineBalancingDAO extends AbstractDao_1<Integer, LineBalancing> implements BasicDAO_1<LineBalancing> {
+public class LineBalancingDAO extends AbstractDao<Integer, LineBalancing> implements BasicDAO_1<LineBalancing> {
 
     @Override
     public List<LineBalancing> findAll() {

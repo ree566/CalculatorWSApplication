@@ -24,7 +24,7 @@ public abstract class AbstractDao_1<PK extends Serializable, T> {
     private final Class<T> persistentClass;
 
     @Autowired
-    @Qualifier("sessionFactory2")
+    @Qualifier("sessionFactory")
     private SessionFactory sessionFactory;
 
     public AbstractDao_1() {

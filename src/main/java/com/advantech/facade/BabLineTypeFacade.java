@@ -71,7 +71,7 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
         ASSY_STANDARD = p.getAssyLineBalanceStandard().doubleValue();
         PKG_STANDARD = p.getPackingLineBalanceStandard().doubleValue();
         this.initMap();
-//        this.initAlarmSign();
+        this.initAlarmSign();
     }
 
     @Override

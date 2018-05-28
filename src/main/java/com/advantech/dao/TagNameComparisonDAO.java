@@ -91,7 +91,8 @@ public class TagNameComparisonDAO extends AbstractDao<TagNameComparisonId, TagNa
 
     @Override
     public int update(TagNameComparison pojo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        super.getSession().update(pojo);
+        return 1;
     }
 
     @Override

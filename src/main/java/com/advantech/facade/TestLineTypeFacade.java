@@ -65,7 +65,7 @@ public class TestLineTypeFacade extends BasicLineTypeFacade {
         TEST_STANDARD_MAX = p.getTestProductivityStandardMax().doubleValue();
         PEOPLE_NOT_MATCH = new HashMap();
         this.initMap();
-//        this.initAlarmSign();
+        this.initAlarmSign();
     }
 
     @Override

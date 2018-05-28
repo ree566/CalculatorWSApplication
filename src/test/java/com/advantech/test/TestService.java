@@ -148,17 +148,29 @@ public class TestService {
         }
     }
 
-    @Test
+//    @Test
     @Transactional
     @Rollback(false)
     public void testUserService() {
 
-        int[] ids = {23, 24, 25, 26};
+        List<User> l = userService.findAll();
 
-        for (int id : ids) {
-            User u = userService.findByPrimaryKey(id);
+        for (User u : l) {
             u.setPassword(encoder.encode(u.getPassword()));
             userService.update(u);
+        }
+    }
+    
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void testTagNameEncode() {
+
+        List<TagNameComparison> l = tagNameComparisonService.findAll();
+
+        for (TagNameComparison u : l) {
+            u.setTagNameEncode(encoder.encode(u.getTagNameEncode()));
+            tagNameComparisonService.update(u);
         }
     }
 

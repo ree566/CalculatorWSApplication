@@ -35,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Wei.Cheng
  */
 @Service
-@Transactional("transactionManager2")
+@Transactional("transactionManager")
 public class LineBalancingService {
 
     private static final Logger log = LoggerFactory.getLogger(LineBalancingDAO.class);
