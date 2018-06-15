@@ -61,7 +61,7 @@ public class TestDAO {
     @Autowired
     private SensorTransformDAO sensorTransformDAO;
 
-    @Test
+//    @Test
     @Transactional
     @Rollback(true)
     public void testBabDAO() throws JsonProcessingException {
@@ -88,14 +88,11 @@ public class TestDAO {
         HibernateObjectPrinter.print(setting);
     }
 
-//    @Test
+    @Test
     @Transactional
     @Rollback(true)
     public void testBabPcsDetailHistoryDAO() throws JsonProcessingException, ParseException {
-        List<Map> l = babPcsDetailHistoryDAO.findByBabForMap(12597);
-        assertNotEquals(0, l.size());
-        Map m = l.get(0);
-        assertNotNull(m.get("id"));
+        List<Map> l = babPcsDetailHistoryDAO.findByBabForMap(5949);
         HibernateObjectPrinter.print(l);
     }
 

@@ -86,8 +86,6 @@
         <script src="js/moment.js"></script>
 
         <script>
-            var cookie_expired_time = moment().set({hour: 23, minute: 0, second: 0});
-
             var hnd;//鍵盤輸入間隔
             var hnd2;//鍵盤輸入間隔
             var serverErrorConnMessage = "Error, the textbox can't connect to server now.";
@@ -716,6 +714,7 @@
 
             //generate all cookies exist 12 hours
             function generateCookie(name, value) {
+                var cookie_expired_time = moment().set({hour: 23, minute: 0, second: 0});
                 $.cookie(name, value, {expires: cookie_expired_time.toDate()});
             }
 

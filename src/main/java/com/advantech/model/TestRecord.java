@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -100,10 +101,11 @@ public class TestRecord implements Serializable {
         this.testTable = testTable;
     }
 
+    @CreationTimestamp
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "yyyy-MM-dd'T'kk:mm:ss.SSS'Z'", timezone = "GMT+8")
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "saveTime", length = 23, insertable = false, updatable = false)
+    @Column(name = "saveTime", length = 23)
     public Date getLastUpdateTime() {
         return lastUpdateTime;
     }
