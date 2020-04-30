@@ -29,7 +29,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
 
     public List<BabAvg> findBabAvg(int bab_id) {
         return super.getSession()
-                .createSQLQuery("select * from tbfn_BabAvg(:bab_id)")
+                .createSQLQuery("select * from M9_BW.tbfn_BabAvg(:bab_id)")
                 .addScalar("bab_id", StandardBasicTypes.INTEGER)
                 .addScalar("station", StandardBasicTypes.INTEGER)
                 .addScalar("average", StandardBasicTypes.DOUBLE)
@@ -40,7 +40,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
 
     public List<BabAvg> findBabAvgInHistory(int bab_id) {
         return super.getSession()
-                .createSQLQuery("select * from tbfn_BabAvg_history(:bab_id)")
+                .createSQLQuery("select * from M9_BW.tbfn_BabAvg_history(:bab_id)")
                 .addScalar("bab_id", StandardBasicTypes.INTEGER)
                 .addScalar("station", StandardBasicTypes.INTEGER)
                 .addScalar("average", StandardBasicTypes.DOUBLE)
@@ -71,7 +71,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
 
     public List<BabLastGroupStatus> findBabLastGroupStatus(int bab_id) {
         return super.getSession()
-                .createSQLQuery("{CALL usp_GetLastGroupStatus(:bab_id)}")
+                .createSQLQuery("{CALL M9_BW.usp_GetLastGroupStatus(:bab_id)}")
                 .setParameter("bab_id", bab_id)
                 .setResultTransformer(Transformers.aliasToBean(BabLastGroupStatus.class))
                 .list();
@@ -79,7 +79,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
 
     public List<SensorCurrentGroupStatus> findSensorCurrentGroupStatus(int bab_id) {
         return super.getSession()
-                .createSQLQuery("{CALL usp_GetSensorCurrentGroupStatus(:bab_id)}")
+                .createSQLQuery("{CALL M9_BW.usp_GetSensorCurrentGroupStatus(:bab_id)}")
                 .setParameter("bab_id", bab_id)
                 .setResultTransformer(Transformers.aliasToBean(SensorCurrentGroupStatus.class))
                 .list();
@@ -87,7 +87,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
 
     public List<Map> findSensorStatus(int bab_id) {
         return super.getSession()
-                .createSQLQuery("select * from tbfn_GetSensorStatus(:bab_id)")
+                .createSQLQuery("select * from M9_BW.tbfn_GetSensorStatus(:bab_id)")
                 .setParameter("bab_id", bab_id)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
@@ -95,7 +95,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
 
     public List<Map> findBalanceDetail(int bab_id) {
         return super.getSession()
-                .createSQLQuery("select * from tbfn_BabBalanceDetail(:bab_id)")
+                .createSQLQuery("select * from M9_BW.tbfn_BabBalanceDetail(:bab_id)")
                 .setParameter("bab_id", bab_id)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
@@ -109,7 +109,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
             sitefloorName = f.getName();
         }
         return session
-                .createSQLQuery("{CALL usp_GetBabDetail(:lineTypeName, :sitefloorName, :sD, :eD, :minPcs)}")
+                .createSQLQuery("{CALL M9_BW.usp_GetBabDetail(:lineTypeName, :sitefloorName, :sD, :eD, :minPcs)}")
                 .setParameter("lineTypeName", lineTypeName)
                 .setParameter("sitefloorName", sitefloorName)
                 .setParameter("sD", sD.withHourOfDay(0).toDate())
@@ -122,7 +122,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
     //Get bananceCompare with alarmPercent in /pages/admin/BabTotal page
     public List<Map> findLineBalanceCompareByBab(int bab_id) {
         return super.getSession()
-                .createSQLQuery("{CALL usp_GetLineBalanceCompareByBab(:bab_id)}")
+                .createSQLQuery("{CALL M9_BW.usp_GetLineBalanceCompareByBab(:bab_id)}")
                 .setParameter("bab_id", bab_id)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
@@ -131,7 +131,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
     //Get bananceCompare with alarmPercent in /pages/admin/BabTotal page
     public List<Map> findLineBalanceCompare(String modelName, String lineTypeName) {
         return super.getSession()
-                .createSQLQuery("{CALL usp_GetLineBalanceCompare(:modelName, :lineTypeName)}")
+                .createSQLQuery("{CALL M9_BW.usp_GetLineBalanceCompare(:modelName, :lineTypeName)}")
                 .setParameter("modelName", modelName)
                 .setParameter("lineTypeName", lineTypeName)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
@@ -140,7 +140,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
 
     public List<Map> findSensorStatusPerStationToday() {
         return super.getSession()
-                .createSQLQuery("select * from vw_SensorStatusPerStationToday")
+                .createSQLQuery("select * from M9_BW.vw_SensorStatusPerStationToday")
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
     }
@@ -153,7 +153,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
         }
 
         return super.getSession()
-                .createSQLQuery("{CALL usp_Excel_PcsDetail(:modelName, :lineType, :startDate, :endDate)}")
+                .createSQLQuery("{CALL M9_BW.usp_Excel_PcsDetail(:modelName, :lineType, :startDate, :endDate)}")
                 .setParameter("modelName", modelName)
                 .setParameter("lineType", "-1".equals(lineType) ? null : lineType)
                 .setParameter("startDate", startDate != null ? startDate.toDate() : startDate)

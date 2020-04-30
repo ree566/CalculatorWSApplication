@@ -202,7 +202,7 @@
                 <ref bean="HandleUncloseBab-Trig"/>
                 <ref bean="CleanSensorData-Trig"/>
                 <ref bean="TestLineTypeRecord-Trig"/>
-                <ref bean="CountermeasureAlarm-Trig"/>
+                <!--<ref bean="CountermeasureAlarm-Trig"/>-->
                 
                 <!--<ref bean="SensorDetect-Trig"/>-->
                 <!--<ref bean="ClearPollingJob-Trig"/>-->

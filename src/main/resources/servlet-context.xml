@@ -43,9 +43,9 @@
     <bean id="dataSource1" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
         <property name="connectionTestQuery" value="SELECT 1" />
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://localhost:53041/WebAccess_1;loginTimeout=15" />
-        <property name="username" value="admin" />
-        <property name="password" value="mis" />
+        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.22.3.27/TWM9;loginTimeout=15" />
+        <property name="username" value="ATMCSa" />
+        <property name="password" value="@tmc$a392" />
     </bean>
     
     <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" destroy-method="destroy"> 
@@ -73,6 +73,9 @@
                 <prop key="hibernate.id.new_generator_mappings" >false</prop>
                 <!--<prop key="hibernate.hbm2ddl.auto" >update</prop>-->
                 <!--<prop key="hibernate.show_sql">true</prop>-->
+                <!--<prop key="hibernate.format_sql">true</prop>-->
+                <prop key="hibernate.default_schema">M9_BW</prop>
+                <prop key="hibernate.dialect">com.advantech.helper.SqlServerDialectWithNvarchar</prop>
             </props> 
         </property> 
     </bean>
