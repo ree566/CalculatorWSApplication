@@ -57,7 +57,7 @@
             .mapTitle{
                 padding: 3px; 
                 background-color: white;
-                font-size: 40px;
+                font-size: 30px;
                 float: left;
                 border: 5px red solid;
                 cursor: none;
@@ -324,27 +324,27 @@
                 }
 
                 function testObjectInit() {
-                    var loopCount = maxTestTableNo;
+                    var loopCount = minTestTableNo;
                     $(".testWiget").each(function () {
                         if ($(this).attr("reverse")) {
                             var childAmount = $(this).children().length;
-                            var startCount = loopCount - childAmount + 1;
+                            var startCount = loopCount + childAmount - 1;
 
                             $(this).children().each(function () {
                                 $(this).attr({"id": "draggable" + "T" + startCount + "_" + sitefloor + "f"})
                                         .addClass("draggable blub-empty divCustomBg")
                                         .html(startCount)
                                         .tooltipster({updateAnimation: null});
-                                startCount++;
+                                startCount--;
                             });
-                            loopCount -= childAmount;
+                            loopCount += childAmount;
                         } else {
                             $(this).children().each(function () {
                                 $(this).attr({"id": "draggable" + "T" + loopCount + "_" + sitefloor + "f"})
                                         .addClass("draggable blub-empty divCustomBg")
                                         .html(loopCount)
                                         .tooltipster({updateAnimation: null});
-                                loopCount--;
+                                loopCount++;
                             });
                         }
                     });

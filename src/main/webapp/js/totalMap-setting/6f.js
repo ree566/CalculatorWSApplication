@@ -3,54 +3,49 @@ var pYa = 0;
 
 var mapInfo = {
     titleName: "東湖廠6樓",
-    x: 555,
-    y: 395
+    x: 665,
+    y: 430
 };
 
 var titleGroup = [
     //assy
-    {lineName: "L1", x: 1055, y: 260},
-    {lineName: "L2", x: 1055, y: 155},
-    {lineName: "L3", x: 1055, y: 90},
-    {lineName: "L4", x: 1055, y: 0},
-    //pkg
-    {lineName: "L6", x: 520, y: 285},
-    {lineName: "L7", x: 160, y: 90},
-    {lineName: "L8", x: 425, y: 155},
-    {lineName: "L9", x: 340, y: 240},
-    {lineName: "FQC", x: 320, y: 400}
+    {lineName: "L1-1", x: 965, y: 265},
+    {lineName: "L1-2", x: 855, y: 265},
+    {lineName: "L2", x: 765, y: 265},
+    {lineName: "L3", x: 700, y: 265},
+    {lineName: "L4", x: 615, y: 265},
+    {lineName: "L5", x: 515, y: 265},
+    {lineName: "L6", x: 435, y: 265},
+    {lineName: "L7", x: 355, y: 265}
 ];
 
+//, straight: true, reverse: true
 var testGroup = [
-	{people: 4, x: 705, y: 30, straight: true, reverse: true}, // group 43-47
-    {people: 3, x: 420, y: 100}, // group 40-42
-    {people: 3, x: 420, y: 30}, // group 37-39
-    {people: 1, x: 550, y: 115}, // group 36
-    {people: 1, x: 550, y: 70}, // group 35
-    {people: 1, x: 550, y: 30}, // group 34
-    {people: 1, x: 600, y: 115}, // group 33
-    {people: 1, x: 600, y: 70}, // group 32
-    {people: 1, x: 600, y: 30}, // group 31
-    {people: 3, x: 765, y: 115}, // group 28-30
-    {people: 3, x: 765, y: 20} // group 25-27
+    {people: 3, x: 560, y: 450, reverse: true}, // group 37-39
+    {people: 3, x: 560, y: 360, reverse: true}, // group 40-42
+    {people: 3, x: 400, y: 450, reverse: true}, // group 35
+    {people: 3, x: 400, y: 370, reverse: true}, // group 36
+    {people: 2, x: 685, y: 360, reverse: true} // group 43-47
 ];
 
 var babGroup = [
-    {people: 4, x: 900, y: 265, lineName: "L1"},
-    {people: 4, x: 900, y: 185, lineName: "L2"},
-    {people: 4, x: 900, y: 110, lineName: "L3"},
-    {people: 4, x: 900, y: 20, lineName: "L4"},
-    {people: 3, x: 565, y: 245, lineName: "L6"},
-    {people: 3, x: 235, y: 100, lineName: "L7"},
-    {people: 3, x: 510, y: 170, lineName: "L8"},
-    {people: 3, x: 400, y: 245, lineName: "L9"}
+    {people: 6, x: 945, y: 85, lineName: "L1-1", straight: true, reverse: true},
+    {people: 6, x: 870, y: 85, lineName: "L1-2", straight: true, reverse: true},
+    {people: 6, x: 770, y: 85, lineName: "L2", straight: true, reverse: true},
+    {people: 6, x: 700, y: 85, lineName: "L3", straight: true, reverse: true},
+    {people: 6, x: 605, y: 85, lineName: "L4", straight: true, reverse: true},
+    {people: 6, x: 540, y: 85, lineName: "L5", straight: true, reverse: true},
+    {people: 6, x: 445, y: 85, lineName: "L6", straight: true, reverse: true},
+    {people: 6, x: 380, y: 85, lineName: "L7", straight: true, reverse: true}
 ];
 
 var fqcGroup = [
-    {people: 1, x: 410, y: 370, lineName: "FQC_1"},
-    {people: 1, x: 410, y: 440, lineName: "FQC_2"}
+//    {people: 1, x: 410, y: 370, lineName: "FQC_1"},
+//    {people: 1, x: 410, y: 440, lineName: "FQC_2"}
 ];
 
-var maxTestTableNo = 46;
+var minTestTableNo = 1;
+var maxTestTableNo = 14;
+
 var sitefloor = 6;
 

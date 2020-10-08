@@ -140,6 +140,7 @@
                     var sopName = $("#sopName").val();
                     var sopPage = $("#sopPage").val();
                     var standardTime = $("#standardTime").val();
+                    var remark = $("#detailRemark").val();
 
                     var errorMsg = "";
                     if (!station) {
@@ -175,7 +176,8 @@
                                 station: station,
                                 sopName: sopName,
                                 sopPage: sopPage,
-                                standardTime: standardTime
+                                standardTime: standardTime,
+                                remark: remark
                             },
                             success: function (response) {
                                 if (response == "success") {
@@ -212,6 +214,7 @@
                     $("#sopName").val(data.sopName);
                     $("#sopPage").val(data.sopPage);
                     $("#standardTime").val(data.standardTime);
+                    $("#detailRemark").val(data.remark);
                     $("#subTableCurrentID").val(data.id);
 
                     $('#addEditRemarkDetail').modal('show');
@@ -283,18 +286,20 @@
                             }
                         ],
                         "columns": [
-                            {data: "id"},
-                            {data: "modelName"},
-                            {data: "remark"},
+                            {data: "id", title: "id"},
+                            {data: "modelName", title: "機種"},
+                            {data: "remark", title: "備註"},
                             {
-                                "data": "id",
+                                "data": "id", 
+                                title: "action",
                                 "width": "20%",
                                 "render": function (data, type, full, meta) { //this column is redefinied to show the action buttons
                                     return '<div class="btn-toolbar"><button class="btn btn-sm btn-primary EditButton">Edit</button><button class="btn btn-sm btn-danger DeleteButton">Delete</button></div>';
                                 }
                             },
                             {
-                                "data": "id",
+                                "data": "id", 
+                                title: "帶出詳細",
                                 "width": "20%",
                                 "render": function (data, type, full, meta) { //this column is redefinied to show the action buttons
                                     return '<div class="btn-toolbar"><button class="btn btn-sm btn-primary EditDetail">詳細</button></div>';
@@ -319,18 +324,27 @@
                                 "orderable": false
                             }],
                         "columns": [
-                            {data: "id"},
-                            {data: "station"},
-                            {data: "sopName"},
-                            {data: "sopPage"},
+                            {data: "id", title: "id"},
+                            {data: "station", title: "station"},
+                            {data: "sopName", title: "sopName"},
+                            {data: "sopPage", title: "sopPage"},
                             {
                                 data: "standardTime",
+                                title: "標工",
+                                "render": function (data, type, full, meta) { //this column is redefinied to show the action buttons
+                                    return data == null ? 'n/a' : data;
+                                }
+                            },
+                            {
+                                data: "remark",
+                                title: "備註",
                                 "render": function (data, type, full, meta) { //this column is redefinied to show the action buttons
                                     return data == null ? 'n/a' : data;
                                 }
                             },
                             {
                                 "data": "id",
+                                title: "action",
                                 "width": "20%",
                                 "render": function (data, type, full, meta) { //this column is redefinied to show the action buttons
                                     return '<div class="btn-toolbar"><button class="btn btn-sm btn-primary EditSubButton">Edit</button><button class="btn btn-sm btn-danger DeleteSubButton">Delete</button></div>';
@@ -438,15 +452,6 @@
                         <h3>Model Sop 備忘錄</h3>
                     </div>
                     <table id="remark-info" class="table table-bordered display cell-border">
-                        <thead>
-                            <tr>
-                                <th>id</th>
-                                <th>機種</th>
-                                <th>備註</th>
-                                <th>action</th>
-                                <th>帶出詳細</th>
-                            </tr>
-                        </thead>
                     </table>
                 </div>
 
@@ -455,16 +460,6 @@
                         <h3>正在編輯<font id="editModelName"></font>的Detail</h3>
                     </div>
                     <table id="remark-detail" class="table table-bordered display cell-border">
-                        <thead>
-                            <tr>
-                                <th>id</th>
-                                <th>station</th>
-                                <th>sopName</th>
-                                <th>sopPage</th>
-                                <th>標工</th>
-                                <th>action</th>
-                            </tr>
-                        </thead>
                     </table>
                 </div>
             </div>
@@ -536,6 +531,12 @@
                                     <label class="control-label col-sm-3" for="standardTime">標工: </label>
                                     <div class="input-group col-sm-9">
                                         <input id="standardTime" type="text" class="input-xlarge form-control" >
+                                    </div>
+                                </div>
+                                <div id="standardTimeField">
+                                    <label class="control-label col-sm-3" for="standardTime">備註: </label>
+                                    <div class="input-group col-sm-9">
+                                        <textarea id="detailRemark" type="text" class="input-xlarge form-control" ></textarea>
                                     </div>
                                 </div>
                                 <input type="hidden" id="subTableCurrentID" value="" />                         

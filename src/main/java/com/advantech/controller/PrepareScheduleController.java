@@ -5,6 +5,7 @@
  */
 package com.advantech.controller;
 
+import com.advantech.converter.Encodeable;
 import com.advantech.datatable.DataTableResponse;
 import com.advantech.helper.SecurityPropertiesUtils;
 import com.advantech.model.db1.Floor;
@@ -19,10 +20,14 @@ import com.advantech.service.db1.PrepareScheduleService;
 import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import static com.google.common.base.Preconditions.checkState;
+import com.google.common.collect.ImmutableMap;
+import static com.google.common.collect.Lists.newArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +64,17 @@ public class PrepareScheduleController {
 
     @Autowired
     private WebServiceRV rv;
+
+    private Map<List<Integer>, List<Station>> stationMap;
+
+    @PostConstruct
+    protected void init() {
+        stationMap = ImmutableMap.<List<Integer>, List<Station>>builder()
+                .put(newArrayList(1, 2), newArrayList(Station.ASSY, Station.T1, Station.BI))
+                .put(newArrayList(4), newArrayList(Station.T2, Station.T3))
+                .put(newArrayList(3), newArrayList(Station.PACKAGE))
+                .build();
+    }
 
     @RequestMapping(value = "/findPrepareSchedule", method = {RequestMethod.GET})
     @ResponseBody
@@ -122,23 +138,45 @@ public class PrepareScheduleController {
             @RequestParam("lineType_id[]") Integer[] lineType_id,
             HttpServletRequest request
     ) {
+        return new DataTableResponse(getData(startDate, lineType_id));
+    }
+
+    private List<PrepareSchedule> getData(DateTime startDate, Integer[] lineType_id) {
         List<LineType> lineTypes = lineTypeService.findByPrimaryKeys(lineType_id);
-
         List<PrepareSchedule> schedules = psService.findByLineTypeAndDate(lineTypes, startDate);
-        List<RptStationQty> mesQty = rv.getRptStationQtys(startDate.minusDays(7), startDate.plusDays(7), Factory.DEFAULT);
-
+        Map<String, List<RptStationQty>> dataMap = new HashMap<>();
+        List<Station> stations = stationMap.get(Arrays.asList(lineType_id));
+        
+        for (Station station : stations) {
+            List<RptStationQty> mesQty = rv.getRptStationQtys(startDate.minusDays(14), startDate.plusDays(7), station.token(), Factory.DEFAULT);
+            dataMap.put(station.name(), mesQty);
+        }
+        
         schedules.stream().forEach(p -> {
-            int rptStationQty = mesQty.stream()
-                    .filter(m -> m.getPo().equals(p.getPo()))
-                    .mapToInt(m -> m.getQty()).sum();
-
-            Map otherInfo = new HashMap();
-            otherInfo.put("passCntQry", rptStationQty);
+            Map<Object, Object> otherInfo = new HashMap<>();
+            dataMap.forEach((k, v) -> {
+                int stationQty = v.stream().filter(m -> m.getPo().equals(p.getPo())).mapToInt(m -> m.getQty()).sum();
+                otherInfo.put("passCntQry_" + k, stationQty);
+            });
             p.setOtherInfo(otherInfo);
 
         });
+        return schedules;
+    }
 
-        return new DataTableResponse(schedules);
+    private enum Station implements Encodeable {
+        ASSY(2), T1(3), BI(4), T2(11), T3(30), PACKAGE(28);
+
+        private final Integer value;
+
+        private Station(Integer value) {
+            this.value = value;
+        }
+
+        @Override
+        public Integer token() {
+            return this.value;
+        }
     }
 
 }

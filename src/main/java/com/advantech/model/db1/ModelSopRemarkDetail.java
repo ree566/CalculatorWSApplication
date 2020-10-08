@@ -30,6 +30,7 @@ public class ModelSopRemarkDetail implements Serializable {
     private String sopName;
     private String sopPage;
     private Integer standardTime;
+    private String remark;
 
     public ModelSopRemarkDetail() {
     }
@@ -39,6 +40,15 @@ public class ModelSopRemarkDetail implements Serializable {
         this.station = station;
         this.sopName = sopName;
         this.sopPage = sopPage;
+    }
+
+    public ModelSopRemarkDetail(ModelSopRemark modelSopRemark, int station, String sopName, String sopPage, Integer standardTime, String remark) {
+        this.modelSopRemark = modelSopRemark;
+        this.station = station;
+        this.sopName = sopName;
+        this.sopPage = sopPage;
+        this.standardTime = standardTime;
+        this.remark = remark;
     }
 
     @Id
@@ -98,4 +108,12 @@ public class ModelSopRemarkDetail implements Serializable {
         this.standardTime = standardTime;
     }
 
+    @Column(name = "remark", length = 150)
+    public String getRemark() {
+        return this.remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 }

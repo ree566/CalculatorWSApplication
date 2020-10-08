@@ -52,6 +52,10 @@ public class BabPassStationRecordService {
         return dao.findLastProcessingByTagName(tagName);
     }
 
+    public List<BabPassStationRecord> findByBab(Bab b) {
+        return this.dao.findByBab(b);
+    }
+
     public int insert(BabPassStationRecord pojo) {
         return dao.insert(pojo);
     }
@@ -76,26 +80,20 @@ public class BabPassStationRecordService {
         Bab b = currentTag.getBab();
         checkState(userInput.getId() == b.getId(), "Processing record id not match");
 
-        checkBarcodeSn(b, barcode);
-
-        /*
-            Check barcode rule for hole line is correct or not 
-            Current barcode can't exist in current tagName multiple times
-            Same tagName and different bab -> Can't exist more than 1 time
-            Same tagName and same bab -> Can't input more than 3 times
-         */
-        //Check barcode exist in other bab record or not
-        List<BabPassStationRecord> tagBarcodeRecords = dao.findByBarcodeAndTagName(barcode, tagName);
-        List<BabPassStationRecord> diffBabRecords = tagBarcodeRecords.stream().filter(p -> p.getBab().getId() != bab.getId()).collect(toList());
-        checkState(diffBabRecords.isEmpty(), "Barcode input too much times(Exist in other bab record)");
-        
         List<BabPassStationRecord> barcodeRecords = dao.findByBab(bab);
 
         List<BabPassStationRecord> barcodeInCurrentTagName = barcodeRecords.stream()
                 .filter(p -> tagName.equals(p.getTagName().getName()) && barcode.equals(p.getBarcode()))
                 .collect(toList());
         int inputCount = barcodeInCurrentTagName.size() + 1;
-        checkState(inputCount <= 3, "Barcode(" + barcode + ") input too much times");
+        if (b.getIspre() == 0) {
+            checkArgument((barcode.length() >= 5), "Barcode length can't under five character!");
+            checkBarcodeSn(b, barcode);
+            List<BabPassStationRecord> tagBarcodeRecords = this.dao.findByBarcodeAndTagName(barcode, tagName);
+            List<BabPassStationRecord> diffBabRecords = (List<BabPassStationRecord>) tagBarcodeRecords.stream().filter(p -> (p.getBab().getId() != bab.getId())).collect(toList());
+            checkState(diffBabRecords.isEmpty(), "Barcode input too much times(Exist in other bab record)");
+            checkState((inputCount <= 3), "Barcode(" + barcode + ") input too much times");
+        }
 
         //Check barcode after first station
         if (currentTag.getStation() > 1) {

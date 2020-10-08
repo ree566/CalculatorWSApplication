@@ -75,12 +75,6 @@
                 urlLineType = getQueryVariable("lineType");
                 lineTypeIds = (urlLineType == null || urlLineType == "ASSY" ? [1, 2] : [3]);
 
-                if (urlLineType == "ASSY") {
-                    $("#worktimeSumArea").hide();
-                    $("#page-title").html("組裝最佳排站配置");
-                } else if (urlLineType == "Packing") {
-                    $("#page-title").html("包裝最佳排站配置");
-                }
                 initSelectOption();
 
                 var momentFormatString = 'YYYY-MM-DD';
@@ -104,6 +98,15 @@
 
                 $("#send").click(function () {
                     getDetail();
+                });
+
+                $('body').on('click', '#tb1 tbody tr', function () {
+                    if ($(this).hasClass('selected')) {
+                        $(this).removeClass('selected');
+                    } else {
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }
                 });
 
                 $(".lineSelGroup").hide();
@@ -162,10 +165,9 @@
                         "url": "<c:url value="/PrepareScheduleController/findPrepareSchedulePercentage" />",
                         "type": "Get",
                         data: {
-                            lineId: $("#line").val(),
                             startDate: $("#fini").val(),
                             floorId: $("#floor").val(),
-                            lineType_id: lineTypeIds
+                            "lineType_id[]": $("#lineType").val()
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
                             alert(xhr.responseText);
@@ -177,41 +179,34 @@
                         {data: "modelName", title: "機種"},
                         {data: "totalQty", title: "總工單數"},
                         {data: "scheduleQty", title: "當日排程數"},
-                        {data: "otherInfo", title: "MES總筆數"},
-                        {data: "otherInfo", title: "總完成度"},
-                        {data: "floor.id", title: "樓層"},
-                        {data: "line.id", title: "線別", visible: false}
+                        {data: "otherInfo.passCntQry_ASSY", title: "MES總筆數(Assy)"},
+                        {data: "otherInfo.passCntQry_ASSY", title: "總完成度(Assy)", "sType": "numeric-comma"},
+                        {data: "otherInfo.passCntQry_T1", title: "MES總筆數(T1)"},
+                        {data: "otherInfo.passCntQry_T1", title: "總完成度(T1)", "sType": "numeric-comma"},
+                        {data: "otherInfo.passCntQry_BI", title: "MES總筆數(BI)"},
+                        {data: "otherInfo.passCntQry_BI", title: "總完成度(BI)", "sType": "numeric-comma"},
+                        {data: "otherInfo.passCntQry_T2", title: "MES總筆數(T2)"},
+                        {data: "otherInfo.passCntQry_T2", title: "總完成度(T2)", "sType": "numeric-comma"},
+                        {data: "otherInfo.passCntQry_T3", title: "MES總筆數(T3)"},
+                        {data: "otherInfo.passCntQry_T3", title: "總完成度(T3)", "sType": "numeric-comma"},
+                        {data: "otherInfo.passCntQry_PACKAGE", title: "MES總筆數(PACKAGE)"},
+                        {data: "otherInfo.passCntQry_PACKAGE", title: "總完成度(PACKAGE)", "sType": "numeric-comma"}
+//                        {data: "floor.id", title: "樓層", visible: false},
+//                        {data: "line.id", title: "線別", visible: false}
                     ],
                     "columnDefs": [
                         {
                             "type": "html",
-                            "targets": [7],
+                            "targets": [5, 7, 9, 11, 13, 15],
                             'render': function (data, type, full, meta) {
-                                return data == 1 ? "5F" : "6F";
+                                return isNull(data, '---');
                             }
                         },
                         {
                             "type": "html",
-                            "targets": [8],
+                            "targets": [6, 8, 10, 12, 14, 16],
                             'render': function (data, type, full, meta) {
-                                var selClone = $("#line").clone(true).off();
-                                selClone.removeAttr("id").addClass("scheLines").attr("disabled", "disabled");
-                                selClone.find("option[value = '" + data + "']").attr("selected", "selected");
-                                return selClone.prop("outerHTML");
-                            }
-                        },
-                        {
-                            "type": "html",
-                            "targets": [5],
-                            'render': function (data, type, full, meta) {
-                                return data == null ? 0 : data.passCntQry;
-                            }
-                        },
-                        {
-                            "type": "html",
-                            "targets": [6],
-                            'render': function (data, type, full, meta) {
-                                return getPercent(data == null ? 0 : (data.passCntQry / full["totalQty"]));
+                                return data == null ? '---' : getPercent((data / full["totalQty"]));
                             }
                         }
                     ],
@@ -225,6 +220,17 @@
                     "processing": true,
                     "initComplete": function (settings, json) {
                         $("#send").attr("disabled", false);
+                    },
+                    "fnDrawCallback": function () {
+//                        var api = this.api();
+//                        setTimeout(function () {
+//                            api.columns().flatten().each(function (colIdx) {
+//                                var columnData = api.columns(colIdx).data().join('');
+//                                if (columnData.length == (api.rows().count() - 1) && colIdx != 0) {
+//                                    api.column(colIdx).visible(false);
+//                                }
+//                            });
+//                        }, 0);
                     },
                     filter: false,
                     destroy: true,
@@ -246,18 +252,25 @@
                 return Math.round(val * size) / size;
             }
 
+            function isNull(col, replace_value) {
+                return col == null ? replace_value : col;
+            }
+
         </script>
     </head>
     <body>
         <c:import url="/temp/admin-header.jsp" />
         <div class="container-fluid">
             <div>
-                <h3 id="page-title" class="title">組裝最佳排站配置</h3>
+                <h3 id="page-title" class="title">工單完程度列表</h3>
             </div>
             <div class="row form-inline">
-                <div class="col form-group lineSelGroup">
-                    <label for="line">線別: </label>
-                    <select id="line">
+                <div class="col form-group">
+                    <label for="lineType">製程: </label>
+                    <select id="lineType">
+                        <option value="1,2">組裝</option>
+                        <option value="4">測試</option>
+                        <option value="3">包裝</option>
                     </select>
                 </div>
                 <div class="col form-group">

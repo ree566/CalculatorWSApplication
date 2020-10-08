@@ -298,7 +298,7 @@ public class WebServiceRV {
         }
     }
 
-    public List<RptStationQty> getRptStationQtys(DateTime sD, DateTime eD, final Factory f) {
+    public List<RptStationQty> getRptStationQtys(DateTime sD, DateTime eD, int mesLineId, final Factory f) {
 
         try {
             String queryString
@@ -308,7 +308,7 @@ public class WebServiceRV {
                     + "<START_TIME>" + fmt.print(sD) + "</START_TIME>"
                     + "<END_TIME>" + fmt.print(eD) + "</END_TIME>"
                     + "<UNIT_NO/>"
-                    + "<STATION_ID>2</STATION_ID>"
+                    + "<STATION_ID>" + mesLineId + "</STATION_ID>"
                     + "<WERKS>TWM3</WERKS>"
                     + "<ITEM_NO/>"
                     + "</STATION_QTY>"

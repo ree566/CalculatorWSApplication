@@ -11,6 +11,7 @@ import com.advantech.model.db1.BabSettingHistory;
 import com.advantech.service.db1.BabPassStationRecordService;
 import com.advantech.service.db1.BabSettingHistoryService;
 import static com.google.common.base.Preconditions.checkArgument;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -42,7 +43,7 @@ public class BabPassStationRecordController {
     ) {
         BabSettingHistory setting = settingHistoryService.findProcessingByTagName(tagName);
         checkArgument(setting != null, "Can't find processing bab");
-        ModelAndView mav = new ModelAndView("barcode_input");
+        ModelAndView mav = new ModelAndView("barcode_input_click");
         mav.addObject("tagName", tagName);
         mav.addObject("bab_id", setting.getBab().getId());
         return mav;
@@ -65,7 +66,6 @@ public class BabPassStationRecordController {
             @RequestParam String tagName,
             @ModelAttribute Bab bab
     ) {
-        checkArgument(barcode.length() >= 5, "Barcode length can't under five character!");
         int count = babPassStationRecordService.checkStationInfoAndInsert(bab, tagName, barcode);
         return count;
     }
@@ -74,5 +74,12 @@ public class BabPassStationRecordController {
     @ResponseBody
     protected String delete(@RequestParam String barcode, @ModelAttribute Bab bab) {
         return "success";
+    }
+
+    @RequestMapping(value = {"/findLastInput"}, method = {RequestMethod.GET})
+    @ResponseBody
+    protected BabPassStationRecord findLastInput(@ModelAttribute Bab bab) {
+        List<BabPassStationRecord> l = this.babPassStationRecordService.findByBab(bab);
+        return l.isEmpty() ? new BabPassStationRecord() : l.get(l.size() - 1);
     }
 }

@@ -106,7 +106,7 @@ public class TestQuartzJobs {
     @Autowired
     private ArrangePrepareScheduleImpl_2 aps;
 
-    @Test
+//    @Test
     public void testSyncPrepareSchedule1() throws Exception {
         //先設定好當日出勤名單, 才會給予字動排站
         //This is assy schedule
@@ -130,7 +130,7 @@ public class TestQuartzJobs {
     @Autowired
     private SyncUserFromRemote suf;
 
-//    @Test
+    @Test
     public void testSyncUserFromRemote() throws Exception {
 
         suf.execute();
@@ -142,7 +142,7 @@ public class TestQuartzJobs {
     @Autowired
     private ArrangePrepareScheduleImpl_Packing apspkg;
 
-    @Test
+//    @Test
     public void testSyncPrepareSchedule2() throws Exception {
         //先設定好當日出勤名單, 才會給予字動排站
         //This is packing schedule

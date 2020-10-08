@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Transactional
 public abstract class PrepareScheduleJob {
-    
+
     protected DateTimeFormatter df = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm:ss");
 
     public void execute() throws Exception {
@@ -28,11 +28,18 @@ public abstract class PrepareScheduleJob {
         if (d.getHourOfDay() >= 17) {
             d = d.plusDays(d.getDayOfWeek() == 6 ? 2 : 1);
         }
+
         DateTime d2 = new DateTime(d.plusDays(1));
         if (d2.getDayOfWeek() == 7) {
             d2 = d2.plusDays(1);
         }
-        this.execute(newArrayList(d, d2));
+
+        DateTime d3 = new DateTime(d2.plusDays(1));
+        if (d3.getDayOfWeek() == 7) {
+            d3 = d3.plusDays(1);
+        }
+
+        this.execute(newArrayList(d, d2, d3));
     }
 
     abstract void execute(List<DateTime> dts) throws Exception;

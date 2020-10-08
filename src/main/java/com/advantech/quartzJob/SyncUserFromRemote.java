@@ -19,6 +19,7 @@ import com.advantech.model.db1.UserProfile;
 import com.advantech.security.State;
 import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
+import static com.google.common.collect.Lists.newArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -71,7 +72,7 @@ public class SyncUserFromRemote {
                 .filter(ur -> (ur.getUnitNo() != null && ur.getUnitNo().matches("(A|B|T|P)")))
                 .collect(toList());
 
-        List<User> users = userDAO.findAll();
+        List<User> users = userDAO.findByRole("PREASSY_USER", "ASSY_USER", "TEST_USER", "PACKING_USER");
 
         Floor f = floorDAO.findByPrimaryKey(4);
 
@@ -101,7 +102,7 @@ public class SyncUserFromRemote {
                     user.setState(State.ACTIVE);
 
                     user.setFloor(f);
-                    
+
                     user.setUnit(mfg);
 
                     setUserProfle(user, ru.getUnitNo());
@@ -123,7 +124,30 @@ public class SyncUserFromRemote {
                 }
 
             });
+
+            //Remove user when user is not in remote list
+            List adminProfileIds = newArrayList(1, 4, 7, 9, 11, 13);
+
+            users.forEach(u -> {
+                UserInfoOnMes fitUser = remoteDirectUser.stream()
+                        .filter(ur -> (ur.getUserNo().equals(u.getJobnumber())))
+                        .findFirst().orElse(null);
+
+                UserProfile usersAdminProfile = u.getUserProfiles().stream()
+                        .filter(p -> adminProfileIds.contains(p.getId()))
+                        .findFirst()
+                        .orElse(null);
+                
+                //If user is not in admin group, update user to delete status
+                if (fitUser == null && usersAdminProfile == null) {
+                    System.out.println("remove" + " " + u.getJobnumber());
+                    u.setState(State.DELETED);
+                    userDAO.update(u);
+                }
+
+            });
         }
+
     }
 
     private void setUserProfle(User user, String department) {

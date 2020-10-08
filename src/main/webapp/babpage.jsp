@@ -823,12 +823,13 @@
                         var d = response;
                         if (d != null && d.length != 0) {
                             var modelSopRemark = d[0].modelSopRemark;
-                            memo.append("<p><label>機種: </label>" + modelSopRemark.modelName + "</p>");
-                            memo.append("<p><label>站別: </label>" + d[0].station + "</p>");
-                            memo.append("<p><label>備註: </label>" + modelSopRemark.remark + "</p>");
+                            memo.append("<p><label>機種:</label> " + modelSopRemark.modelName + "</p>");
+                            memo.append("<p><label>站別:</label> " + d[0].station + "</p>");
+                            memo.append("<p><label>備註1:</label> " + modelSopRemark.remark + "</p>");
+                            memo.append("<p><label>備註2:</label> " + d[0].remark + "</p>");
                             for (var i = 0, j = d.length; i < j; i++) {
                                 var s = d[i];
-                                memo.append("<p><label>Sop" + (i + 1) + "資訊: </label>" + s.sopName + " ( " + s.sopPage + " )</p>");
+                                memo.append("<p><label>Sop" + (i + 1) + "資訊:</label><br />" + s.sopName + " ( " + s.sopPage + " )</p>");
                             }
                         } else {
                             memo.append("<p>無資訊</p>");
@@ -1029,6 +1030,13 @@
                         做完時請記得做save。(Please "save" when you finished.)
                         <span class="glyphicon glyphicon-alert"></span>
                     </div>
+                    
+<!--                    <div class="row">
+                        <div class="col col-xs-12">
+                            <label for="open-barcode-input">刷入序號</label>
+                            <input type="button" id="open-barcode-input" class="btn btn-info" value="Open barcode input">
+                        </div>
+                    </div>-->
                 </div>
                 <div class="wigetInfo">
                     <h3>步驟2:</h3>

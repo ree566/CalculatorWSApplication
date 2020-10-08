@@ -126,6 +126,8 @@
             var beginTimeObj, endTimeObj;
 
             var countermeasureType = "Bab_Abnormal_LineBalance";
+            
+            $("#sitefloor").hide();
 
             function initSelectOption() {
                 initOptions($("#lineType, #lineType2"));
@@ -153,10 +155,10 @@
                         "data": data
                     },
                     "columns": [
-                        {data: "bab.id", visible: false},
-                        {data: "groupid"},
-                        {data: "balance"},
-                        {data: "pass"}
+                        {data: "bab.id", title: "bab_id", visible: false},
+                        {data: "groupid", title: "組別"},
+                        {data: "balance", title: "平衡率"},
+                        {data: "pass", title: "是否合格"}
                     ],
                     "oLanguage": {
                         "sLengthMenu": "顯示 _MENU_ 筆記錄",
@@ -365,17 +367,17 @@
                         }
                     },
                     "columns": [
-                        {data: "id"},
-                        {data: "po"},
-                        {data: "modelName"},
-                        {data: "line_name"},
-                        {data: "floor_name"},
-                        {data: "people"},
-                        {data: "isused"},
-                        {data: "failPercent", "sType": "numeric-comma"},
-                        {data: "btime"},
-                        {data: "replyFlag"},
-                        {data: "replyFlag"}
+                        {data: "id", title: "id"},
+                        {data: "po", title: "工單"},
+                        {data: "modelName", title: "機種"},
+                        {data: "line_name", title: "線別"},
+                        {data: "floor_name", title: "樓層", visible: false},
+                        {data: "people", title: "人數"},
+                        {data: "isused", title: "紀錄flag"},
+                        {data: "failPercent", title: "亮燈頻率(%)", "sType": "numeric-comma"},
+                        {data: "btime", title: "投入時間"},
+                        {data: "replyFlag", title: "異常回覆"},
+                        {data: "replyFlag", title: "站別詳細"}
                     ],
                     "columnDefs": [
                         {
@@ -445,7 +447,7 @@
                     },
                     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
                     destroy: true,
-                    stateSave: true,
+                    stateSave: false,
                     "order": [[8, "desc"]],
                     "drawCallback": function (settings) {
                         $.unblockUI();
@@ -527,21 +529,21 @@
                 $("#lineBalnHistory").DataTable({
                     "ajax": postObj,
                     "columns": [
-                        {data: "modelName", width: "150px"},
+                        {data: "modelName", title: "機種", width: "150px"},
 //                          已完結工單資訊(對照組)  
-                        {data: "ctrl_id", visible: false},
-                        {data: "ctrl_PO", width: "140px"},
-                        {data: "ctrl_lineName", width: "140px"},
-                        {data: "ctrl_alarmPercent", width: "140px"},
-                        {data: "ctrl_btime", width: "100px"},
+                        {data: "ctrl_id", title: "上次生產Id", visible: false},
+                        {data: "ctrl_PO", title: "上次生產<br/>工單", width: "140px"},
+                        {data: "ctrl_lineName", title: "上次生產<br/>線別", width: "140px"},
+                        {data: "ctrl_alarmPercent", title: "上次生產<br/>亮燈頻率", width: "140px"},
+                        {data: "ctrl_btime", title: "投入時間", width: "100px"},
 //                          最後一筆生產紀錄(實驗組)  
-                        {data: "exp_id", visible: false},
-                        {data: "exp_PO", width: "140px"},
-                        {data: "exp_lineName", width: "140px"},
-                        {data: "exp_alarmPercent", width: "140px"},
-                        {data: "exp_btime", width: "100px"},
+                        {data: "exp_id", title: "本次生產Id", visible: false},
+                        {data: "exp_PO", title: "本次生產<br/>工單", width: "140px"},
+                        {data: "exp_lineName", title: "本次生產<br/>線別", width: "140px"},
+                        {data: "exp_alarmPercent", title: "本次生產<br/>亮燈頻率", width: "140px"},
+                        {data: "exp_btime", title: "投入時間", width: "100px"},
 //                          狀態  
-                        {data: 1, width: "40px"}
+                        {data: 1, title: "狀態", width: "40px"}
                     ],
                     "oLanguage": {
                         "sLengthMenu": "顯示 _MENU_ 筆記錄",
@@ -549,6 +551,8 @@
                         "sInfo": "目前記錄：_START_ 至 _END_, 總筆數：_TOTAL_"
                     },
                     "columnDefs": [
+                        {className: "ctrl", "targets": [1, 2, 3, 4, 5]},
+                        {className: "exp", "targets": [6, 7, 8, 9, 10]},
                         {
                             "type": "html",
                             "targets": 4,
@@ -1052,21 +1056,6 @@
                     <div style="width: 90%; background-color: #F5F5F5">
                         <div style="padding: 10px">
                             <table id="babHistory" class="display" cellspacing="0" width="100%" style="text-align: center">
-                                <thead>
-                                    <tr>
-                                        <th>id</th>
-                                        <th>工單</th>
-                                        <th>機種</th>
-                                        <th>線別</th>
-                                        <th>樓層</th>
-                                        <th>人數</th>
-                                        <th>紀錄flag</th>
-                                        <th>亮燈頻率(%)</th>
-                                        <th>投入時間</th>
-                                        <th>異常回覆</th>
-                                        <th>站別詳細</th>
-                                    </tr>
-                                </thead>
                             </table>
                         </div>
                     </div>
@@ -1090,22 +1079,6 @@
                 <div id="serverMsg"></div>
                 <div>
                     <table id="lineBalnHistory" class="table table-bordered" hidden>
-                        <thead>
-                            <tr>
-                                <th>機種</th>
-                                <th class="ctrl">上次生產Id</th>
-                                <th class="ctrl">上次生產<br/>工單</th>
-                                <th class="ctrl">上次生產<br/>線別</th>
-                                <th class="ctrl">上次生產<br/>亮燈頻率</th>
-                                <th class="ctrl">投入時間</th>
-                                <th class="exp">本次生產Id</th>
-                                <th class="exp">本次生產<br/>工單</th>
-                                <th class="exp">本次生產<br/>線別</th>
-                                <th class="exp">本次生產<br/>亮燈頻率</th>
-                                <th class="">投入時間</th>
-                                <th>狀態</th>
-                            </tr>
-                        </thead>
                     </table>
                 </div>
             </div>
@@ -1118,14 +1091,6 @@
                         <h3>上次生產</h3>
                         <div class="detail">
                             <table id="ctrlDetail" class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>bab_id</th>
-                                        <th>組別</th>
-                                        <th>平衡率</th>
-                                        <th>是否合格</th>
-                                    </tr>
-                                </thead>
                                 <tfoot>
                                     <tr>
                                         <th colspan="3" style="text-align:right">Total:</th>
@@ -1144,14 +1109,6 @@
                         <h3>本次生產</h3>
                         <div class="detail">
                             <table id="expDetail" class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>bab_id</th>
-                                        <th>組別</th>
-                                        <th>平衡率</th>
-                                        <th>是否合格</th>
-                                    </tr>
-                                </thead>
                                 <tfoot>
                                     <tr>
                                         <th colspan="3" style="text-align:right">Total:</th>
