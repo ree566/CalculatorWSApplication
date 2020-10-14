@@ -82,6 +82,8 @@
                     $("#page-title").html("包裝最佳排站配置");
                 }
                 initSelectOption();
+                $("#floor").val(1);
+                $("#floor").parent().hide();
 
                 var momentFormatString = 'YYYY-MM-DD';
                 $(":text,input[type='number'],select").addClass("form-control");
@@ -169,7 +171,7 @@
                 console.log(lineTypeIds);
                 $.ajax({
                     type: "GET",
-                    url: "<c:url value="/BabLineController/findByUserAndLineType" />",
+                    url: "<c:url value="/BabLineController/findByLineType" />",
                     data: {
                         lineType_id: lineTypeIds
                     },

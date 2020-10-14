@@ -50,7 +50,7 @@
             for (var i = 0, j = sitefloors.length; i < j; i++) {
                 var sitefloor = sitefloors[i].floor;
                 navbar.find(".totalMapSelect").append("<li><a href='TotalMap?sitefloor=" + sitefloor + "'>狀態平面圖" + sitefloor + "F</a></li>");
-                navbar.find(".totalMapSelect").append("<li><a href='changeover.jsp?sitefloor=" + sitefloor + "'>換線" + sitefloor + "F</a></li>");
+//                navbar.find(".totalMapSelect").append("<li><a href='changeover.jsp?sitefloor=" + sitefloor + "'>換線" + sitefloor + "F</a></li>");
                 navbar.find(".sensorAdjustSelect").append("<li><a href='" + (mode == "auto" ? "Sensor" : "Barcode") +
                         "Adjust?sitefloor=" + sitefloor + "'>" + sitefloor + "樓感應器狀態(校正用)</a></li>");
             }
@@ -90,7 +90,9 @@
                             <li><a href="TestTotalDetail">測試線別狀態</a></li>
                             </c:if>
                         <li><a href="TestTotal">測試線別紀錄</a></li>
-                        <li><a href="testPassStationProductivity.jsp">MES測試過站查詢</a></li>
+                            <c:if test="${isIeOper || isBackDoor4876 || isAdmin}">
+                            <li><a href="testPassStationProductivity.jsp">MES測試過站查詢</a></li>
+                            </c:if>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -121,7 +123,9 @@
                         <li><a href="lineUserReference.jsp?lineType=ASSY">組裝當日線別人員維護</a></li>
                         <li><a href="prepareSchedule.jsp?lineType=ASSY">組裝當日自動排站</a></li>
                         <li class="divider"></li>
-                        <li><a href="prepareSchedule_percentage.jsp">工單完成度列表</a></li>
+                            <c:if test="${isIeOper || isBackDoor4876 || isAdmin || isMfgLineOwner || isMfgOper}">
+                            <li><a href="prepareSchedule_percentage.jsp">工單完成度列表</a></li>
+                            </c:if>
                     </ul>
                 </li>
                 <li class="dropdown">

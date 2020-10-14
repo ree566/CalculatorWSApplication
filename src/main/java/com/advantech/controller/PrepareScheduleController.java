@@ -70,8 +70,10 @@ public class PrepareScheduleController {
     @PostConstruct
     protected void init() {
         stationMap = ImmutableMap.<List<Integer>, List<Station>>builder()
-                .put(newArrayList(1, 2), newArrayList(Station.ASSY, Station.T1, Station.BI))
-                .put(newArrayList(4), newArrayList(Station.T2, Station.T3))
+                .put(newArrayList(2), newArrayList(Station.PACKAGE))
+                .put(newArrayList(1), newArrayList(Station.ASSY))
+                .put(newArrayList(7), newArrayList(Station.T1, Station.BI))
+                .put(newArrayList(8), newArrayList(Station.T2, Station.T3, Station.T4))
                 .put(newArrayList(3), newArrayList(Station.PACKAGE))
                 .build();
     }
@@ -79,22 +81,12 @@ public class PrepareScheduleController {
     @RequestMapping(value = "/findPrepareSchedule", method = {RequestMethod.GET})
     @ResponseBody
     protected DataTableResponse findPrepareSchedule(
-            @RequestParam(required = false) Integer floorId,
+            @RequestParam Integer floorId,
             @RequestParam("lineType_id[]") Integer[] lineType_id,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime d,
             HttpServletRequest request
     ) {
-
-        Floor f;
-
-        if (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_OPER_IE") && floorId != null) {
-            f = floorService.findByPrimaryKey(floorId);
-        } else {
-            User user = SecurityPropertiesUtils.retrieveAndCheckUserInSession();
-            f = user.getFloor();
-        }
-
-//        List l = aps1.findPrepareSchedule(f, d);
+        Floor f = floorService.findByPrimaryKey(floorId);
         List l = aps1.findPrepareSchedule(f, lineType_id, d);
         return new DataTableResponse(l);
     }
@@ -146,12 +138,12 @@ public class PrepareScheduleController {
         List<PrepareSchedule> schedules = psService.findByLineTypeAndDate(lineTypes, startDate);
         Map<String, List<RptStationQty>> dataMap = new HashMap<>();
         List<Station> stations = stationMap.get(Arrays.asList(lineType_id));
-        
-        for (Station station : stations) {
-            List<RptStationQty> mesQty = rv.getRptStationQtys(startDate.minusDays(14), startDate.plusDays(7), station.token(), Factory.DEFAULT);
+
+        stations.forEach((station) -> {
+            List<RptStationQty> mesQty = rv.getRptStationQtys(startDate, startDate.plusDays(1), station.token(), Factory.DEFAULT);
             dataMap.put(station.name(), mesQty);
-        }
-        
+        });
+
         schedules.stream().forEach(p -> {
             Map<Object, Object> otherInfo = new HashMap<>();
             dataMap.forEach((k, v) -> {
@@ -165,7 +157,7 @@ public class PrepareScheduleController {
     }
 
     private enum Station implements Encodeable {
-        ASSY(2), T1(3), BI(4), T2(11), T3(30), PACKAGE(28);
+        PREASSY(162), ASSY(2), T1(3), BI(4), T2(11), T3(30), T4(151), PACKAGE(28);
 
         private final Integer value;
 

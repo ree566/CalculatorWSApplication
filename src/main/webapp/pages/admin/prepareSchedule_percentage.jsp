@@ -177,38 +177,39 @@
                         {data: "id", title: "id", visible: false},
                         {data: "po", title: "工單"},
                         {data: "modelName", title: "機種"},
-                        {data: "totalQty", title: "總工單數"},
+                        {data: "totalQty", title: "總工單數", visible: false},
                         {data: "scheduleQty", title: "當日排程數"},
+                        {data: "otherInfo.passCntQry_PREASSY", title: "MES總筆數(Pre-Assy)", visible: false},
                         {data: "otherInfo.passCntQry_ASSY", title: "MES總筆數(Assy)"},
-                        {data: "otherInfo.passCntQry_ASSY", title: "總完成度(Assy)", "sType": "numeric-comma"},
                         {data: "otherInfo.passCntQry_T1", title: "MES總筆數(T1)"},
-                        {data: "otherInfo.passCntQry_T1", title: "總完成度(T1)", "sType": "numeric-comma"},
                         {data: "otherInfo.passCntQry_BI", title: "MES總筆數(BI)"},
-                        {data: "otherInfo.passCntQry_BI", title: "總完成度(BI)", "sType": "numeric-comma"},
                         {data: "otherInfo.passCntQry_T2", title: "MES總筆數(T2)"},
-                        {data: "otherInfo.passCntQry_T2", title: "總完成度(T2)", "sType": "numeric-comma"},
                         {data: "otherInfo.passCntQry_T3", title: "MES總筆數(T3)"},
-                        {data: "otherInfo.passCntQry_T3", title: "總完成度(T3)", "sType": "numeric-comma"},
-                        {data: "otherInfo.passCntQry_PACKAGE", title: "MES總筆數(PACKAGE)"},
-                        {data: "otherInfo.passCntQry_PACKAGE", title: "總完成度(PACKAGE)", "sType": "numeric-comma"}
+                        {data: "otherInfo.passCntQry_T4", title: "MES總筆數(T4)"},
+                        {data: "otherInfo.passCntQry_PACKAGE", title: "MES總筆數(PACKAGE)"}
+//                        {data: "otherInfo.passCntQry_PACKAGE", title: "總完成度(PACKAGE)", "sType": "numeric-comma"}
 //                        {data: "floor.id", title: "樓層", visible: false},
 //                        {data: "line.id", title: "線別", visible: false}
                     ],
                     "columnDefs": [
                         {
                             "type": "html",
-                            "targets": [5, 7, 9, 11, 13, 15],
+                            "targets": [5, 6, 7, 8, 9, 10, 11, 12],
                             'render': function (data, type, full, meta) {
-                                return isNull(data, '---');
-                            }
-                        },
-                        {
-                            "type": "html",
-                            "targets": [6, 8, 10, 12, 14, 16],
-                            'render': function (data, type, full, meta) {
-                                return data == null ? '---' : getPercent((data / full["totalQty"]));
+                                if (data == null) {
+                                    return '---';
+                                } else {
+                                    return '(' + data + '/' + full["scheduleQty"] + ')';
+                                }
                             }
                         }
+//                        {
+//                            "type": "html",
+//                            "targets": [6, 8, 10, 12, 14, 16],
+//                            'render': function (data, type, full, meta) {
+//                                return data == null ? '---' : getPercent((data / full["totalQty"]));
+//                            }
+//                        }
                     ],
                     "order": [],
                     "oLanguage": {
@@ -268,8 +269,10 @@
                 <div class="col form-group">
                     <label for="lineType">製程: </label>
                     <select id="lineType">
-                        <option value="1,2">組裝</option>
-                        <option value="4">測試</option>
+                        <option value="2">前置</option>
+                        <option value="1">組裝</option>
+                        <option value="7">T1</option>
+                        <option value="8">T2</option>
                         <option value="3">包裝</option>
                     </select>
                 </div>
