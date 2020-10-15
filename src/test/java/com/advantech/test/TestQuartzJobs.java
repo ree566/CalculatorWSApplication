@@ -22,6 +22,7 @@ import com.advantech.quartzJob.ArrangePrepareScheduleImpl_2;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Packing;
 import com.advantech.quartzJob.SyncPrepareScheduleForPacking;
 import com.advantech.quartzJob.SyncWorktimeFromRemote;
+import static com.google.common.collect.Lists.newArrayList;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -106,15 +107,15 @@ public class TestQuartzJobs {
     @Autowired
     private ArrangePrepareScheduleImpl_2 aps;
 
-//    @Test
+    @Test
     public void testSyncPrepareSchedule1() throws Exception {
         //先設定好當日出勤名單, 才會給予字動排站
         //This is assy schedule
 
-        DateTime d = new DateTime("2020-07-20");
+        DateTime d = new DateTime("2020-10-13");
 
 //        sps.execute(d);
-        aps.execute();
+        aps.execute(newArrayList(d));
     }
 
     @Autowired
@@ -130,7 +131,7 @@ public class TestQuartzJobs {
     @Autowired
     private SyncUserFromRemote suf;
 
-    @Test
+//    @Test
     public void testSyncUserFromRemote() throws Exception {
 
         suf.execute();

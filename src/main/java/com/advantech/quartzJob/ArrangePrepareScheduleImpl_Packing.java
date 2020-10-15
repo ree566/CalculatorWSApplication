@@ -13,6 +13,7 @@ import com.advantech.service.db1.FloorService;
 import com.advantech.service.db1.LineService;
 import com.advantech.service.db1.LineTypeService;
 import com.advantech.service.db1.PrepareScheduleService;
+import static com.google.common.base.Preconditions.checkState;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
 import org.joda.time.DateTime;
@@ -71,8 +72,11 @@ public class ArrangePrepareScheduleImpl_Packing extends PrepareScheduleJob {
         List<Line> lines = lineService.findBySitefloorAndLineType(f.getName(), lt);
         List<PrepareSchedule> schedules = psService.findByFloorAndLineTypeAndDate(f, lt, d);
 
+        Line line = lines.stream().filter(l -> l.getLock() == 0).findFirst().orElse(null);
+
+        checkState(line != null, "Can't find any unlock line in setting");
+        
         schedules.forEach(s -> {
-            Line line = lines.get(0);
             s.setLine(line);
         });
 

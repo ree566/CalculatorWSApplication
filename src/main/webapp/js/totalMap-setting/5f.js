@@ -16,11 +16,11 @@ var titleGroup = [
 //    {lineName: "LD", x: 730, y: 160},
 //    {lineName: "LE", x: 735, y: 80},
 //    //pkg
-//    {lineName: "LF", x: 300, y: 40},
-//    {lineName: "LG", x: 210, y: 40},
-//    {lineName: "LH", x: 125, y: 40},
-//    {lineName: "5F_CELL", x: 1060, y: 275}
-//    {lineName: "FQC", x: 210, y: 240}
+    {lineName: "L2", x: 755, y: 305},
+    {lineName: "L3", x: 715, y: 95},
+    {lineName: "L4", x: 560, y: 305},
+    {lineName: "L5", x: 315, y: 195},
+    {lineName: "L6", x: 215, y: 195}
 ];
 
 var testGroup = [
@@ -37,11 +37,11 @@ var babGroup = [
 //    {people: 3, x: 1000, y: 345, lineName: "LC-1"},
 //    {people: 3, x: 1000, y: 410, lineName: "LC-2"},
 //    {people: 3, x: 795, y: 170, lineName: "LD"},
-//    {people: 3, x: 795, y: 55, lineName: "LE"},
-//    {people: 3, x: 320, y: 100, lineName: "LF", straight: true, reverse: true},
-//    {people: 3, x: 230, y: 100, lineName: "LG", straight: true, reverse: true},
-//    {people: 3, x: 160, y: 100, lineName: "LH", straight: true, reverse: true},
-//    {people: 6, x: 850, y: 290, lineName: "5F_CELL"}
+    {people: 3, x: 755, y: 210, lineName: "PKG_L2", straight: true},
+    {people: 3, x: 660, y: 170, lineName: "PKG_L3"},
+    {people: 3, x: 595, y: 210, lineName: "PKG_L4", straight: true},
+    {people: 3, x: 325, y: 95, lineName: "PKG_L5", straight: true, reverse: true},
+    {people: 3, x: 230, y: 95, lineName: "PKG_L6", straight: true, reverse: true}
 ];
 
 var fqcGroup = [

@@ -78,11 +78,13 @@
                 if (urlLineType == "ASSY") {
                     $("#worktimeSumArea").hide();
                     $("#page-title").html("組裝最佳排站配置");
+                    $("#floor").val(2);
                 } else if (urlLineType == "Packing") {
                     $("#page-title").html("包裝最佳排站配置");
+                    $("#floor").val(1);
                 }
                 initSelectOption();
-                $("#floor").val(1);
+                
                 $("#floor").parent().hide();
 
                 var momentFormatString = 'YYYY-MM-DD';
@@ -242,7 +244,8 @@
                         {data: "users", title: "站3", width: "7%"},
                         {data: "users", title: "站4", width: "7%"},
                         {data: "undoneQty", title: "未完成", width: "5%", visible: false},
-                        {data: "memo", title: "備註", width: "5%"}
+                        {data: "memo", title: "備註", width: "5%"},
+                        {data: "hrcMemo", title: "人機協作", width: "5%"}
                     ],
                     "columnDefs": [
                         {
@@ -327,6 +330,13 @@
                             'render': function (data, type, full, meta) {
                                 var disabled = full.line == null;
                                 return "<input type='text' class='form-control memo' value='" + (data == null ? '' : data) + "' " + (disabled ? "disabled" : "") + ">";
+                            }
+                        },
+                        {
+                            "type": "html",
+                            "targets": [18],
+                            'render': function (data, type, full, meta) {
+                                return (data == null ? '' : data);
                             }
                         }
                     ],

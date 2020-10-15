@@ -52,6 +52,7 @@ public class PrepareSchedule implements Serializable {
     private Floor floor;
     private int priority = 0;
     private Date createDate;
+    private String hrcMemo;
 
     private Map otherInfo;
 
@@ -234,7 +235,16 @@ public class PrepareSchedule implements Serializable {
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
-    
+
+    @Column(name = "hrc_memo", length = 150)
+    public String getHrcMemo() {
+        return hrcMemo;
+    }
+
+    public void setHrcMemo(String hrcMemo) {
+        this.hrcMemo = hrcMemo;
+    }
+
     @Transient
     public Map getOtherInfo() {
         return otherInfo;

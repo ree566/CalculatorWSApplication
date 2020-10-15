@@ -27,6 +27,12 @@ public class FloorDAO extends AbstractDao<Integer, Floor> implements BasicDAO_1<
     public Floor findByPrimaryKey(Object obj_id) {
         return super.getByKey((int) obj_id);
     }
+    
+    public List<Floor> findByPrimaryKeys(Integer... obj_ids){
+        Criteria c = super.createEntityCriteria();
+        c.add(Restrictions.in("id", obj_ids));
+        return c.list();
+    }
 
     public Floor findByName(String floorName) {
         Criteria c = super.createEntityCriteria();

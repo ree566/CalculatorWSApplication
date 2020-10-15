@@ -13,6 +13,7 @@ import com.advantech.model.db1.User;
 import com.advantech.service.db1.LineService;
 import com.advantech.service.db1.LineTypeService;
 import java.util.List;
+import static java.util.stream.Collectors.toList;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -68,7 +69,9 @@ public class BabLineController {
     @ResponseBody
     protected List<Line> findByLineType(@RequestParam("lineType_id[]") Integer[] lineType_id, HttpServletRequest request) {
         List<LineType> lt = lineTypeService.findByPrimaryKeys(lineType_id);
-        return lineService.findByLineType(lt);
+        List<Line> l = lineService.findByLineType(lt);
+        l = l.stream().filter(ll -> ll.getLock() == 0).collect(toList());
+        return l;
     }
 
     @RequestMapping(value = "/findByUserAndLineType", method = {RequestMethod.GET})

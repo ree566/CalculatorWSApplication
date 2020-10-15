@@ -30,11 +30,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import javax.annotation.PostConstruct;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Minutes;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,15 +74,24 @@ public class ArrangePrepareScheduleImpl_2 extends PrepareScheduleJob {
 
     Line emptyLine;
 
+    List<LineType> lt;
+
+    List<Floor> floors;
+
+    @PostConstruct
+    public void init() {
+        emptyLine = lineService.findByPrimaryKey(7);
+        lt = lineTypeService.findByPrimaryKeys(1, 2);
+        floors = floorService.findByPrimaryKeys(1, 2);
+    }
+
     @Override
     public void execute(List<DateTime> dts) throws Exception {
+
+        updateScheduleToSpecFloor(dts);
+
         dts.forEach(d -> {
             d = d.withTime(0, 0, 0, 0);
-
-            List<Floor> floors = floorService.findAll();
-            floors = floors.stream()
-                    .filter(f -> f.getId() == 1 || f.getId() == 2)
-                    .collect(toList());
 
             for (Floor f : floors) {
                 List<PrepareSchedule> ps = this.findPrepareSchedule(f, d);
@@ -93,6 +101,21 @@ public class ArrangePrepareScheduleImpl_2 extends PrepareScheduleJob {
             }
         });
         logger.info("Update prepareSchedule finish");
+    }
+
+    //Assy schedule is focus on floor 6 
+    private void updateScheduleToSpecFloor(List<DateTime> dts) {
+        Floor floorFive = floors.stream().filter(f -> f.getId() == 1).findFirst().get();
+        Floor floorSix = floors.stream().filter(f -> f.getId() == 2).findFirst().get();
+
+        for (DateTime d : dts) {
+            List<PrepareSchedule> l = psService.findByFloorAndLineTypeAndDate(floorFive, lt, d);
+            for (PrepareSchedule p : l) {
+                p.setFloor(floorSix);
+                psService.update(p);
+            }
+        }
+
     }
 
     public List<PrepareSchedule> findPrepareSchedule(Floor f, DateTime d) {
@@ -111,16 +134,16 @@ public class ArrangePrepareScheduleImpl_2 extends PrepareScheduleJob {
 
         updateDateParamater(d);
 
-        emptyLine = lineService.findByPrimaryKey(7);
+        List<PrepareSchedule> l = psService.findByFloorAndLineTypeAndDate(f, lt, d);
 
-        List<LineType> lt = lineTypeService.findByPrimaryKeys(1, 2);
+        if (l.isEmpty()) {
+            return l;
+        }
 
         List<Line> totalLine = lineService.findBySitefloorAndLineType(f.getName(), lt);
 
-        List<Line> lines = totalLine.stream().filter(l -> l.getLineType().getId() == 1).collect(toList());
-        List<Line> cellLines = totalLine.stream().filter(l -> l.getLineType().getId() == 2).collect(toList());
-
-        List<PrepareSchedule> l = psService.findByFloorAndLineTypeAndDate(f, lt, d);
+        List<Line> lines = totalLine.stream().filter(ll -> ll.getLineType().getId() == 1).collect(toList());
+        List<Line> cellLines = totalLine.stream().filter(ll -> ll.getLineType().getId() == 2).collect(toList());
 
         //Check is prepareSchedule has been scheduled or not
         PrepareSchedule ps = l.stream().filter(p -> p.getLine() != null).findFirst().orElse(null);

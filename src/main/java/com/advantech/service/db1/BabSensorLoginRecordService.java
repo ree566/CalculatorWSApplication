@@ -8,7 +8,9 @@ package com.advantech.service.db1;
 import com.advantech.dao.db1.BabSensorLoginRecordDAO;
 import com.advantech.model.db1.BabSensorLoginRecord;
 import com.advantech.model.db1.BabSettingHistory;
+import com.advantech.model.db1.Line;
 import com.advantech.model.db1.SensorTransform;
+import com.advantech.model.db1.TagNameComparison;
 import static com.google.common.base.Preconditions.checkArgument;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class BabSensorLoginRecordService {
     
     @Autowired
     private SensorTransformService sensorTransformService;
+    
+    @Autowired
+    private TagNameComparisonService tagService;
 
     public List<BabSensorLoginRecord> findAll() {
         return babSensorLoginRecordDAO.findAll();
@@ -49,6 +54,9 @@ public class BabSensorLoginRecordService {
     }
 
     public int insert(String tagName, String jobnumber) {
+        TagNameComparison tag = tagService.findByLampSysTagName(tagName);
+        Line l = tag.getLine();
+        checkArgument(l.getLock() == 0, "This line status is locked, please try another tagName.");
         BabSensorLoginRecord recCheck1 = this.findBySensor(tagName);
         checkArgument(recCheck1 == null, "This sensor is already logged in by other user");
         checkJobnumberIsExist(jobnumber);

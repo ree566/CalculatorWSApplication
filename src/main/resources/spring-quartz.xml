@@ -324,7 +324,7 @@
                 <ref bean="HandleUncloseFqc-Trig"/>
                 <ref bean="FqcInit-Trig"/>-->
 
-<!--                <ref bean="BabGenerateData-Trig"/>
+                <ref bean="BabGenerateData-Trig"/>
                 <ref bean="TestGenerateData-Trig"/>
                 <ref bean="DataBaseInit-Trig"/>
                 <ref bean="HandleUncloseBab-Trig"/>
@@ -336,7 +336,7 @@
                 <ref bean="SyncPrepareScheduleForPacking-Trig"/>
                 <ref bean="SyncLineUserReference-Trig"/>
                 <ref bean="SyncUserFromRemote-Trig"/>
-                <ref bean="SyncWorktimeFromRemote-Trig"/>
+                <ref bean="SyncWorktimeFromRemote-Trig"/><!--
                 -->
                 <!--<ref bean="SaveMesCountRecord-Trig"/>-->
                 <!--<ref bean="CountermeasureAlarm-Trig"/>-->                
