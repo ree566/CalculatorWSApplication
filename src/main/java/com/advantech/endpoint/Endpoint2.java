@@ -43,12 +43,15 @@ public class Endpoint2 extends BasicHandler implements WebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession wss) throws Exception {
+
         //Push the current status on client first connect
-//        try {
-        wss.sendMessage(new TextMessage(pollingJob.getData()));
-//        } catch (Exception ex) {
-//            log.error(ex.getMessage(), ex);
-//        }
+        try {
+            wss.sendMessage(new TextMessage(pollingJob.getData()));
+        } catch (Exception e) {
+            //Remove session because reconnectedWebSocket.js not trigger ws.close when reconnected
+            sessions.remove(wss);
+            log.error("Remove empty session " + wss.getId());
+        }
 
         //        HandshakeRequest req = (HandshakeRequest) conf.getUserProperties().get("handshakereq");
 //        Map<String,List<String>> headers = req.getHeaders();

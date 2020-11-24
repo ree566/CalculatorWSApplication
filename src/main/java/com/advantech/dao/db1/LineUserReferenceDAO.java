@@ -7,7 +7,9 @@ package com.advantech.dao.db1;
 
 import com.advantech.model.db1.Line;
 import com.advantech.model.db1.LineUserReference;
+import java.util.Date;
 import java.util.List;
+import static java.util.stream.Collectors.toList;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
@@ -59,16 +61,30 @@ public class LineUserReferenceDAO extends AbstractDao<Integer, LineUserReference
                 .addOrder(Order.asc("station"))
                 .list();
     }
-    
+
     public List<LineUserReference> findByDate(DateTime d) {
         return super.createEntityCriteria()
                 .add(Restrictions.eq("onboardDate", d.toDate()))
                 .list();
     }
 
+    public List<LineUserReference> findByDate(List<DateTime> d) {
+        List<Date> td = d.stream().map(dt -> dt.toDate()).collect(toList());
+        return super.createEntityCriteria()
+                .add(Restrictions.in("onboardDate", td))
+                .list();
+    }
+
     @Override
     public int insert(LineUserReference pojo) {
         super.getSession().save(pojo);
+        return 1;
+    }
+
+    public int insert(List<LineUserReference> l) {
+        for (LineUserReference lf : l) {
+            this.insert(lf);
+        }
         return 1;
     }
 
@@ -81,6 +97,13 @@ public class LineUserReferenceDAO extends AbstractDao<Integer, LineUserReference
     @Override
     public int delete(LineUserReference pojo) {
         super.getSession().delete(pojo);
+        return 1;
+    }
+
+    public int delete(List<LineUserReference> l) {
+        for (LineUserReference lf : l) {
+            this.delete(lf);
+        }
         return 1;
     }
 

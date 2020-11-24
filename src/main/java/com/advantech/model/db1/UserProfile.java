@@ -6,8 +6,6 @@
 package com.advantech.model.db1;
 
 import com.advantech.security.UserProfileType;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;

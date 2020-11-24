@@ -76,7 +76,7 @@ public class ActionCodeResponsor implements java.io.Serializable {
         this.floor = floor;
     }
 
-    @Column(name = "user_name", length = 20)
+    @Column(name = "[user_name]", length = 20)
     public String getUserName() {
         return this.userName;
     }

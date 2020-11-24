@@ -45,7 +45,7 @@ public class TestFacade {
         bF.initAlarmSign();
     }
 
-//    @Test
+    @Test
     @Transactional
     @Rollback(false)
     public void testTestLineTypeFacade() {

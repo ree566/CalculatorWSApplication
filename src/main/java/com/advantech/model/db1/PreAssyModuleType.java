@@ -51,7 +51,7 @@ public class PreAssyModuleType implements java.io.Serializable {
         this.id = id;
     }
 
-    @Column(name = "name", nullable = false, length = 50, unique = true)
+    @Column(name = "[name]", nullable = false, length = 50, unique = true)
     public String getName() {
         return this.name;
     }

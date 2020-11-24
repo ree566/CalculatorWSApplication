@@ -66,7 +66,7 @@ public class ModelSopRemarkEvent implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "[user_id]")
     public User getUser() {
         return user;
     }

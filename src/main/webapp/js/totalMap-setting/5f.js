@@ -38,7 +38,7 @@ var babGroup = [
 //    {people: 3, x: 1000, y: 410, lineName: "LC-2"},
 //    {people: 3, x: 795, y: 170, lineName: "LD"},
     {people: 3, x: 755, y: 210, lineName: "PKG_L2", straight: true},
-    {people: 3, x: 660, y: 170, lineName: "PKG_L3"},
+    {people: 4, x: 660, y: 170, lineName: "PKG_L3"},
     {people: 3, x: 595, y: 210, lineName: "PKG_L4", straight: true},
     {people: 3, x: 325, y: 95, lineName: "PKG_L5", straight: true, reverse: true},
     {people: 3, x: 230, y: 95, lineName: "PKG_L6", straight: true, reverse: true}

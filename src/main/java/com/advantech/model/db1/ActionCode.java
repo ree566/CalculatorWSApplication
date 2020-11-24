@@ -92,7 +92,7 @@ public class ActionCode implements java.io.Serializable {
         this.errorCode = errorCode;
     }
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "[name]", nullable = false)
     public String getName() {
         return this.name;
     }

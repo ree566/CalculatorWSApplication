@@ -51,7 +51,7 @@ public class TestTable implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "[name]", nullable = false)
     public String getName() {
         return name;
     }

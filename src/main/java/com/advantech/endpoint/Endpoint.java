@@ -11,6 +11,7 @@
 package com.advantech.endpoint;
 
 import com.advantech.quartzJob.PollingDataCollectStatus;
+import java.io.IOException;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +31,10 @@ public class Endpoint extends BasicHandler implements WebSocketHandler {
     private static final Logger log = LoggerFactory.getLogger(Endpoint.class);
 
     private static final String JOB_NAME = "PollingStatus";
-    
+
     @Autowired
     private PollingDataCollectStatus pollingJob;
-    
+
     private static boolean isJobScheduled = false;
 
     @PostConstruct
@@ -48,7 +49,13 @@ public class Endpoint extends BasicHandler implements WebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession wss) throws Exception {
         //Push the current status on client first connect
-        wss.sendMessage(new TextMessage(pollingJob.getData()));
+
+        try {
+            wss.sendMessage(new TextMessage(pollingJob.getData()));
+        } catch (IOException e) {
+            sessions.remove(wss);
+            log.error("Remove empty session " + wss.getId());
+        }
 
 //        HandshakeRequest req = (HandshakeRequest) conf.getUserProperties().get("handshakereq");
 //        Map<String,List<String>> headers = req.getHeaders();

@@ -254,7 +254,7 @@
     
     <bean id="SyncPrepareScheduleForAssy-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="SyncPrepareScheduleForAssy-Job" />
-        <property name="cronExpression" value="0 45 17 ? * * *" />
+        <property name="cronExpression" value="0 45 8,17 ? * * *" />
     </bean>
     
     <!--
@@ -268,7 +268,7 @@
     
     <bean id="SyncPrepareScheduleForPacking-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="SyncPrepareScheduleForPacking-Job" />
-        <property name="cronExpression" value="0 45 17 ? * * *" />
+        <property name="cronExpression" value="0 45 8,17 ? * * *" />
     </bean>
     
     <!--
@@ -336,8 +336,8 @@
                 <ref bean="SyncPrepareScheduleForPacking-Trig"/>
                 <ref bean="SyncLineUserReference-Trig"/>
                 <ref bean="SyncUserFromRemote-Trig"/>
-                <ref bean="SyncWorktimeFromRemote-Trig"/><!--
-                -->
+                <ref bean="SyncWorktimeFromRemote-Trig"/>
+                
                 <!--<ref bean="SaveMesCountRecord-Trig"/>-->
                 <!--<ref bean="CountermeasureAlarm-Trig"/>-->                
                 

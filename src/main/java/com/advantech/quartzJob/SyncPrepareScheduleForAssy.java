@@ -45,7 +45,7 @@ public class SyncPrepareScheduleForAssy {
     private SessionFactory sessionFactory;
 
     @Autowired
-    private ArrangePrepareScheduleImpl_2 aps;
+    private ArrangePrepareScheduleImpl_Assy aps;
 
     @Autowired
     private PrepareScheduleService psService;
