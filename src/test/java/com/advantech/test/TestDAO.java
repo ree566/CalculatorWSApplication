@@ -46,6 +46,7 @@ import org.joda.time.Minutes;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import static org.junit.Assert.*;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -102,10 +103,10 @@ public class TestDAO {
     @Rollback(true)
     public void testBabDAO() throws JsonProcessingException {
 
-        for (int i = 1; i <= 4; i++) {
-            List l = babDAO.findUnReplyed(i);
-            assertTrue(l.isEmpty());
-        }
+//        for (int i = 1; i <= 4; i++) {
+//            List l = babDAO.findUnReplyed(i);
+//            assertTrue(l.isEmpty());
+//        }
 
     }
 
@@ -331,6 +332,14 @@ public class TestDAO {
 //            System.out.printf("Start: %s --- End: %s \r\n", fmt.print(i.getStart()), fmt.print(i.getEnd()));
 //        });
     }
-   
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testFindBabUnreply() {
+        List<Bab> l = this.babDAO.findUnReplyed(1, new DateTime().minusDays(1), new DateTime());
+        assertTrue(!l.isEmpty());
+        HibernateObjectPrinter.print(l);
+    }
 
 }

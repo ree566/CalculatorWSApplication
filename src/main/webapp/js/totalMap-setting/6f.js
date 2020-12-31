@@ -3,8 +3,8 @@ var pYa = 0;
 
 var mapInfo = {
     titleName: "東湖廠6樓",
-    x: 665,
-    y: 430
+    x: 725,
+    y: 420
 };
 
 var titleGroup = [
@@ -21,11 +21,13 @@ var titleGroup = [
 
 //, straight: true, reverse: true
 var testGroup = [
-    {people: 3, x: 560, y: 450, reverse: true}, // group 37-39
-    {people: 3, x: 560, y: 360, reverse: true}, // group 40-42
-    {people: 3, x: 400, y: 450, reverse: true}, // group 35
-    {people: 3, x: 400, y: 370, reverse: true}, // group 36
-    {people: 2, x: 685, y: 360, reverse: true} // group 43-47
+    {people: 3, x: 615, y: 435, reverse: true}, // group 37-39
+    {people: 5, x: 380, y: 435, reverse: true}, // group 40-42
+    {people: 5, x: 315, y: 80, straight: true}, // group 35
+    {people: 5, x: 220, y: 80, straight: true}, // group 36
+    {people: 2, x: 685, y: 350, reverse: true}, // group 43-47
+    {people: 2, x: 585, y: 350, reverse: true}, // group 43-47
+    {people: 2, x: 510, y: 350, reverse: true} // group 43-47
 ];
 
 var babGroup = [
@@ -45,7 +47,7 @@ var fqcGroup = [
 ];
 
 var minTestTableNo = 1;
-var maxTestTableNo = 14;
+var maxTestTableNo = 24;
 
 var sitefloor = 6;
 

@@ -131,13 +131,13 @@ public class BabDAO extends AbstractDao<Integer, Bab> implements BasicDAO_1<Bab>
         return c.list();
     }
 
-    public List<Bab> findUnReplyed(int floor_id) {
+    public List<Bab> findUnReplyed(int floor_id, DateTime sD, DateTime eD) {
         Criteria c = super.createEntityCriteria();
         c.createAlias("line", "l");
         c.createAlias("l.lineType", "lt");
         c.add(Restrictions.eq("replyStatus", ReplyStatus.UNREPLIED));
         c.add(Restrictions.eq("l.floor.id", floor_id));
-        c.add(Restrictions.lt("beginTime", new DateTime().withHourOfDay(0).toDate()));
+        c.add(Restrictions.between("beginTime", sD.toDate(), eD.toDate()));
         return c.list();
     }
 

@@ -221,17 +221,24 @@
                     "processing": true,
                     "initComplete": function (settings, json) {
                         $("#send").attr("disabled", false);
+
+                        $.fn.dataTable.ext.errMode = 'none';
+                        $('#tb1')
+                                .on('error.dt', function (e, settings, techNote, message) {
+                                    console.log('An error has been reported by DataTables: ', message);
+                                })
+                                .DataTable();
                     },
                     "fnDrawCallback": function () {
-//                        var api = this.api();
-//                        setTimeout(function () {
-//                            api.columns().flatten().each(function (colIdx) {
-//                                var columnData = api.columns(colIdx).data().join('');
-//                                if (columnData.length == (api.rows().count() - 1) && colIdx != 0) {
-//                                    api.column(colIdx).visible(false);
-//                                }
-//                            });
-//                        }, 0);
+                        var api = this.api();
+                        setTimeout(function () {
+                            api.columns().flatten().each(function (colIdx) {
+                                var columnData = api.columns(colIdx).data().join('');
+                                if (columnData.length == (api.rows().count() - 1) && colIdx != 0) {
+                                    api.column(colIdx).visible(false);
+                                }
+                            });
+                        }, 500);
                     },
                     filter: false,
                     destroy: true,

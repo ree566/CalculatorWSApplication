@@ -22,7 +22,6 @@ import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Assy;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Packing;
 import com.advantech.quartzJob.SyncPrepareScheduleForPacking;
 import com.advantech.quartzJob.SyncWorktimeFromRemote;
-import static com.google.common.collect.Lists.newArrayList;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,9 +73,9 @@ public class TestQuartzJobs {
     }
 
 //    @Test
-    public void testCountermeasureAlarm() throws JobExecutionException {
+    public void testCountermeasureAlarm() throws Exception {
         CountermeasureAlarm c = new CountermeasureAlarm();
-        c.executeInternal(null);
+        c.execute();
     }
 
 //    @Test

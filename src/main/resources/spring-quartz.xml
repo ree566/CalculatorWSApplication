@@ -122,13 +122,15 @@
         Job7 setting
         每日把未回覆異常原因的回覆給幹部
     -->    
-    <bean name="CountermeasureAlarm" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-        <property name="jobClass" value="com.advantech.quartzJob.CountermeasureAlarm" />
-        <property name="durability" value="true" />
+    <bean name="CountermeasureAlarm-Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="countermeasureAlarm" />
+        <property name="targetMethod" value="execute"/>  
+        <property name="concurrent" value="false"/>
     </bean>
     
     <bean id="CountermeasureAlarm-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="CountermeasureAlarm" />
+        <property name="jobDetail" ref="CountermeasureAlarm-Job" />
+        <!--<property name="cronExpression" value="0/40 * 8-20 ? * MON-SAT *" />-->
         <property name="cronExpression" value="0 0 11,16 ? * MON-FRI *" />
     </bean>
     
@@ -324,7 +326,7 @@
                 <ref bean="HandleUncloseFqc-Trig"/>
                 <ref bean="FqcInit-Trig"/>-->
 
-                <ref bean="BabGenerateData-Trig"/>
+<!--                <ref bean="BabGenerateData-Trig"/>
                 <ref bean="TestGenerateData-Trig"/>
                 <ref bean="DataBaseInit-Trig"/>
                 <ref bean="HandleUncloseBab-Trig"/>
@@ -336,10 +338,10 @@
                 <ref bean="SyncPrepareScheduleForPacking-Trig"/>
                 <ref bean="SyncLineUserReference-Trig"/>
                 <ref bean="SyncUserFromRemote-Trig"/>
-                <ref bean="SyncWorktimeFromRemote-Trig"/>
+                <ref bean="SyncWorktimeFromRemote-Trig"/>-->
                 
                 <!--<ref bean="SaveMesCountRecord-Trig"/>-->
-                <!--<ref bean="CountermeasureAlarm-Trig"/>-->                
+                <ref bean="CountermeasureAlarm-Trig"/>                
                 
                 <!--<ref bean="SensorDetect-Trig"/>-->
             </list>
