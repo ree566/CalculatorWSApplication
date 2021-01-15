@@ -19,16 +19,14 @@ var titleGroup = [
     {lineName: "L2", x: 755, y: 305},
     {lineName: "L3", x: 715, y: 95},
     {lineName: "L4", x: 560, y: 305},
-    {lineName: "L5", x: 315, y: 195},
-    {lineName: "L6", x: 215, y: 195}
+    {lineName: "L5", x: 500, y: 85},
+    {lineName: "L6", x: 500, y: 5}
 ];
 
 var testGroup = [
-    {people: 5, x: 1015, y: 205, straight: true, reverse: true}, // group 11-18
-    {people: 5, x: 1080, y: 205, straight: true, reverse: true}, // group 6-10
-    {people: 2, x: 1125, y: 275, straight: true}, // group 1-5
-    {people: 4, x: 1125, y: 340, straight: true}, // group 1-5
-    {people: 4, x: 1015, y: 40, straight: true, reverse: true} // group 1-5
+    {people: 3, x: 1120, y: 335, straight: true}, // group 11-18
+    {people: 3, x: 1015, y: 420, reverse: true} // group 6-10
+  
 ];
 
 var babGroup = [
@@ -38,10 +36,10 @@ var babGroup = [
 //    {people: 3, x: 1000, y: 410, lineName: "LC-2"},
 //    {people: 3, x: 795, y: 170, lineName: "LD"},
     {people: 3, x: 755, y: 210, lineName: "PKG_L2", straight: true},
-    {people: 3, x: 660, y: 170, lineName: "PKG_L3"},
+    {people: 4, x: 660, y: 170, lineName: "PKG_L3"},
     {people: 3, x: 595, y: 210, lineName: "PKG_L4", straight: true},
-    {people: 3, x: 325, y: 95, lineName: "PKG_L5", straight: true, reverse: true},
-    {people: 3, x: 230, y: 95, lineName: "PKG_L6", straight: true, reverse: true}
+    {people: 3, x: 565, y: 100, lineName: "PKG_L5", reverse: true},
+    {people: 3, x: 565, y: 20, lineName: "PKG_L6", reverse: true}
 ];
 
 var fqcGroup = [
@@ -50,7 +48,7 @@ var fqcGroup = [
 //    {people: 1, x: 300, y: 300, lineName: "FQC_5"}
 ];
 
-var minTestTableNo = 15;
-var maxTestTableNo = 34;
+var minTestTableNo = 25;
+var maxTestTableNo = 30;
 
 var sitefloor = 5;

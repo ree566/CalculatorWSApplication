@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -25,6 +26,7 @@ public class PreAssyModuleType implements java.io.Serializable {
 
     private int id;
     private String name;
+    private LineType lineType;
 
     @JsonIgnore
     private Set<PreAssyModuleStandardTime> preAssyModuleStandardTimes = new HashSet<>(0);
@@ -51,7 +53,7 @@ public class PreAssyModuleType implements java.io.Serializable {
         this.id = id;
     }
 
-    @Column(name = "name", nullable = false, length = 50, unique = true)
+    @Column(name = "[name]", nullable = false, length = 50, unique = true)
     public String getName() {
         return this.name;
     }
@@ -68,6 +70,18 @@ public class PreAssyModuleType implements java.io.Serializable {
     public void setPreAssyModuleStandardTimes(Set<PreAssyModuleStandardTime> preAssyModuleStandardTimes) {
         this.preAssyModuleStandardTimes = preAssyModuleStandardTimes;
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lineType_id", nullable = false)
+    public LineType getLineType() {
+        return lineType;
+    }
+
+    public void setLineType(LineType lineType) {
+        this.lineType = lineType;
+    }
+    
+    
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Bab_PreAssyModuleType_REF", joinColumns = {

@@ -76,6 +76,9 @@ public class PropertiesReader {
     private BigDecimal cellProductivityStandardMin = new BigDecimal(0.8);
     private BigDecimal cellProductivityStandardMax = new BigDecimal(1.2);
 
+    @Value("${bab.countermeasure.alert.day: 1}")
+    private int babCountermeasureAlertDay;
+
     @Autowired
     private LineTypeConfigService lineTypeConfigService;
 
@@ -240,6 +243,10 @@ public class PropertiesReader {
 
     public BabDataCollectMode getBabDataCollectMode() {
         return babDataCollectMode;
+    }
+
+    public int getBabCountermeasureAlertDay() {
+        return babCountermeasureAlertDay;
     }
 
 }

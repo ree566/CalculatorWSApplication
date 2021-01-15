@@ -7,13 +7,11 @@ package com.advantech.controller;
 
 import com.advantech.converter.Encodeable;
 import com.advantech.datatable.DataTableResponse;
-import com.advantech.helper.SecurityPropertiesUtils;
 import com.advantech.model.db1.Floor;
 import com.advantech.model.db1.LineType;
 import com.advantech.model.db1.PrepareSchedule;
 import com.advantech.model.db1.RptStationQty;
-import com.advantech.model.db1.User;
-import com.advantech.quartzJob.ArrangePrepareScheduleImpl_1;
+import com.advantech.quartzJob.ArrangePrepareScheduleImpl;
 import com.advantech.service.db1.FloorService;
 import com.advantech.service.db1.LineTypeService;
 import com.advantech.service.db1.PrepareScheduleService;
@@ -54,7 +52,7 @@ public class PrepareScheduleController {
     private FloorService floorService;
 
     @Autowired
-    private ArrangePrepareScheduleImpl_1 aps1;
+    private ArrangePrepareScheduleImpl aps1;
 
     @Autowired
     private PrepareScheduleService psService;
@@ -70,12 +68,12 @@ public class PrepareScheduleController {
     @PostConstruct
     protected void init() {
         stationMap = ImmutableMap.<List<Integer>, List<Station>>builder()
-                .put(newArrayList(2), newArrayList(Station.PACKAGE))
+                .put(newArrayList(9), newArrayList(Station.PREASSY))
                 .put(newArrayList(1), newArrayList(Station.ASSY))
                 .put(newArrayList(7), newArrayList(Station.T1, Station.BI))
                 .put(newArrayList(8), newArrayList(Station.T2, Station.T3, Station.T4))
                 .put(newArrayList(3), newArrayList(Station.PACKAGE))
-                .build();
+                .build(); 
     }
 
     @RequestMapping(value = "/findPrepareSchedule", method = {RequestMethod.GET})

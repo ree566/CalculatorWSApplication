@@ -79,7 +79,7 @@ public class ErrorCode implements java.io.Serializable {
         this.countermeasures = countermeasures;
     }
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "[name]", nullable = false)
     public String getName() {
         return this.name;
     }

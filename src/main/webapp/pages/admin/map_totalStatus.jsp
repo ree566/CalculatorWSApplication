@@ -206,7 +206,7 @@
                 dragableWiget.addClass("adjustPosition");
                 dragableWiget.not(".clearWiget").addClass("ui-helper").draggable({
                     drag: function (e) {
-                        return false;
+//                        return false;
                     }
                 });
 
@@ -485,7 +485,7 @@
                 var ws2, ws4;
 
                 var onopen = function () {
-
+                    console.log("The connection open");
                 };
 
                 var onerror = function (event) {
@@ -571,7 +571,7 @@
                     if (ws4 != null) {
                         ws4.close();
                     }
-                    console.log("websocket connection is now end");
+                    console.log("websocket connection is now close");
                 }
 //-----------------------
 

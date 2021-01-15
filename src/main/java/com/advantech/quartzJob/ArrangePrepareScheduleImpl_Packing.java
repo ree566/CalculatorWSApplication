@@ -53,7 +53,7 @@ public class ArrangePrepareScheduleImpl_Packing extends PrepareScheduleJob {
 
             List<Floor> floors = floorService.findAll();
             floors = floors.stream()
-                    .filter(f -> f.getId() == 1 || f.getId() == 2)
+                    .filter(f -> f.getId() == 1)
                     .collect(toList());
 
             for (Floor f : floors) {

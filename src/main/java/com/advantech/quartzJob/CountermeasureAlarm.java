@@ -5,9 +5,9 @@
  */
 package com.advantech.quartzJob;
 
-import com.advantech.helper.ApplicationContextHelper;
 import com.advantech.helper.DatetimeGenerator;
 import com.advantech.helper.MailManager;
+import com.advantech.helper.PropertiesReader;
 import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.BabAlarmHistory;
 import com.advantech.model.db1.Floor;
@@ -23,39 +23,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Wei.Cheng
  */
-public class CountermeasureAlarm extends QuartzJobBean {
+@Component
+@Transactional
+public class CountermeasureAlarm {
 
     private static final Logger log = LoggerFactory.getLogger(CountermeasureAlarm.class);
     private final DecimalFormat formatter = new DecimalFormat("#.##%");
     private final DatetimeGenerator dg = new DatetimeGenerator("yyyy-MM-dd HH:mm");
 
-    private final BabService babService;
-    private final UserService userService;
-    private final FloorService floorService;
-    private final MailManager mailManager;
+    @Autowired
+    private BabService babService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private FloorService floorService;
+
+    @Autowired
+    private MailManager mailManager;
 
     private final String notificationName = "abnormal_unfill_alarm";
     private final String subject = "[藍燈系統]未填寫異常回覆工單列表 ";
 
-    public CountermeasureAlarm() {
-        babService = (BabService) ApplicationContextHelper.getBean("babService");
-        userService = (UserService) ApplicationContextHelper.getBean("userService");
-        floorService = (FloorService) ApplicationContextHelper.getBean("floorService");
-        mailManager = (MailManager) ApplicationContextHelper.getBean("mailManager");
-    }
+    @Autowired
+    private PropertiesReader p;
 
-    @Override
-    public void executeInternal(JobExecutionContext jec) throws JobExecutionException {
+    public void execute() throws Exception {
         try {
             //Link the mailloop to send daily mail
             sendMail();
@@ -77,17 +82,23 @@ public class CountermeasureAlarm extends QuartzJobBean {
                 log.info("CC users " + Arrays.toString(ccMailUsers));
 
                 // when user sitefloor is not setting, turn user's mail to mail cc loop
-                String mailBody = this.generateMailBody(f.getId());
-                if (!"".equals(mailBody)) {
-                    //有資料再寄信
-                    mailManager.sendMail(mailLoop, ccMailLoop, subject + f.getName() + "F", mailBody);
-                }
+//                String mailBody = this.generateMailBody(f.getId());
+//                if (!"".equals(mailBody)) {
+//                    //有資料再寄信
+//                    mailManager.sendMail(mailLoop, ccMailLoop, subject + f.getName() + "F", mailBody);
+//                }
             }
         }
     }
 
     public String generateMailBody(int floor_id) {
-        List<Bab> l = babService.findUnReplyed(floor_id);
+        DateTime today = new DateTime();
+
+        List<Bab> l = babService.findUnReplyed(
+                floor_id,
+                today.minusDays(p.getBabCountermeasureAlertDay()).withHourOfDay(0),
+                today.withHourOfDay(23)
+        );
         if (l.isEmpty()) {
             return "";
         } else {

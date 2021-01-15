@@ -179,14 +179,14 @@
                         {data: "modelName", title: "機種"},
                         {data: "totalQty", title: "總工單數", visible: false},
                         {data: "scheduleQty", title: "當日排程數"},
-                        {data: "otherInfo.passCntQry_PREASSY", title: "MES總筆數(Pre-Assy)", visible: false},
-                        {data: "otherInfo.passCntQry_ASSY", title: "MES總筆數(Assy)"},
-                        {data: "otherInfo.passCntQry_T1", title: "MES總筆數(T1)"},
-                        {data: "otherInfo.passCntQry_BI", title: "MES總筆數(BI)"},
-                        {data: "otherInfo.passCntQry_T2", title: "MES總筆數(T2)"},
-                        {data: "otherInfo.passCntQry_T3", title: "MES總筆數(T3)"},
-                        {data: "otherInfo.passCntQry_T4", title: "MES總筆數(T4)"},
-                        {data: "otherInfo.passCntQry_PACKAGE", title: "MES總筆數(PACKAGE)"}
+                        {data: "otherInfo.passCntQry_PREASSY", title: "MES筆數(Pre-Assy)"},
+                        {data: "otherInfo.passCntQry_ASSY", title: "MES筆數(Assy)"},
+                        {data: "otherInfo.passCntQry_T1", title: "MES筆數(T1)"},
+                        {data: "otherInfo.passCntQry_BI", title: "MES筆數(BI)"},
+                        {data: "otherInfo.passCntQry_T2", title: "MES筆數(T2)"},
+                        {data: "otherInfo.passCntQry_T3", title: "MES筆數(T3)"},
+                        {data: "otherInfo.passCntQry_T4", title: "MES筆數(T4)"},
+                        {data: "otherInfo.passCntQry_PACKAGE", title: "MES筆數(PACKAGE)"}
 //                        {data: "otherInfo.passCntQry_PACKAGE", title: "總完成度(PACKAGE)", "sType": "numeric-comma"}
 //                        {data: "floor.id", title: "樓層", visible: false},
 //                        {data: "line.id", title: "線別", visible: false}
@@ -221,17 +221,24 @@
                     "processing": true,
                     "initComplete": function (settings, json) {
                         $("#send").attr("disabled", false);
+
+                        $.fn.dataTable.ext.errMode = 'none';
+                        $('#tb1')
+                                .on('error.dt', function (e, settings, techNote, message) {
+                                    console.log('An error has been reported by DataTables: ', message);
+                                })
+                                .DataTable();
                     },
                     "fnDrawCallback": function () {
-//                        var api = this.api();
-//                        setTimeout(function () {
-//                            api.columns().flatten().each(function (colIdx) {
-//                                var columnData = api.columns(colIdx).data().join('');
-//                                if (columnData.length == (api.rows().count() - 1) && colIdx != 0) {
-//                                    api.column(colIdx).visible(false);
-//                                }
-//                            });
-//                        }, 0);
+                        var api = this.api();
+                        setTimeout(function () {
+                            api.columns().flatten().each(function (colIdx) {
+                                var columnData = api.columns(colIdx).data().join('');
+                                if (columnData.length == (api.rows().count() - 1) && colIdx != 0) {
+                                    api.column(colIdx).visible(false);
+                                }
+                            });
+                        }, 500);
                     },
                     filter: false,
                     destroy: true,
@@ -269,7 +276,7 @@
                 <div class="col form-group">
                     <label for="lineType">製程: </label>
                     <select id="lineType">
-                        <option value="2">前置</option>
+                        <option value="9">前置</option>
                         <option value="1">組裝</option>
                         <option value="7">T1</option>
                         <option value="8">T2</option>

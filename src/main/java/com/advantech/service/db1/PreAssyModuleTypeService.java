@@ -6,6 +6,7 @@
 package com.advantech.service.db1;
 
 import com.advantech.dao.db1.PreAssyModuleTypeDAO;
+import com.advantech.model.db1.LineType;
 import com.advantech.model.db1.PreAssyModuleType;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,10 @@ public class PreAssyModuleTypeService {
 
     public List<PreAssyModuleType> findByModelName(String modelName) {
         return dao.findByModelName(modelName);
+    }
+
+    public List<PreAssyModuleType> findByModelNameAndLineType(String modelName, LineType lt) {
+        return dao.findByModelNameAndLineType(modelName, lt);
     }
 
     public PreAssyModuleType findByPrimaryKey(Object obj_id) {

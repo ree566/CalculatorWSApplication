@@ -18,11 +18,10 @@ import com.advantech.quartzJob.SyncTestPassStationData;
 import com.advantech.quartzJob.SyncUserFromRemote;
 import com.advantech.quartzJob.TestLineTypeRecord;
 import com.advantech.quartzJob.TestLineTypeRecordUnrepliedAlarm;
-import com.advantech.quartzJob.ArrangePrepareScheduleImpl_2;
+import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Assy;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Packing;
 import com.advantech.quartzJob.SyncPrepareScheduleForPacking;
 import com.advantech.quartzJob.SyncWorktimeFromRemote;
-import static com.google.common.collect.Lists.newArrayList;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,9 +73,9 @@ public class TestQuartzJobs {
     }
 
 //    @Test
-    public void testCountermeasureAlarm() throws JobExecutionException {
+    public void testCountermeasureAlarm() throws Exception {
         CountermeasureAlarm c = new CountermeasureAlarm();
-        c.executeInternal(null);
+        c.execute();
     }
 
 //    @Test
@@ -105,17 +104,18 @@ public class TestQuartzJobs {
     private SyncPrepareScheduleForAssy sps;
 
     @Autowired
-    private ArrangePrepareScheduleImpl_2 aps;
+    private ArrangePrepareScheduleImpl_Assy aps;
 
     @Test
     public void testSyncPrepareSchedule1() throws Exception {
         //先設定好當日出勤名單, 才會給予字動排站
         //This is assy schedule
 
-        DateTime d = new DateTime("2020-10-13");
+//        DateTime d = new DateTime("2020-10-21");
 
 //        sps.execute(d);
-        aps.execute(newArrayList(d));
+//        aps.execute(newArrayList(d));
+        aps.execute();
     }
 
     @Autowired
@@ -147,7 +147,7 @@ public class TestQuartzJobs {
     public void testSyncPrepareSchedule2() throws Exception {
         //先設定好當日出勤名單, 才會給予字動排站
         //This is packing schedule
-        DateTime d = new DateTime("2020-07-20");
+//        DateTime d = new DateTime("2020-07-20");
 //        sps2.execute(d);
         apspkg.execute();
     }

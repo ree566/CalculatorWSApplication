@@ -842,11 +842,15 @@
             }
 
             function initPreAssyModuleType() {
+                var userInfoCookie = $.cookie(userInfoCookieName);
+                var userInfo = $.parseJSON(userInfoCookie);
+                var lineType_id = userInfo.lineType_id;
                 $.ajax({
                     type: "GET",
-                    url: "PreAssyModuleTypeController/findByModelName",
+                    url: "PreAssyModuleTypeController/findByModelNameAndLineType",
                     data: {
-                        modelName: $("#modelName").val()
+                        modelName: $("#modelName").val(),
+                        lineType_id: lineType_id
                     },
                     dataType: "json",
                     success: function (response) {

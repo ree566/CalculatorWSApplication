@@ -5,6 +5,7 @@
  */
 package com.advantech.dao.db1;
 
+import com.advantech.model.db1.LineType;
 import com.advantech.model.db1.PreAssyModuleType;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -27,6 +28,14 @@ public class PreAssyModuleTypeDAO extends AbstractDao<Integer, PreAssyModuleType
         return super.createEntityCriteria()
                 .createAlias("preAssyModuleStandardTimes", "st")
                 .add(Restrictions.eq("st.modelName", modelName))
+                .list();
+    }
+    
+    public List<PreAssyModuleType> findByModelNameAndLineType(String modelName, LineType lt) {
+        return super.createEntityCriteria()
+                .createAlias("preAssyModuleStandardTimes", "st")
+                .add(Restrictions.eq("st.modelName", modelName))
+                .add(Restrictions.eq("lineType", lt))
                 .list();
     }
 

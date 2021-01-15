@@ -5,9 +5,7 @@
  */
 package com.advantech.model.db1;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +36,9 @@ public class LineType implements Serializable {
     @JsonIgnore
     private Set<LineTypeConfig> lineTypeConfigs = new HashSet<>(0);
 
+    @JsonIgnore
+    private Set<PreAssyModuleType> preAssyModuleTypes = new HashSet<>(0);
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false)
@@ -49,7 +50,7 @@ public class LineType implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "[name]", nullable = false, length = 50)
     public String getName() {
         return name;
     }
@@ -74,6 +75,15 @@ public class LineType implements Serializable {
 
     public void setLineTypeConfigs(Set<LineTypeConfig> lineTypeConfigs) {
         this.lineTypeConfigs = lineTypeConfigs;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lineType")
+    public Set<PreAssyModuleType> getPreAssyModuleTypes() {
+        return preAssyModuleTypes;
+    }
+
+    public void setPreAssyModuleTypes(Set<PreAssyModuleType> preAssyModuleTypes) {
+        this.preAssyModuleTypes = preAssyModuleTypes;
     }
 
 }

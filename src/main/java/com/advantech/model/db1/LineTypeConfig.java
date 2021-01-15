@@ -5,8 +5,6 @@
  */
 package com.advantech.model.db1;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.Column;

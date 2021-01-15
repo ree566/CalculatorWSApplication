@@ -325,12 +325,12 @@ public class TestSqlBeans {
 
     }
 
-//    @Test
-    @Rollback(false)
+    @Test
+    @Rollback(true)
     public void testPreAssyModuleType() {
-        PreAssyModuleType t = new PreAssyModuleType();
-        t.setName("IO");
-        session.save(t);
+        PreAssyModuleType t = (PreAssyModuleType) session.createCriteria(PreAssyModuleType.class)
+                .add(Restrictions.idEq(161))
+                .uniqueResult();
 
         HibernateObjectPrinter.print(t);
 
@@ -414,27 +414,27 @@ public class TestSqlBeans {
 
         HibernateObjectPrinter.print(p);
     }
-    
+
 //    @Test
     @Rollback(false)
-    public void testUserInsert(){
+    public void testUserInsert() {
         User user = session.get(User.class, 1);
-        
+
         assertNotNull(user);
-        
+
         user.setUsernameCh("中文");
-        
+
         session.update(user);
     }
 
-    @Test
+//    @Test
     @Rollback(true)
-    public void testWorktime(){
+    public void testWorktime() {
         Worktime worktime = session.get(Worktime.class, 1);
-        
+
         assertNotNull(worktime);
-        
+
         HibernateObjectPrinter.print(worktime);
     }
-    
+
 }

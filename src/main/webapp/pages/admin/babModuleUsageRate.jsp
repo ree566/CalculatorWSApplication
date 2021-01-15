@@ -31,7 +31,7 @@
                 margin: 5px auto;
             }
             table th{
-                text-align: center;
+                /*text-align: center;*/
             }
             .alarm{
                 color:red;
@@ -43,7 +43,7 @@
                 color: red;
             }
             table td{
-                text-align: center;
+                /*text-align: center;*/
             }
         </style>
         <script src="<c:url value="/webjars/jquery/1.12.4/jquery.min.js" />"></script>
@@ -105,6 +105,8 @@
                     getDetail();
                 });
 
+                $("#floor").val(2);
+
             });
 
             function getDetail() {
@@ -128,13 +130,15 @@
                         }
                     },
                     "columns": [
-                        {data: "floor_id", title: "floor_id"},
+                        {data: "floor_id", title: "floor_id", visible: false},
+                        {data: "po", title: "工單"},
                         {data: "modelName", title: "機種"},
                         {data: "module", title: "module"},
-                        {data: "status", title: "status"}
+                        {data: "status", title: "status"},
+                        {data: "useCnt", title: "useCnt", visible: false}
                     ],
                     rowGroup: {
-                        dataSrc: ["modelName", "floor_id"]
+                        dataSrc: ["po"]
                     },
                     "columnDefs": [
                         {
@@ -143,8 +147,21 @@
                             'render': function (data, type, full, meta) {
                                 return data == 1 ? "5F" : "6F";
                             }
+                        },
+                        {
+                            "type": "html",
+                            "targets": [4],
+                            'render': function (data, type, full, meta) {
+                                return full["useCnt"] == 0 ? "進行中" : data;
+                            }
                         }
                     ],
+                    "createdRow": function (row, data, dataIndex) {
+                        var useCnt = data.useCnt;
+                        if (useCnt == 0) {
+                            $(row).addClass('alarm');
+                        }
+                    },
                     "oLanguage": {
                         "sLengthMenu": "顯示 _MENU_ 筆記錄",
                         "sZeroRecords": "無符合資料",

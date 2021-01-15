@@ -83,7 +83,7 @@ public class TestRecord implements Serializable {
         this.userId = userId;
     }
 
-    @Column(name = "user_name", nullable = false, length = 20)
+    @Column(name = "[user_name]", nullable = false, length = 20)
     public String getUserName() {
         return userName;
     }

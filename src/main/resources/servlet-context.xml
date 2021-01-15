@@ -43,7 +43,7 @@
     <bean id="dataSource1" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
         <property name="connectionTestQuery" value="SELECT 1" />
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.22.3.27/ATMC" />
+        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.22.3.3/ATMC" />
         <property name="username" value="ATMCSa" />
         <property name="password" value="@tmc$a392" />
     </bean>
@@ -71,7 +71,7 @@
                 <prop key="hibernate.query.factory_class">org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory</prop>
                 <prop key="hibernate.jdbc.batch_size">${HIBERNATE.JDBC.BATCHSIZE}</prop>
                 <prop key="hibernate.id.new_generator_mappings" >false</prop>
-                <!--<prop key="hibernate.show_sql">true</prop>-->
+                <prop key="hibernate.show_sql">true</prop>
                 <!--<prop key="hibernate.format_sql">true</prop>-->
                 <prop key="hibernate.default_schema">M3_BW</prop>
                 <prop key="hibernate.dialect">com.advantech.helper.SqlServerDialectWithNvarchar</prop>
@@ -83,7 +83,7 @@
     <bean id="dataSource2" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
         <property name="connectionTestQuery" value="SELECT 1" />
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://M3-SERVER/Line_Balancing" />
+        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.20.131.241/Line_Balancing" />
         <property name="username" value="waychien" />
         <property name="password" value="m3server" />
     </bean>
@@ -222,7 +222,7 @@
     <!--Email setting-->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="Relay.advantech.com.tw" />
-        <property name="port" value="25" />
+        <property name="port" value="2526" />
 
         <property name="javaMailProperties">
             <props>

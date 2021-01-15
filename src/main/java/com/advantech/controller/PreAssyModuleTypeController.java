@@ -7,8 +7,11 @@
 package com.advantech.controller;
 
 import com.advantech.datatable.DataTableResponse;
+import com.advantech.model.db1.LineType;
 import com.advantech.model.db1.PreAssyModuleType;
+import com.advantech.service.db1.LineTypeService;
 import com.advantech.service.db1.PreAssyModuleTypeService;
+import static com.google.common.base.Preconditions.checkState;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,17 +32,27 @@ public class PreAssyModuleTypeController {
     @Autowired
     private PreAssyModuleTypeService service;
 
+    @Autowired
+    private LineTypeService lineTypeService;
+
     @RequestMapping(value = "/findAll", method = {RequestMethod.GET})
     @ResponseBody
     protected DataTableResponse findAll() {
         return new DataTableResponse(service.findAll());
     }
-    
-    
+
     @RequestMapping(value = "/findByModelName", method = {RequestMethod.GET})
     @ResponseBody
     protected DataTableResponse findByModelName(@RequestParam String modelName) {
         return new DataTableResponse(service.findByModelName(modelName));
+    }
+
+    @RequestMapping(value = "/findByModelNameAndLineType", method = {RequestMethod.GET})
+    @ResponseBody
+    protected DataTableResponse findByModelName(@RequestParam String modelName, @RequestParam int lineType_id) {
+        LineType lt = lineTypeService.findByPrimaryKey(lineType_id);
+        checkState(lt != null, "Can't find lineType in id " + lineType_id);
+        return new DataTableResponse(service.findByModelNameAndLineType(modelName, lt));
     }
 
     @RequestMapping(value = "/saveOrUpdate", method = {RequestMethod.POST})

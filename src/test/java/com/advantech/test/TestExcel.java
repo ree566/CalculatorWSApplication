@@ -132,22 +132,18 @@ public class TestExcel {
 //        return l;
     }
 
-    @Test
+//    @Test
     @Transactional
     @Rollback(false)
     public void testReadExcel() throws FileNotFoundException, IOException, InvalidFormatException, Exception, Exception {
-        String syncFilePath = "C:\\Users\\wei.cheng\\Desktop\\複本 更新大表附件盒及線外工時用.xlsx";
+        String syncFilePath = "C:\\Users\\MFG.ESOP\\Desktop\\藍燈前置工時修改(2).xls";
         try (InputStream is = new FileInputStream(new File(syncFilePath))) {
 
             Session session = sessionFactory.getCurrentSession();
 
             Workbook workbook = WorkbookFactory.create(is);
 
-            PreAssyModuleType packingModuleType = session.get(PreAssyModuleType.class, 121);
-            
-            List<PreAssyModuleStandardTime> standardTimes = session.createCriteria(PreAssyModuleStandardTime.class)
-                    .add(Restrictions.eq("preAssyModuleType", packingModuleType))
-                    .list();
+            List<PreAssyModuleType> moduleTypes = session.createCriteria(PreAssyModuleType.class).list();
 
             Sheet sheet = workbook.getSheetAt(0);
             for (int i = 1, maxNumberfRows = sheet.getPhysicalNumberOfRows(); i < maxNumberfRows; i++) {
@@ -156,28 +152,97 @@ public class TestExcel {
 
                     //Because cell_A will auto convert to number if modelName only contains numbers.
                     //Search will cause exception when not add convert lines
-                    Cell modelName_cell = CellUtil.getCell(row, CellReference.convertColStringToIndex("B"));
+                    Cell modelName_cell = CellUtil.getCell(row, CellReference.convertColStringToIndex("A"));
                     modelName_cell.setCellType(CellType.STRING);
 
-                    String modelName = ((String) getCellValue(row, "B")).trim();
-                    BigDecimal standardTime = new BigDecimal((double) getCellValue(row, "BQ"));
+                    String modelName = ((String) getCellValue(row, "A")).trim();
+                    String moduleTypeName = ((String) getCellValue(row, "B")).trim();
+                    BigDecimal standardTime = new BigDecimal((double) getCellValue(row, "C"));
 
-                    PreAssyModuleStandardTime fitData = standardTimes.stream()
-                            .filter(p -> p.getModelName().equals(modelName))
-                            .findFirst().orElse(null);
+                    PreAssyModuleType moduleType = moduleTypes.stream()
+                            .filter(mt -> mt.getName().equals(moduleTypeName))
+                            .findFirst()
+                            .orElse(null);
 
-                    if (fitData == null) {
-//                        throw new Exception("Can't find fit data on model name " + modelName);
-                        PreAssyModuleStandardTime pt = new PreAssyModuleStandardTime();
-                        pt.setModelName(modelName);
-                        pt.setPreAssyModuleType(packingModuleType);
-                        pt.setStandardTime(standardTime);
-                        session.save(pt);
+                    PreAssyModuleStandardTime pms = (PreAssyModuleStandardTime) session.createCriteria(PreAssyModuleStandardTime.class)
+                            .add(Restrictions.eq("preAssyModuleType", moduleType))
+                            .add(Restrictions.eq("modelName", modelName))
+                            .uniqueResult();
+
+                    if (pms == null) {
+                        PreAssyModuleStandardTime pojo = new PreAssyModuleStandardTime();
+                        pojo.setModelName(modelName);
+                        pojo.setPreAssyModuleType(moduleType);
+                        pojo.setStandardTime(standardTime);
+                        session.save(pojo);
+                        System.out.printf("Saving modelName: %s %s\r\n", modelName, moduleTypeName);
+//                        throw new Exception("Can't find fit data on model name " + modelName + " " + moduleTypeName);
                     } else {
-                        fitData.setModelName(modelName);
                         standardTime.setScale(0, RoundingMode.FLOOR);
-                        fitData.setStandardTime(standardTime);
-                        session.update(fitData);
+                        pms.setStandardTime(standardTime);
+                        session.update(pms);
+                        System.out.printf("Update modelName: %s %s\r\n", modelName, moduleTypeName);
+                    }
+
+                }
+            }
+        }
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void testReadExcel3() throws FileNotFoundException, IOException, InvalidFormatException, Exception, Exception {
+        String syncFilePath = "C:\\Users\\MFG.ESOP\\Desktop\\包三模組.xlsx";
+        try (InputStream is = new FileInputStream(new File(syncFilePath))) {
+
+            Session session = sessionFactory.getCurrentSession();
+
+            Workbook workbook = WorkbookFactory.create(is);
+
+            List<PreAssyModuleType> moduleTypes = session.createCriteria(PreAssyModuleType.class).list();
+
+            Sheet sheet = workbook.getSheetAt(0);
+            for (int i = 1, maxNumberfRows = sheet.getPhysicalNumberOfRows(); i < maxNumberfRows; i++) {
+                Row row = sheet.getRow(i); // 取得第 i Row
+                if (row != null) {
+
+                    //Because cell_A will auto convert to number if modelName only contains numbers.
+                    //Search will cause exception when not add convert lines
+                    Cell modelName_cell = CellUtil.getCell(row, CellReference.convertColStringToIndex("A"));
+                    modelName_cell.setCellType(CellType.STRING);
+
+                    String modelName = ((String) getCellValue(row, "A")).trim();
+                    String moduleTypeName = ((String) getCellValue(row, "B")).trim();
+                    BigDecimal standardTime = new BigDecimal(0.0);
+
+                    PreAssyModuleType moduleType = moduleTypes.stream()
+                            .filter(mt -> mt.getName().equals(moduleTypeName))
+                            .findFirst()
+                            .orElse(null);
+
+                    PreAssyModuleStandardTime pms = (PreAssyModuleStandardTime) session.createCriteria(PreAssyModuleStandardTime.class)
+                            .add(Restrictions.eq("preAssyModuleType", moduleType))
+                            .add(Restrictions.eq("modelName", modelName))
+                            .uniqueResult();
+                    
+                    if(moduleType == null){
+                        System.out.printf("Can't find moduleType: %s \r\n", moduleTypeName);
+                    }
+
+                    if (pms == null) {
+                        PreAssyModuleStandardTime pojo = new PreAssyModuleStandardTime();
+                        pojo.setModelName(modelName);
+                        pojo.setPreAssyModuleType(moduleType);
+                        pojo.setStandardTime(standardTime);
+                        session.save(pojo);
+                        System.out.printf("Saving modelName: %s %s\r\n", modelName, moduleTypeName);
+//                        throw new Exception("Can't find fit data on model name " + modelName + " " + moduleTypeName);
+                    } else {
+//                        standardTime.setScale(0, RoundingMode.FLOOR);
+//                        pms.setStandardTime(standardTime);
+//                        session.update(pms);
+//                        System.out.printf("Update modelName: %s %s\r\n", modelName, moduleTypeName);
                     }
 
                 }

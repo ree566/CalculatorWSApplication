@@ -35,7 +35,7 @@ public class MesLine implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "[name]", nullable = false, length = 50)
     public String getName() {
         return name;
     }

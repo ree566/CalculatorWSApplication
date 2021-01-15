@@ -88,7 +88,7 @@
                 $("#floor").parent().hide();
 
                 var momentFormatString = 'YYYY-MM-DD';
-                $(":text,input[type='number'],select").addClass("form-control");
+                $(":text,select:not(#line)").addClass("form-control");
                 $(":button").addClass("btn btn-default");
 
                 var options = {
@@ -232,20 +232,20 @@
                         {data: "modelName", title: "機種", width: "7%"},
                         {data: "totalQty", title: "工單數"},
                         {data: "scheduleQty", title: "排程數"},
-                        {data: "floor.id", title: "樓層"},
+                        {data: "floor.id", title: "樓層", visible: false},
                         {data: "timeCost", title: "workTime"},
                         {data: "cycleTime", title: "cycleTime", visible: false},
                         {data: "line.id", title: "線別"},
-                        {data: "priority", title: "順序", width: "5%"},
-                        {data: "startDate", title: "開始時間"},
-                        {data: "endDate", title: "結束時間"},
-                        {data: "users", title: "站1", width: "7%"},
-                        {data: "users", title: "站2", width: "7%"},
-                        {data: "users", title: "站3", width: "7%"},
-                        {data: "users", title: "站4", width: "7%"},
-                        {data: "undoneQty", title: "未完成", width: "5%", visible: false},
-                        {data: "memo", title: "備註", width: "5%"},
-                        {data: "hrcMemo", title: "人機協作", width: "5%"}
+                        {data: "priority", title: "順序"},
+                        {data: "startDate", title: "開始時間", width: "5%"},
+                        {data: "endDate", title: "結束時間", width: "5%"},
+                        {data: "users", title: "站1", width: "5%"},
+                        {data: "users", title: "站2", width: "5%"},
+                        {data: "users", title: "站3", width: "5%"},
+                        {data: "users", title: "站4", width: "5%"},
+                        {data: "undoneQty", title: "未完成", visible: false},
+                        {data: "hrcMemo", title: "人機協作"},
+                        {data: "memo", title: "備註"}
                     ],
                     "columnDefs": [
                         {
@@ -313,7 +313,7 @@
                             "targets": [9],
                             'render': function (data, type, full, meta) {
                                 var disabled = full.line == null;
-                                return "<input type='number' class='form-control priority' min=1 value='" + (data == null ? 0 : data) + "' " + (disabled ? "disabled" : "") + ">";
+                                return "<div class='col-sm-10'><input type='number' class='priority' min=1 value='" + (data == null ? 0 : data) + "' " + (disabled ? "disabled" : "") + "></div>";
                             }
                         },
                         {
@@ -334,7 +334,7 @@
                         },
                         {
                             "type": "html",
-                            "targets": [18],
+                            "targets": [19],
                             'render': function (data, type, full, meta) {
                                 return (data == null ? '' : data);
                             }

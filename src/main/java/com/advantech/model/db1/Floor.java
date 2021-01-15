@@ -57,7 +57,7 @@ public class Floor implements java.io.Serializable {
         this.id = id;
     }
 
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "[name]", nullable = false, length = 50)
     public String getName() {
         return this.name;
     }

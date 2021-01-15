@@ -6,6 +6,7 @@
 package com.advantech.quartzJob;
 
 import static com.google.common.collect.Lists.newArrayList;
+import java.util.ArrayList;
 import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -23,25 +24,32 @@ public abstract class PrepareScheduleJob {
 
     protected DateTimeFormatter df = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm:ss");
 
+    private int executeDayCnt = 4;
+
     public void execute() throws Exception {
-        DateTime d = new DateTime();
+
+        List<DateTime> executeDays = new ArrayList();
+
+        DateTime d = new DateTime().withTime(0, 0, 0, 0);
         if (d.getHourOfDay() >= 17) {
             d = d.plusDays(d.getDayOfWeek() == 6 ? 2 : 1);
         }
 
-        DateTime d2 = new DateTime(d.plusDays(1));
-        if (d2.getDayOfWeek() == 7) {
-            d2 = d2.plusDays(1);
+        for (int i = 0; i < executeDayCnt; i++) {
+            if (d.getDayOfWeek() == 7) {
+                d = d.plusDays(1);
+            }
+            executeDays.add(d);
+            d = d.plusDays(1);
         }
 
-        DateTime d3 = new DateTime(d2.plusDays(1));
-        if (d3.getDayOfWeek() == 7) {
-            d3 = d3.plusDays(1);
-        }
-
-        this.execute(newArrayList(d, d2, d3));
+        this.execute(executeDays);
     }
 
     abstract void execute(List<DateTime> dts) throws Exception;
+
+    protected void setExecuteDayCnt(int cnt) {
+        this.executeDayCnt = cnt;
+    }
 
 }

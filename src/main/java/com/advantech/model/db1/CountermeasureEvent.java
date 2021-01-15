@@ -4,7 +4,6 @@ package com.advantech.model.db1;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -64,7 +63,7 @@ public class CountermeasureEvent implements java.io.Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "[user_id]")
     public User getUser() {
         return this.user;
     }

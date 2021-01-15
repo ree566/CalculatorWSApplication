@@ -145,8 +145,8 @@ public class BabService {
         return babDAO.findAllModelName();
     }
 
-    public List<Bab> findUnReplyed(int floor_id) {
-        List<Bab> l = babDAO.findUnReplyed(floor_id);
+    public List<Bab> findUnReplyed(int floor_id, DateTime sD, DateTime eD) {
+        List<Bab> l = babDAO.findUnReplyed(floor_id, sD, eD);
         l.forEach(b -> {
             Hibernate.initialize(b.getBabAlarmHistorys());
             Hibernate.initialize(b.getLine().getUsers());
