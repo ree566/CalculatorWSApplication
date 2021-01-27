@@ -20,6 +20,7 @@ import com.advantech.service.db1.WorktimeService;
 import static com.google.common.base.Preconditions.checkArgument;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -242,10 +243,19 @@ public class SqlViewController {
     protected DataTableResponse findBabModuleUsageRate(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
-            @RequestParam int floor_id
+            @RequestParam int floor_id,
+            @RequestParam int lineType_id
     ) {
         Floor f = floor_id == -1 ? null : floorService.findByPrimaryKey(floor_id);
-        return new DataTableResponse(procSerice.findBabModuleUsageRate(startDate, endDate, f));
+        List l;
+        if (lineType_id == 1) {
+            l = procSerice.findBabModuleUsageRateForAssy(startDate, endDate, f);
+        } else if (lineType_id == 3) {
+            l = procSerice.findBabModuleUsageRateForPacking(startDate, endDate, f);
+        } else {
+            l = new ArrayList();
+        }
+        return new DataTableResponse(l);
     }
 
 }

@@ -61,7 +61,13 @@
         <script>
             var table;
             var lockDays = 14;
+            var urlLineType;
+            var lineTypeId;
             $(function () {
+                urlLineType = getQueryVariable("lineType");
+                lineTypeId = (urlLineType == null || urlLineType == "ASSY" ? 1 : 3);
+
+                $("#floor").val(urlLineType == "ASSY" ? 2 : 1);
 
                 var momentFormatString = 'YYYY-MM-DD';
                 $(":text,input[type='number'],select").addClass("form-control");
@@ -104,9 +110,6 @@
                 $("#send").click(function () {
                     getDetail();
                 });
-
-                $("#floor").val(2);
-
             });
 
             function getDetail() {
@@ -123,7 +126,8 @@
                         data: {
                             startDate: $('#fini').val(),
                             endDate: $('#ffin').val(),
-                            floor_id: $("#floor").val()
+                            floor_id: $("#floor").val(),
+                            lineType_id: lineTypeId
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
                             alert(xhr.responseText);

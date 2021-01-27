@@ -277,9 +277,19 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
         return 1;
     }
 
-    public List<Map> findBabModuleUsageRate(DateTime sD, DateTime eD, Floor f) {
+    public List<Map> findBabModuleUsageRateForAssy(DateTime sD, DateTime eD, Floor f) {
         return super.getSession()
-                .createSQLQuery("{CALL M3_BW.usp_GetBabModuleUsageRate(:sD, :eD, :floor_id)}")
+                .createSQLQuery("{CALL M3_BW.usp_GetBabModuleUsageRate_ForAssy(:sD, :eD, :floor_id)}")
+                .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.withHourOfDay(23).toDate() : null)
+                .setParameter("floor_id", f == null ? null : f.getId())
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+    
+    public List<Map> findBabModuleUsageRateForPacking(DateTime sD, DateTime eD, Floor f) {
+        return super.getSession()
+                .createSQLQuery("{CALL M3_BW.usp_GetBabModuleUsageRate_ForPacking(:sD, :eD, :floor_id)}")
                 .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
                 .setParameter("eD", eD != null ? eD.withHourOfDay(23).toDate() : null)
                 .setParameter("floor_id", f == null ? null : f.getId())

@@ -132,11 +132,11 @@ public class TestExcel {
 //        return l;
     }
 
-//    @Test
+    @Test
     @Transactional
     @Rollback(false)
     public void testReadExcel() throws FileNotFoundException, IOException, InvalidFormatException, Exception, Exception {
-        String syncFilePath = "C:\\Users\\MFG.ESOP\\Desktop\\藍燈前置工時修改(2).xls";
+        String syncFilePath = "C:\\Users\\MFG.ESOP\\Desktop\\藍燈前置工時修改(3).xls";
         try (InputStream is = new FileInputStream(new File(syncFilePath))) {
 
             Session session = sessionFactory.getCurrentSession();
@@ -189,7 +189,7 @@ public class TestExcel {
         }
     }
 
-    @Test
+//    @Test
     @Transactional
     @Rollback(false)
     public void testReadExcel3() throws FileNotFoundException, IOException, InvalidFormatException, Exception, Exception {

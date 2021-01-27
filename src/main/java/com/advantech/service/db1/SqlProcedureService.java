@@ -154,8 +154,12 @@ public class SqlProcedureService {
         return sqlProcedureDAO.sensorDataClean(date);
     }
 
-    public List<Map> findBabModuleUsageRate(DateTime sD, DateTime eD, Floor f) {
-        return sqlProcedureDAO.findBabModuleUsageRate(sD, eD, f);
+    public List<Map> findBabModuleUsageRateForAssy(DateTime sD, DateTime eD, Floor f) {
+        return sqlProcedureDAO.findBabModuleUsageRateForAssy(sD, eD, f);
+    }
+    
+    public List<Map> findBabModuleUsageRateForPacking(DateTime sD, DateTime eD, Floor f) {
+        return sqlProcedureDAO.findBabModuleUsageRateForPacking(sD, eD, f);
     }
 
 }
