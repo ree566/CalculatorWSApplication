@@ -11,6 +11,7 @@ import com.advantech.dao.db1.BabPreAssyPcsRecordDAO;
 import com.advantech.dao.db1.BabSettingHistoryDAO;
 import com.advantech.dao.db1.CountermeasureDAO;
 import com.advantech.dao.db1.FqcDAO;
+import com.advantech.dao.db1.PrepareScheduleDailyRemarkDAO;
 import com.advantech.dao.db1.SensorTransformDAO;
 import com.advantech.dao.db1.SqlViewDAO;
 import com.advantech.dao.db1.TagNameComparisonDAO;
@@ -24,10 +25,11 @@ import com.advantech.model.db1.Line;
 import com.advantech.model.db1.MesLine;
 import com.advantech.model.db1.MesPassCountRecord;
 import com.advantech.model.db1.SensorTransform;
-import com.advantech.model.view.BabProcessDetail;
+import com.advantech.model.view.db1.BabProcessDetail;
 import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import static com.google.common.collect.Lists.newArrayList;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -49,6 +51,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -97,6 +100,9 @@ public class TestDAO {
 
     @Autowired
     private WebServiceRV rv;
+    
+    @Autowired
+    private PrepareScheduleDailyRemarkDAO preRemarkDAO;
 
 //    @Test
     @Transactional
@@ -107,7 +113,6 @@ public class TestDAO {
 //            List l = babDAO.findUnReplyed(i);
 //            assertTrue(l.isEmpty());
 //        }
-
     }
 
 //    @Test
@@ -333,13 +338,63 @@ public class TestDAO {
 //        });
     }
 
-    @Test
+//    @Test
     @Transactional
     @Rollback(true)
     public void testFindBabUnreply() {
         List<Bab> l = this.babDAO.findUnReplyed(1, new DateTime().minusDays(1), new DateTime());
         assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l);
+    }
+
+    @Autowired
+    @Qualifier("sqlViewDAO4")
+    private com.advantech.dao.db4.SqlViewDAO sqlViewDAO4;
+
+//    @Test
+    @Transactional("tx4")
+    @Rollback(true)
+    public void testFindMesPassStationInfo() {
+        List<String> po = newArrayList(
+                "PCJ9119ZA",
+                "PSJA042ZA",
+                "PIJA158ZA",
+                "PAJ9011ZA",
+                "THJ000235ZA",
+                "THJ000420ZA",
+                "THJ000232ZA",
+                "THJ000233ZA",
+                "PSJA201ZA",
+                "THJ000064ZA"
+        );
+        List list = sqlViewDAO4.findMesPassStationInfo(po, new DateTime());
+        list.forEach(o -> {
+            HibernateObjectPrinter.print(o);
+        });
+    }
+
+    @Autowired
+    @Qualifier("sqlViewDAO3")
+    private com.advantech.dao.db3.SqlViewDAO sqlViewDAO3;
+
+//    @Test
+    @Transactional("tx3")
+    @Rollback(true)
+    public void testFindWorktimeFromRemote() {
+        List list = sqlViewDAO3.findWorktime();
+
+        HibernateObjectPrinter.print(list.get(0));
+
+    }
+    
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testPrepareScheduleDailyRemark() {
+        List list = preRemarkDAO.findAll();
+
+        HibernateObjectPrinter.print(list.get(0));
+
     }
 
 }

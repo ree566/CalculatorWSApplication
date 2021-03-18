@@ -185,7 +185,7 @@ public class WebServiceRVTest {
         DateTime sD = new DateTime().withTime(0, 0, 0, 0);
         DateTime eD = new DateTime().plusDays(1).withTime(0, 0, 0, 0);
         
-        List l = rv.getRptStationQtys(sD, eD, 1, Factory.DEFAULT);
+        List l = rv.getRptStationQtys("TEST_MODELNAME", 1, Factory.DEFAULT);
         assertTrue(!l.isEmpty());
         
         HibernateObjectPrinter.print(l.get(0));

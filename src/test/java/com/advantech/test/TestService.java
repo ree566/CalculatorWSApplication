@@ -22,7 +22,7 @@ import com.advantech.model.db1.PrepareScheduleEndtimeSetting;
 import com.advantech.model.db1.TagNameComparison;
 import com.advantech.model.db1.User;
 import com.advantech.model.db1.Worktime;
-import com.advantech.model.view.BabProcessDetail;
+import com.advantech.model.view.db1.BabProcessDetail;
 import com.advantech.quartzJob.HandleUncloseBab;
 import com.advantech.service.db1.BabCollectModeChangeEventService;
 import com.advantech.service.db1.BabPassStationRecordService;

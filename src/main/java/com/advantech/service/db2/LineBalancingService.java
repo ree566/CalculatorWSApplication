@@ -15,7 +15,7 @@ import com.advantech.helper.MailManager;
 import com.advantech.helper.PropertiesReader;
 import com.advantech.model.db1.LineType;
 import com.advantech.model.db1.User;
-import com.advantech.model.view.BabAvg;
+import com.advantech.model.view.db1.BabAvg;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Date;

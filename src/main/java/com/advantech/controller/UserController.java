@@ -7,14 +7,16 @@
 package com.advantech.controller;
 
 import com.advantech.datatable.DataTableResponse;
+import com.advantech.helper.AtmcEmployeeUtils;
 import com.advantech.helper.CustomPasswordEncoder;
 import com.advantech.helper.SecurityPropertiesUtils;
 import com.advantech.model.db1.User;
-import com.advantech.service.db1.SqlViewService;
 import com.advantech.service.db1.UserService;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,14 +32,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/UserController")
 public class UserController {
 
-    @Autowired
-    private SqlViewService sqlViewService;
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
 
     @Autowired
     private CustomPasswordEncoder pswEncoder;
+
+    @Autowired
+    private AtmcEmployeeUtils atmcEmployeeUtils;
 
     @RequestMapping(value = "/findAll", method = {RequestMethod.GET})
     @ResponseBody
@@ -59,13 +63,19 @@ public class UserController {
     @RequestMapping(value = "/checkUser", method = {RequestMethod.GET})
     @ResponseBody
     public boolean checkUser(@RequestParam String jobnumber) {
-        return isUserExist(jobnumber);
+        try {
+            checkState(this.checkUserByAtmcRemote(jobnumber) == true, "User with jobnumber " + jobnumber + " not found");
+            return true;
+        } catch (Exception ex) {
+            log.info("Have some issue on checking user on ATMC service...", ex);
+            User user = userService.findByJobnumber(jobnumber);
+            return user != null;
+        }
     }
 
-    private boolean isUserExist(String jobnumber) {
-        //change the sql query(password not check)
-        User user = userService.findByJobnumber(jobnumber);
-        return user != null;
+    public boolean checkUserByAtmcRemote(@RequestParam String jobnumber) throws Exception {
+        String checkMsg = atmcEmployeeUtils.getUser(jobnumber);
+        return !"".equals(checkMsg);
     }
 
     @RequestMapping(value = "/updatePassword", method = {RequestMethod.POST})

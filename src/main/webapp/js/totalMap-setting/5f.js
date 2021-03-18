@@ -15,6 +15,9 @@ var titleGroup = [
 //    {lineName: "LC-2", x: 1110, y: 405},
 //    {lineName: "LD", x: 730, y: 160},
 //    {lineName: "LE", x: 735, y: 80},
+//    {lineName: "LJ", x: 800, y: 305},
+//    {lineName: "LK", x: 805, y: 305},
+//    {lineName: "LL", x: 810, y: 305},
 //    //pkg
     {lineName: "L2", x: 755, y: 305},
     {lineName: "L3", x: 715, y: 95},
@@ -30,6 +33,9 @@ var testGroup = [
 ];
 
 var babGroup = [
+    {people: 1, x: 985, y: 55, lineName: "LI"},
+    {people: 1, x: 930, y: 55, lineName: "LJ"},
+    {people: 1, x: 880, y: 55, lineName: "LK"},
 //    {people: 4, x: 930, y: 55, lineName: "LA"},
 //    {people: 4, x: 930, y: 170, lineName: "LB"},
 //    {people: 3, x: 1000, y: 345, lineName: "LC-1"},
@@ -38,8 +44,8 @@ var babGroup = [
     {people: 3, x: 755, y: 210, lineName: "PKG_L2", straight: true},
     {people: 4, x: 660, y: 170, lineName: "PKG_L3"},
     {people: 3, x: 595, y: 210, lineName: "PKG_L4", straight: true},
-    {people: 3, x: 565, y: 100, lineName: "PKG_L5", reverse: true},
-    {people: 3, x: 565, y: 20, lineName: "PKG_L6", reverse: true}
+    {people: 3, x: 565, y: 100, lineName: "PKG_L5"},
+    {people: 3, x: 565, y: 20, lineName: "PKG_L6"}
 ];
 
 var fqcGroup = [

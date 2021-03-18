@@ -298,19 +298,19 @@ public class WebServiceRV {
         }
     }
 
-    public List<RptStationQty> getRptStationQtys(DateTime sD, DateTime eD, int mesLineId, final Factory f) {
+    public List<RptStationQty> getRptStationQtys(String modelName, int mesStationId, final Factory f) {
 
         try {
             String queryString
                     = "<root>"
                     + "<METHOD ID='RPTSO.QryRptStationQty001'/>"
                     + "<STATION_QTY>"
-                    + "<START_TIME>" + fmt.print(sD) + "</START_TIME>"
-                    + "<END_TIME>" + fmt.print(eD) + "</END_TIME>"
+                    + "<START_TIME></START_TIME>"
+                    + "<END_TIME></END_TIME>"
                     + "<UNIT_NO/>"
-                    + "<STATION_ID>" + mesLineId + "</STATION_ID>"
-                    + "<WERKS>TWM3</WERKS>"
-                    + "<ITEM_NO/>"
+                    + "<STATION_ID>" + mesStationId + "</STATION_ID>"
+                    + "<WERKS/>"
+                    + "<ITEM_NO>" + modelName + "</ITEM_NO>"
                     + "</STATION_QTY>"
                     + "</root>";
 

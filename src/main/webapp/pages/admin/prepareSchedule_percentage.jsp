@@ -45,6 +45,14 @@
             table td{
                 text-align: center;
             }
+            .remark-field{
+                text-align: center;
+                color: red;
+                outline: #4CAF50 solid 2px;
+            }
+            .show-read-more .more-text{
+                display: none;
+            }
         </style>
         <script src="<c:url value="/webjars/jquery/1.12.4/jquery.min.js" />"></script>
         <script src="<c:url value="/webjars/momentjs/2.18.1/moment.js" /> "></script>
@@ -64,6 +72,7 @@
         <script src="<c:url value="/js/pivot.min.js" />"></script>
         <script src="<c:url value="/js/jquery_pivot.js" />"></script>
         <script src="<c:url value="/js/jquery.spring-friendly.js" />"></script>
+        <%--<script src="<c:url value="https://cdn.datatables.net/buttons/1.6.5/js/buttons.colVis.min.js" />"></script>--%>
 
         <script>
             var table;
@@ -71,7 +80,28 @@
             var urlLineType;
             var lineTypeIds;
 
+            var dynamicColIdxMin = 8;
+            var dynamicColIdxMax = 23;
+
+            var stationsDailySumIndex = [];
+            var stationsTotalSumIndex = [];
+
+            var memoIndex = dynamicColIdxMax + 1;
+            var editBtnIndex = memoIndex + 2;
+
             $(function () {
+                for (var i = 0; i < editBtnIndex - 1; i++) {
+                    $("#totalFooter").after("<th></th>");
+                }
+
+                for (var i = dynamicColIdxMin, j = 0; i <= dynamicColIdxMax; i++, j++) {
+                    if (j % 2 == 0) {
+                        stationsDailySumIndex.push(i);
+                    } else {
+                        stationsTotalSumIndex.push(i);
+                    }
+                }
+
                 urlLineType = getQueryVariable("lineType");
                 lineTypeIds = (urlLineType == null || urlLineType == "ASSY" ? [1, 2] : [3]);
 
@@ -96,25 +126,39 @@
                     $(this).val($(this).val().toUpperCase());
                 });
 
-                $("#send").click(function () {
-                    getDetail();
-                });
+                dataTableInit();
+                $("#send").on("click", getDetail);
+                $('body').on('click', '.save', function () {
 
-                $('body').on('click', '#tb1 tbody tr', function () {
-                    if ($(this).hasClass('selected')) {
-                        $(this).removeClass('selected');
-                    } else {
-                        table.$('tr.selected').removeClass('selected');
-                        $(this).addClass('selected');
+                    if (!confirm("Save?")) {
+                        return;
                     }
+                    var data = table.row($(this).closest('tr')).data();
+                    var p_id = data["id"];
+                    var memo = $(this).parents("tr").find(".memo").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "<c:url value="/PrepareScheduleController/updateMemo" />",
+                        data: {
+                            prepareSchedule_id: p_id,
+                            memo: memo
+                        },
+                        dataType: "html",
+                        success: function (response) {
+                            $("#send").trigger("click");
+                            alert(response);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert(xhr.responseText);
+                        }
+                    });
                 });
 
                 $(".lineSelGroup").hide();
-
             });
 
             function initSelectOption() {
-                console.log(lineTypeIds);
                 $.ajax({
                     type: "GET",
                     url: "<c:url value="/BabLineController/findByUserAndLineType" />",
@@ -138,8 +182,28 @@
 
             function getDetail() {
                 $("#send").attr("disabled", true);
-
                 $(".scheLines").off();
+
+                $.ajax({
+                    url: "<c:url value="/PrepareScheduleController/findPrepareSchedulePercentage" />",
+                    type: "Get",
+                    data: {
+                        startDate: $("#fini").val(),
+                        floorId: $("#floor").val(),
+                        "lineType_id[]": $("#lineType").val()
+                    }
+                }).done(function (result) {
+                    table.clear().draw();
+                    table.rows.add(result.data).draw();
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    // needs to implement if it fails
+                    alert(jqXHR.responseText);
+                });
+
+                findRemark();
+            }
+
+            function dataTableInit() {
 
                 table = $('#tb1').DataTable({
                     dom: 'Bfrtip',
@@ -147,69 +211,108 @@
                         {
                             extend: 'copyHtml5',
                             exportOptions: {
-                                columns: ':visible'
+                                columns: ':not(:eq(23)):visible'
                             }
                         },
                         {
                             extend: 'excelHtml5',
-                            footer: true,
                             exportOptions: {
-                                columns: ':visible'
+                                columns: ':not(:eq(23)):visible'
                             }
                         }
                     ],
                     fixedHeader: {
-                        headerOffset: 50
+                        headerOffset: 50,
+                        footer: true
                     },
-                    "ajax": {
-                        "url": "<c:url value="/PrepareScheduleController/findPrepareSchedulePercentage" />",
-                        "type": "Get",
-                        data: {
-                            startDate: $("#fini").val(),
-                            floorId: $("#floor").val(),
-                            "lineType_id[]": $("#lineType").val()
-                        },
-                        error: function (xhr, ajaxOptions, thrownError) {
-                            alert(xhr.responseText);
-                        }
-                    },
+                    data: [],
                     "columns": [
                         {data: "id", title: "id", visible: false},
                         {data: "po", title: "工單"},
                         {data: "modelName", title: "機種"},
-                        {data: "totalQty", title: "總工單數", visible: false},
+                        {data: "totalQty", title: "總工單數"},
                         {data: "scheduleQty", title: "當日排程數"},
-                        {data: "otherInfo.passCntQry_PREASSY", title: "MES筆數(Pre-Assy)"},
-                        {data: "otherInfo.passCntQry_ASSY", title: "MES筆數(Assy)"},
-                        {data: "otherInfo.passCntQry_T1", title: "MES筆數(T1)"},
-                        {data: "otherInfo.passCntQry_BI", title: "MES筆數(BI)"},
-                        {data: "otherInfo.passCntQry_T2", title: "MES筆數(T2)"},
-                        {data: "otherInfo.passCntQry_T3", title: "MES筆數(T3)"},
-                        {data: "otherInfo.passCntQry_T4", title: "MES筆數(T4)"},
-                        {data: "otherInfo.passCntQry_PACKAGE", title: "MES筆數(PACKAGE)"}
-//                        {data: "otherInfo.passCntQry_PACKAGE", title: "總完成度(PACKAGE)", "sType": "numeric-comma"}
-//                        {data: "floor.id", title: "樓層", visible: false},
-//                        {data: "line.id", title: "線別", visible: false}
+                        {data: "timeCost", title: "工時"},
+                        {data: "otherInfo.changeTimeInfo", title: "換線"},
+                        {data: "otherInfo.changeTimeInfo", title: "MES線別"},
+                        {data: "otherInfo.passCntQry_PREASSY", title: "過站(Pre-Assy)"},
+                        {data: "otherInfo.totalPassCntQry_PREASSY", title: "總過站(Pre-Assy)"},
+                        {data: "otherInfo.passCntQry_ASSY", title: "過站(Assy)"},
+                        {data: "otherInfo.totalPassCntQry_ASSY", title: "總過站(Assy)"},
+                        {data: "otherInfo.passCntQry_T1", title: "過站(T1)"},
+                        {data: "otherInfo.totalPassCntQry_T1", title: "總過站(T1)"},
+                        {data: "otherInfo.passCntQry_BI", title: "過站(BI)"},
+                        {data: "otherInfo.totalPassCntQry_BI", title: "總過站(BI)"},
+                        {data: "otherInfo.passCntQry_T2", title: "過站(T2)"},
+                        {data: "otherInfo.totalPassCntQry_T2", title: "總過站(T2)"},
+                        {data: "otherInfo.passCntQry_T3", title: "過站(T3)"},
+                        {data: "otherInfo.totalPassCntQry_T3", title: "總過站(T3)"},
+                        {data: "otherInfo.passCntQry_T4", title: "過站(T4)"},
+                        {data: "otherInfo.totalPassCntQry_T4", title: "總過站(T4)"},
+                        {data: "otherInfo.passCntQry_PACKAGE", title: "過站(PACKAGE)"},
+                        {data: "otherInfo.totalPassCntQry_PACKAGE", title: "總過站(PACKAGE)"},
+                        {data: "memo", title: "人員備註", "width": "15%"},
+                        {data: "poMemo", title: "工單備註", "width": "15%"},
+                        {data: "id", title: "#"}
                     ],
                     "columnDefs": [
                         {
+                            className: "show-read-more",
+                            "show-read-more": [25]
+                        },
+                        {
                             "type": "html",
-                            "targets": [5, 6, 7, 8, 9, 10, 11, 12],
+                            "targets": [6],
+                            'render': function (data, type, full, meta) {
+                                return data == null ? '---' : roundDecimal(data.change_TIME * data.power_CNT, 1);
+                            }
+                        },
+                        {
+                            "type": "html",
+                            "targets": [7],
+                            'render': function (data, type, full, meta) {
+                                return data == null ? '---' : data.line_DESC;
+                            }
+                        },
+                        {
+                            "type": "html",
+                            "targets": stationsDailySumIndex,
                             'render': function (data, type, full, meta) {
                                 if (data == null) {
                                     return '---';
                                 } else {
-                                    return '(' + data + '/' + full["scheduleQty"] + ')';
+                                    return "<p>(" + data + " / " + full["scheduleQty"] + ")</p>" +
+                                            "<p>" + getPercent(data == 0 ? 0 : data / full["scheduleQty"]) + "</p>";
                                 }
                             }
+                        },
+                        {
+                            "type": "html",
+                            "targets": stationsTotalSumIndex,
+                            'render': function (data, type, full, meta) {
+                                if (data == null) {
+                                    return '---';
+                                } else {
+                                    return "<p>(" + data + " / " + full["totalQty"] + ")</p>" +
+                                            "<p>" + (getPercent(data == 0 ? 0 : data / full["totalQty"])) + "</p>";
+                                }
+                            }
+                        },
+                        {
+                            "type": "html",
+                            "targets": [memoIndex],
+                            'render': function (data, type, full, meta) {
+                                return "<textarea class='memo form-control'>" + (data == null ? "" : data) +
+                                        "</textarea>";
+                            }
+                        },
+                        {
+                            "type": "html",
+                            "targets": [editBtnIndex],
+                            'render': function (data, type, full, meta) {
+                                return "<button type='button' class='btn btn-secondary btn-sm save'>Save</button></div>";
+                            }
                         }
-//                        {
-//                            "type": "html",
-//                            "targets": [6, 8, 10, 12, 14, 16],
-//                            'render': function (data, type, full, meta) {
-//                                return data == null ? '---' : getPercent((data / full["totalQty"]));
-//                            }
-//                        }
                     ],
                     "order": [],
                     "oLanguage": {
@@ -220,8 +323,6 @@
                     displayLength: -1,
                     "processing": true,
                     "initComplete": function (settings, json) {
-                        $("#send").attr("disabled", false);
-
                         $.fn.dataTable.ext.errMode = 'none';
                         $('#tb1')
                                 .on('error.dt', function (e, settings, techNote, message) {
@@ -234,17 +335,151 @@
                         setTimeout(function () {
                             api.columns().flatten().each(function (colIdx) {
                                 var columnData = api.columns(colIdx).data().join('');
-                                if (columnData.length == (api.rows().count() - 1) && colIdx != 0) {
-                                    api.column(colIdx).visible(false);
+                                if (colIdx >= dynamicColIdxMin && colIdx <= dynamicColIdxMax) {
+                                    if (columnData.length == (api.rows().count() - 1) && colIdx != 0) {
+                                        api.column(colIdx).visible(false);
+                                    } else {
+                                        api.column(colIdx).visible(true);
+                                    }
                                 }
                             });
                         }, 500);
+
+                        setTimeout(function () {
+                            $("#send").attr("disabled", false);
+                        }, 1500);
+
+                        addLongTextReadmoreEvent();
+                    },
+                    "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(), data;
+
+                        // Remove the formatting to get integer data for summation
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+
+                        var pageTotal;
+
+                        for (var i = 3; i <= 5; i++) {
+
+                            var sum = api
+                                    .column(i, {page: 'current'})
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            if (i == 4) {
+                                pageTotal = sum;
+                            }
+
+                            $(api.column(i).footer()).html(
+                                    '<p>' + sum + '</p>'
+                                    );
+
+                        }
+
+//                        var scheduleTotalWorktime = 0;
+//                        var poTotalWorktime = 0;
+//                        var totalPcs = api.column(3).data().toArray();
+//                        var schedulePcs = api.column(4).data().toArray();
+//                        var worktime = api.column(5).data().toArray();
+//
+//                        for (i = 0; i < schedulePcs.length; i++) {
+//                            scheduleTotalWorktime += worktime[i];
+//                            poTotalWorktime += (worktime[i] * 1.0 / schedulePcs[i]) * totalPcs[i];
+//                        }
+//
+//                        for (var i = dynamicColIdxMin, j = 0; i <= dynamicColIdxMax; i++, j++) {
+//                            var totalWorktime = ((j % 2 == 0) ? scheduleTotalWorktime : poTotalWorktime);
+//                            var passStationPcs = api.column(i).data().toArray();
+//
+//                            if (passStationPcs != null) {
+//                                var passStationWorktime = 0;
+//                                for (var k = 0; k < passStationPcs.length; k++) {
+//                                    passStationWorktime += (worktime[k] * 1.0 / schedulePcs[k]) * passStationPcs[k];
+//                                }
+//
+////                                // Update footer
+//                                $(api.column(i).footer()).html(
+//                                        '<p>' + roundDecimal(passStationWorktime, 1) + ' / ' + roundDecimal(totalWorktime, 1) + '</p>' +
+//                                        '<p>' + getPercent((totalWorktime == 0 || passStationWorktime == 0) ? 0 : (passStationWorktime / totalWorktime)) + '</p>'
+//                                        );
+//                            }
+//                        }
+
+                        for (var i = dynamicColIdxMin, j = 0; i <= dynamicColIdxMax; i++, j++) {
+
+                            if (j % 2 == 0) {
+                                pageCurrent = api
+                                        .column(i, {page: 'current'})
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+
+                                // Update footer
+                                $(api.column(i).footer()).html(
+                                        '<p>( ' + pageCurrent + ' / ' + pageTotal + ' )</p>' +
+                                        '<p>' + getPercent((pageCurrent == 0 || pageTotal == 0) ? 0 : (pageCurrent / pageTotal)) + '</p>'
+                                        );
+                            }
+                        }
                     },
                     filter: false,
-                    destroy: true,
-                    paginate: false
+                    destroy: false,
+                    paginate: false,
+                    retrieve: true
                 });
 
+                $('#tb1').on("preXhr.dt", function (e, settings, data) {
+                    $(this).DataTable().clear();
+                    settings.iDraw = 0;
+                    $(this).DataTable().draw();
+                });
+
+            }
+
+            function findRemark() {
+                $.ajax({
+                    type: "GET",
+                    url: "<c:url value="/PrepareScheduleController/findPrepareScheduleRemark" />",
+                    data: {
+                        startDate: $("#fini").val(),
+                        "lineType_id[]": $("#lineType").val()
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        var d = response.data;
+                        $("#pmcRemark").html(d.length == 0 ? "NO REMARK" : d[0].pmcRemark);
+                        console.log(response);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        showMsg(xhr.responseText);
+                    }
+                });
+            }
+
+            function addLongTextReadmoreEvent() {
+                var maxLength = 300;
+                $(".show-read-more").each(function () {
+                    var myStr = $(this).text();
+                    if ($.trim(myStr).length > maxLength) {
+                        var newStr = myStr.substring(0, maxLength);
+                        var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
+                        $(this).empty().html(newStr);
+                        $(this).append(' <a href="javascript:void(0);" class="read-more">read more...</a>');
+                        $(this).append('<span class="more-text">' + removedStr + '</span>');
+                    }
+                });
+                $(".read-more").click(function () {
+                    $(this).siblings(".more-text").contents().unwrap();
+                    $(this).remove();
+                });
             }
 
             function formatDate(dateString) {
@@ -297,9 +532,20 @@
                 </div>
             </div>
 
+            <div class="row remark-field">
+                <h5 id="pmcRemark"></h5>
+            </div>
+
             <div class="row">
                 <table id="tb1" class="table table-striped table-hover">
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th id="totalFooter" style="text-align:right">Total:</th>
+                        </tr>
+                    </tfoot>
                 </table>
+
             </div>
 
             <hr />

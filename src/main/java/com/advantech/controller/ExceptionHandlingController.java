@@ -46,8 +46,8 @@ public class ExceptionHandlingController {
     // consider subclassing ExceptionHandlerExceptionResolver (see below).
     @ExceptionHandler({Exception.class})
     public ResponseEntity handleError(HttpServletRequest req, Exception ex) {
-//        System.out.println("Request: " + req.getRequestURL() + " raised " + ex);
-//        log.error(ex.getMessage(), ex);
+        System.out.println("Request: " + req.getRequestURL() + " raised " + ex);
+        log.error(ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());

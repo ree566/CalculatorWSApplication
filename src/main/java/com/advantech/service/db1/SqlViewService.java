@@ -8,7 +8,7 @@ package com.advantech.service.db1;
 import com.advantech.dao.db1.SqlViewDAO;
 import com.advantech.helper.PropertiesReader;
 import com.advantech.model.db1.Bab;
-import com.advantech.model.view.BabAvg;
+import com.advantech.model.view.db1.BabAvg;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

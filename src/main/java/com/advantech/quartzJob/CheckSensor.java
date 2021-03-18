@@ -10,7 +10,7 @@ import com.advantech.model.db1.Bab;
 import com.advantech.helper.ApplicationContextHelper;
 import com.advantech.helper.MailManager;
 import com.advantech.model.db1.User;
-import com.advantech.model.view.SensorCurrentGroupStatus;
+import com.advantech.model.view.db1.SensorCurrentGroupStatus;
 import com.advantech.service.db1.SqlProcedureService;
 import com.advantech.service.db1.SqlViewService;
 import java.util.Collections;

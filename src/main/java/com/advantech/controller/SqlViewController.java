@@ -10,7 +10,7 @@ import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.BabStatus;
 import com.advantech.model.db1.Floor;
 import com.advantech.model.db1.Worktime;
-import com.advantech.model.view.BabAvg;
+import com.advantech.model.view.db1.BabAvg;
 import com.advantech.service.db1.BabService;
 import com.advantech.service.db1.FloorService;
 import com.advantech.service.db2.LineBalancingService;

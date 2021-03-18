@@ -53,6 +53,7 @@ public class PrepareSchedule implements Serializable {
     private int priority = 0;
     private Date createDate;
     private String hrcMemo;
+    private String poMemo;
 
     private Map otherInfo;
 
@@ -243,6 +244,15 @@ public class PrepareSchedule implements Serializable {
 
     public void setHrcMemo(String hrcMemo) {
         this.hrcMemo = hrcMemo;
+    }
+
+    @Column(name = "po_memo", length = 150)
+    public String getPoMemo() {
+        return poMemo;
+    }
+
+    public void setPoMemo(String poMemo) {
+        this.poMemo = poMemo;
     }
 
     @Transient

@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
-import org.json.JSONObject;
 
 /**
  *
@@ -192,20 +191,23 @@ public class TestClass {
         return rest.getStart().compareTo(d) * d.compareTo(rest.getEnd()) >= 0;
     }
 
-//    @Test
+    @Test
     public void testMap() throws Exception {
-        String url = "https://atmc.advantech.com.tw/Api/AtmcEmployee/v1/Employee/" + "A-7568";
-        String url2 = "https://atmc.advantech.com.tw/Api/AtmcEmployee/v1/Employee/login";
+        String url = "http://172.22.250.120:7878/v1/Employee/" + "A-75068";
+        String url2 = "http://172.22.250.120:7878/v1/Employee/login";
         Map m = new HashMap();
         m.put("empNo", "A-7568");
-        m.put("password", "w75687568");
+        m.put("password", "www756878568");
         String charset = "UTF-8";
 
         String result = HttpClientUtil.doGet(url, m, charset);
         String result2 = HttpClientUtil.doPost(url2, m, charset);
 
-        System.out.println(result);
-        System.out.println(result2);
+//        String result = AtmcEmployeeUtils.getUser("A-75s68");
+//        Boolean result2 = AtmcEmployeeUtils.userLogin("A-7568", "www757687568");
+//
+        System.out.println("".equals(result) ? "No data" : result);
+//        System.out.println(result2 == false);
     }
 
 //    @Test
@@ -247,7 +249,7 @@ public class TestClass {
 
     }
     
-    @Test
+//    @Test
     public void testDateTime3() {
         DateTime d = new DateTime();
         System.out.println(d.getWeekOfWeekyear());

@@ -7,7 +7,7 @@ package com.advantech.model.db1;
 
 import com.advantech.converter.BabStatusConverter;
 import com.advantech.converter.ReplyStatusConverter;
-import com.advantech.model.view.BabAvg;
+import com.advantech.model.view.db1.BabAvg;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;

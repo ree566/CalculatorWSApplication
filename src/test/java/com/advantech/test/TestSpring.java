@@ -7,7 +7,7 @@ package com.advantech.test;
 
 import com.advantech.helper.PropertiesReader;
 import com.advantech.model.db1.BabDataCollectMode;
-import com.advantech.model.view.BabAvg;
+import com.advantech.model.view.db1.BabAvg;
 import com.advantech.service.db2.LineBalancingService;
 import com.advantech.service.db1.SqlViewService;
 import java.util.Arrays;

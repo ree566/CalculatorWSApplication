@@ -7,10 +7,10 @@ package com.advantech.dao.db1;
 
 import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.Floor;
-import com.advantech.model.view.BabLastBarcodeStatus;
-import com.advantech.model.view.BabLastGroupStatus;
-import com.advantech.model.view.PreAssyModuleUnexecuted;
-import com.advantech.model.view.SensorCurrentGroupStatus;
+import com.advantech.model.view.db1.BabLastBarcodeStatus;
+import com.advantech.model.view.db1.BabLastGroupStatus;
+import com.advantech.model.view.db1.PreAssyModuleUnexecuted;
+import com.advantech.model.view.db1.SensorCurrentGroupStatus;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

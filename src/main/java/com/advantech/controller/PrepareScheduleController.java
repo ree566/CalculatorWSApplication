@@ -10,25 +10,29 @@ import com.advantech.datatable.DataTableResponse;
 import com.advantech.model.db1.Floor;
 import com.advantech.model.db1.LineType;
 import com.advantech.model.db1.PrepareSchedule;
-import com.advantech.model.db1.RptStationQty;
+import com.advantech.model.view.db4.MesChangeTimeInfo;
+import com.advantech.model.view.db4.MesPassStationInfo;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl;
 import com.advantech.service.db1.FloorService;
 import com.advantech.service.db1.LineTypeService;
+import com.advantech.service.db1.PrepareScheduleDailyRemarkService;
 import com.advantech.service.db1.PrepareScheduleService;
-import com.advantech.webservice.Factory;
-import com.advantech.webservice.WebServiceRV;
+import com.advantech.service.db4.SqlViewService;
+import com.advantech.webservice.Section;
 import static com.google.common.base.Preconditions.checkState;
-import com.google.common.collect.ImmutableMap;
 import static com.google.common.collect.Lists.newArrayList;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -61,19 +65,37 @@ public class PrepareScheduleController {
     private LineTypeService lineTypeService;
 
     @Autowired
-    private WebServiceRV rv;
+    private PrepareScheduleDailyRemarkService psRemarkService;
 
-    private Map<List<Integer>, List<Station>> stationMap;
+    private List<StationInfo> stationMap;
+
+    @Autowired
+    @Qualifier("sqlViewService4")
+    private SqlViewService sqlViewService;
+
+    private class StationInfo {
+
+        public List<Integer> lineTypeIds;
+        public List<Station> stations;
+        public Section section;
+
+        public StationInfo(List<Integer> lineTypeIds, List<Station> stations, Section section) {
+            this.lineTypeIds = lineTypeIds;
+            this.stations = stations;
+            this.section = section;
+        }
+
+    }
 
     @PostConstruct
     protected void init() {
-        stationMap = ImmutableMap.<List<Integer>, List<Station>>builder()
-                .put(newArrayList(9), newArrayList(Station.PREASSY))
-                .put(newArrayList(1), newArrayList(Station.ASSY))
-                .put(newArrayList(7), newArrayList(Station.T1, Station.BI))
-                .put(newArrayList(8), newArrayList(Station.T2, Station.T3, Station.T4))
-                .put(newArrayList(3), newArrayList(Station.PACKAGE))
-                .build(); 
+        stationMap = newArrayList(
+                new StationInfo(newArrayList(9), newArrayList(Station.PREASSY), Section.PREASSY),
+                new StationInfo(newArrayList(1), newArrayList(Station.ASSY), Section.BAB),
+                new StationInfo(newArrayList(7), newArrayList(Station.T1, Station.BI), Section.TEST),
+                new StationInfo(newArrayList(8), newArrayList(Station.T2, Station.T3, Station.T4), Section.TEST),
+                new StationInfo(newArrayList(3), newArrayList(Station.PACKAGE), Section.PACKAGE)
+        );
     }
 
     @RequestMapping(value = "/findPrepareSchedule", method = {RequestMethod.GET})
@@ -134,23 +156,48 @@ public class PrepareScheduleController {
     private List<PrepareSchedule> getData(DateTime startDate, Integer[] lineType_id) {
         List<LineType> lineTypes = lineTypeService.findByPrimaryKeys(lineType_id);
         List<PrepareSchedule> schedules = psService.findByLineTypeAndDate(lineTypes, startDate);
-        Map<String, List<RptStationQty>> dataMap = new HashMap<>();
-        List<Station> stations = stationMap.get(Arrays.asList(lineType_id));
+        if (!schedules.isEmpty()) {
+            Map<String, MesPassStationInfo> dataMap = new HashMap<>();
+            StationInfo stationInfo = stationMap.stream()
+                    .filter(s -> s.lineTypeIds.containsAll(Arrays.asList(lineType_id)))
+                    .findFirst().orElse(null);
+            if (stationInfo == null) {
+                return newArrayList();
+            }
+            List<Station> stations = stationInfo.stations;
+            List<String> po = schedules.stream()
+                    .map(PrepareSchedule::getPo)
+                    .collect(Collectors.toList());
+            List<MesPassStationInfo> passStationInfos = sqlViewService.findMesPassStationInfo(po, startDate);
+            List<MesChangeTimeInfo> changeTimeInfos = sqlViewService.findMesChangeTimeDetail(po);
 
-        stations.forEach((station) -> {
-            List<RptStationQty> mesQty = rv.getRptStationQtys(startDate, startDate.plusDays(1), station.token(), Factory.DEFAULT);
-            dataMap.put(station.name(), mesQty);
-        });
+            schedules.stream().forEach(p -> {
+                stations.forEach((station) -> {
+                    MesPassStationInfo info = passStationInfos.stream()
+                            .filter(i -> i.getWIP_NO().equals(p.getPo()) && i.getSTATION_ID().equals(new BigDecimal(station.token())))
+                            .findFirst().orElse(null);
+                    dataMap.put(station.name(), info);
+                });
 
-        schedules.stream().forEach(p -> {
-            Map<Object, Object> otherInfo = new HashMap<>();
-            dataMap.forEach((k, v) -> {
-                int stationQty = v.stream().filter(m -> m.getPo().equals(p.getPo())).mapToInt(m -> m.getQty()).sum();
-                otherInfo.put("passCntQry_" + k, stationQty);
+                Map<Object, Object> otherInfo = new HashMap<>();
+                dataMap.forEach((k, v) -> {
+                    int passQty = v == null ? 0 : v.getPASS_QTY().intValue();
+                    int totalPassQty = v == null ? 0 : v.getTOTAL_PASS_QTY().intValue();
+                    otherInfo.put("passCntQry_" + k, passQty);
+                    otherInfo.put("totalPassCntQry_" + k, totalPassQty);
+                });
+
+                MesChangeTimeInfo changeTimeInfo = changeTimeInfos.stream()
+                        .filter(i -> i.getWIP_NO().equals(p.getPo()) && i.getUNIT_NO().equals(stationInfo.section.getCode()))
+                        .findFirst()
+                        .orElse(null);
+
+                otherInfo.put("changeTimeInfo", changeTimeInfo);
+
+                p.setOtherInfo(otherInfo);
+
             });
-            p.setOtherInfo(otherInfo);
-
-        });
+        }
         return schedules;
     }
 
@@ -167,6 +214,29 @@ public class PrepareScheduleController {
         public Integer token() {
             return this.value;
         }
+    }
+
+    @RequestMapping(value = "/updateMemo", method = {RequestMethod.POST})
+    @ResponseBody
+    protected String updateMemo(
+            @RequestParam int prepareSchedule_id,
+            @RequestParam String memo,
+            HttpServletRequest request
+    ) {
+        PrepareSchedule ps = wService.findByPrimaryKey(prepareSchedule_id);
+        ps.setMemo(memo);
+        wService.update(ps);
+        return "success";
+    }
+
+    @RequestMapping(value = "/findPrepareScheduleRemark", method = {RequestMethod.GET})
+    @ResponseBody
+    protected DataTableResponse findPrepareScheduleRemark(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam("lineType_id[]") Integer[] lineType_id,
+            HttpServletRequest request
+    ) {
+        return new DataTableResponse(psRemarkService.findByLineTypeAndDate(lineType_id, startDate));
     }
 
 }

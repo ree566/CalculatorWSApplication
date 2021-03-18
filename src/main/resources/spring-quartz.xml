@@ -256,7 +256,7 @@
     
     <bean id="SyncPrepareScheduleForAssy-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="SyncPrepareScheduleForAssy-Job" />
-        <property name="cronExpression" value="0 45 8,17 ? * * *" />
+        <property name="cronExpression" value="0 45 8,12,17 ? * * *" />
     </bean>
     
     <!--
@@ -270,7 +270,7 @@
     
     <bean id="SyncPrepareScheduleForPacking-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="SyncPrepareScheduleForPacking-Job" />
-        <property name="cronExpression" value="0 45 8,17 ? * * *" />
+        <property name="cronExpression" value="0 45 8,12,17 ? * * *" />
     </bean>
     
     <!--
