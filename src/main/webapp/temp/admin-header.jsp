@@ -10,6 +10,7 @@
 <sec:authorize access="hasRole('OPER_FQC')"  var="isFqcOper" />
 <sec:authorize access="hasRole('BACKDOOR_4876_')"  var="isBackDoor4876" />
 <sec:authorize access="hasRole('OPER_IE')"  var="isIeOper" />
+<sec:authorize access="hasRole('DATA_DEBUGGER')"  var="isDebugger" />
 <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />">
 <link rel="stylesheet" href="<c:url value="/webjars/font-awesome/4.7.0/css/font-awesome.min.css" />" >
 <style>
@@ -176,7 +177,7 @@
                     </a>
                     <ul class="dropdown-menu totalMapSelect"></ul>
                 </li>
-                <c:if test="${isIeOper || isAdmin || isBackDoor4876}">
+                <c:if test="${isIeOper || isAdmin || isDebugger}">
                     <li>
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <span class="glyphicon glyphicon-list-alt" aria-hidden="true" /> 
@@ -184,7 +185,7 @@
                             <span class="caret" />
                         </a>
                         <ul class="dropdown-menu sensorAdjustSelect">
-                            <c:if test="${isAdmin || isMfgOper || isBackDoor4876}">
+                            <c:if test="${isAdmin || isMfgOper || isDebugger}">
                                 <li><a href="SensorTest">Sensor檢測</a></li>
                                 </c:if>
                         </ul>

@@ -68,8 +68,10 @@ public class UserController {
             return true;
         } catch (Exception ex) {
             log.info("Have some issue on checking user on ATMC service...", ex);
-            User user = userService.findByJobnumber(jobnumber);
-            return user != null;
+//            User user = userService.findByJobnumber(jobnumber);
+//            return user != null;
+            checkState(1 == 0, "Have some issue on checking user on ATMC service...");//Just show server error message to user.
+            return false;
         }
     }
 

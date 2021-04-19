@@ -322,5 +322,14 @@
     <!-- 輔助類別，幫助在非spring管理下的物件取得spring管理的物件 -->
     <bean id="SpringApplicationContext" class="com.advantech.helper.ApplicationContextHelper">
     </bean>
+    
+    <!--RESTful setting-->
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+<!--        <property name="interceptors">
+            <list>
+                <bean class="RestAuthInterceptor" />
+            </list>
+        </property>-->
+    </bean>
 
 </beans>

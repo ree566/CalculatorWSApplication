@@ -42,7 +42,9 @@ public class Endpoint extends BasicHandler implements WebSocketHandler {
         log.info("Endpoint2 init polling job: " + JOB_NAME);
         super.init(JOB_NAME);
         if (super.sessions != null && !super.sessions.isEmpty()) {
-            sessions.clear();
+            synchronized (sessions) {
+                sessions.clear();
+            }
         }
     }
 
@@ -59,11 +61,12 @@ public class Endpoint extends BasicHandler implements WebSocketHandler {
 
 //        HandshakeRequest req = (HandshakeRequest) conf.getUserProperties().get("handshakereq");
 //        Map<String,List<String>> headers = req.getHeaders();
-        sessions.add(wss);
 //        System.out.println("New session opened: " + session.getId());
-
         //每次當client連接進來時，去看目前session的數量 當有1個session時把下方quartz job加入到schedule裏頭(只要執行一次，不要重複加入)
         synchronized (sessions) {
+
+            sessions.add(wss);
+
             int a = sessions.size();
             if (a > 0 && isJobScheduled == false) {
                 pollingDBAndBrocast();
@@ -79,19 +82,23 @@ public class Endpoint extends BasicHandler implements WebSocketHandler {
 
     @Override
     public void handleTransportError(WebSocketSession wss, Throwable thrwbl) throws Exception {
-        sessions.remove(wss);
-        log.error(thrwbl.toString(), thrwbl);
+        synchronized (sessions) {
+            sessions.remove(wss);
+            log.error(thrwbl.toString(), thrwbl);
+        }
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession wss, CloseStatus cs) throws Exception {
-        sessions.remove(wss);
+        synchronized (sessions) {
+            sessions.remove(wss);
 //        System.out.println("session closed: " + session.getId());
 
-        //當client端完全沒有連結中的使用者時，把job給關閉(持續執行浪費性能)
-        if (sessions.isEmpty()) {
-            unPollingDB();
-            isJobScheduled = false;
+            //當client端完全沒有連結中的使用者時，把job給關閉(持續執行浪費性能)
+            if (sessions.isEmpty()) {
+                unPollingDB();
+                isJobScheduled = false;
+            }
         }
     }
 

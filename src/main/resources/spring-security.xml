@@ -34,8 +34,8 @@
         
         <!--Global system access setting-->
         <!--<intercept-url pattern="/pages/admin/**" access="permitAll" />-->
-        <intercept-url pattern="/pages/admin/SensorAdjust" access="hasAnyRole('OPER_IE','ADMIN', 'BACKDOOR_4876_')" />
-        <intercept-url pattern="/pages/admin/sensorAdjust.jsp**" access="hasAnyRole('OPER_IE','ADMIN', 'BACKDOOR_4876_')" />
+        <intercept-url pattern="/pages/admin/SensorAdjust" access="hasAnyRole('DATA_DEBUGGER', 'OPER_IE','ADMIN')" />
+        <intercept-url pattern="/pages/admin/sensorAdjust.jsp**" access="hasAnyRole('DATA_DEBUGGER', 'OPER_IE','ADMIN')" />
         <intercept-url pattern="/pages/admin/ModelSopRemark" access="hasAnyRole('OPER_IE','OPER_MFG', 'OPER_MFG_LINEOWNER', 'OPER_IE', 'ADMIN', 'BACKDOOR_4876_')" />
         <intercept-url pattern="/pages/admin/modelSopRemark.jsp**" access="hasAnyRole('OPER_IE','OPER_MFG', 'OPER_MFG_LINEOWNER', 'OPER_IE', 'ADMIN', 'BACKDOOR_4876_')" />
         <intercept-url pattern="/pages/admin/FqcModelStandardTime" access="hasAnyRole('OPER_IE','OPER_FQC', 'ADMIN')" />
@@ -47,8 +47,8 @@
         <intercept-url pattern="/pages/testPages/**" access="hasRole('ADMIN')" />
         <intercept-url pattern="/pages/admin/setting/**" access="hasRole('ADMIN')" />
         <intercept-url pattern="/pages/admin/setting/**" access="hasRole('ADMIN')" />
-        <intercept-url pattern="/pages/admin/SensorTest" access="hasAnyRole('BACKDOOR_4876_', 'OPER_IE','ADMIN', 'OPER_MFG')" />
-        <intercept-url pattern="/pages/admin/sensorTest.jsp**" access="hasAnyRole('BACKDOOR_4876_', 'OPER_IE','ADMIN', 'OPER_MFG')" />
+        <intercept-url pattern="/pages/admin/SensorTest" access="hasAnyRole('DATA_DEBUGGER', 'OPER_IE','ADMIN', 'OPER_MFG')" />
+        <intercept-url pattern="/pages/admin/sensorTest.jsp**" access="hasAnyRole('DATA_DEBUGGER', 'OPER_IE','ADMIN', 'OPER_MFG')" />
         <intercept-url pattern="/pages/admin/TestTotalDetail" access="hasAnyRole('BACKDOOR_4876_', 'OPER_IE','ADMIN', 'OPER_MFG')" />
         <intercept-url pattern="/pages/admin/testTotal.jsp" access="hasAnyRole('BACKDOOR_4876_', 'OPER_IE','ADMIN', 'OPER_MFG')" />
         <intercept-url pattern="/pages/admin/TotalMap" access="permitAll" />

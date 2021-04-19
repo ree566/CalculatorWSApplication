@@ -171,6 +171,10 @@
                 border-color: red;
                 cursor: pointer;
             }
+/*            .rotate {
+                -webkit-transform: rotateX(180deg);
+                transform: rotateX(180deg);
+            }*/
         </style>
         <script src="<c:url value="/webjars/jquery/1.12.4/jquery.min.js" />"></script>
         <script src="<c:url value="/js/jquery-ui-1.10.0.custom.min.js"/>"></script>
@@ -206,7 +210,7 @@
                 dragableWiget.addClass("adjustPosition");
                 dragableWiget.not(".clearWiget").addClass("ui-helper").draggable({
                     drag: function (e) {
-                        return false;
+//                        return false;
                     }
                 });
 
@@ -628,7 +632,7 @@
         <div id="wigetCtrl">
             <%--<c:out value="${userLineType == null ? 'N/A' : userLineType}" />--%>
             <%--<c:out value="${userSitefloor}" />--%>
-            <div id="mapGroup">
+            <div id="mapGroup" class="rotate">
                 <div id="wigetInfo">
                     <label for="empty" style="float:left">空</label>
                     <div class="draggable blub-empty divCustomBg"></div>
