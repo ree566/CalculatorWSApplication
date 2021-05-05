@@ -115,11 +115,11 @@ public class BabFirstStationController {
         babService.checkAndInsert(bab, tag);
 
         //Don't show mail send error message when mail error caused.
-        try {
-            sendMailAfterBabRunIn(bab);
-        } catch (MessagingException e) {
-            log.error(e.getMessage());
-        }
+//        try {
+//            sendMailAfterBabRunIn(bab);
+//        } catch (MessagingException e) {
+//            log.error(e.getMessage());
+//        }
         ep6.syncAndEcho();
         return "success";
     }

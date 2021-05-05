@@ -19,15 +19,15 @@ import com.advantech.model.db1.TestRecords;
 import com.advantech.model.db1.UserInfoOnMes;
 import com.advantech.model.db1.UserOnMes;
 import com.advantech.model.db1.UsersInfoOnMes;
+import com.advantech.webservice.mes.Section;
+import com.advantech.webservice.mes.SimpleWebServiceRV;
+import com.advantech.webservice.mes.WsClient;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.xml.bind.JAXBContext;
+import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.joda.time.DateTime;
@@ -37,52 +37,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.tempuri.RvResponse;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  *
  * @author Wei.Cheng
  */
 @Component
-public class WebServiceRV {
+public class WebServiceRV extends SimpleWebServiceRV {
 
     private static final Logger log = LoggerFactory.getLogger(WebServiceRV.class);
-
-    @Autowired
-    private WsClient client;
 
     @Autowired
     private MultiWsClient mClient;
 
     private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-    //Get data from WebService
-    private List<Object> getWebServiceData(String queryString) {
-        RvResponse response = client.simpleRvSendAndReceive(queryString);
-        RvResponse.RvResult result = response.getRvResult();
-        return result.getAny();
+    @PostConstruct
+    private void init() {
     }
 
-    private Document getWebServiceDataForDocument(String queryString) {
-        List data = getWebServiceData(queryString);
-        return ((Node) data.get(1)).getOwnerDocument();
-    }
-
-    private List getKanbanUsers() {
+    public List getKanbanUsers() {
+        super.setWsClient(mClient.getClient(Factory.DEFAULT));
         String queryString = "<root>"
                 + "<METHOD ID='ETLSO.QryProductionKanban4Test'/>"
                 + "<KANBANTEST>"
                 + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,04,105</STATION_ID>"
                 + "</KANBANTEST>"
                 + "</root>";
-        return this.getWebServiceData(queryString);
+        return super.getWebServiceData(queryString);
     }
 
     public List<String> getKanbanUsersForString() throws IOException, TransformerConfigurationException, TransformerException {
+        WsClient client = mClient.getClient(Factory.DEFAULT);
         String queryString = "<root>"
                 + "<METHOD ID='ETLSO.QryProductionKanban4Test'/>"
                 + "<KANBANTEST>"
@@ -93,67 +79,44 @@ public class WebServiceRV {
     }
 
     public String getKanbanWorkId(String jobnumber) {
-        String today = getToday();
+        super.setWsClient(mClient.getClient(Factory.DEFAULT));
+        String dt = fmt.print(new DateTime());
         String queryString = "<root><METHOD ID='WMPSO.QryWorkManPowerCard001'/><WORK_MANPOWER_CARD><WORK_ID>-1</WORK_ID><LINE_ID>-1</LINE_ID><STATION_ID>-1</STATION_ID><FACTORY_NO></FACTORY_NO><UNIT_NO></UNIT_NO>"
                 + "<USER_NO>" + jobnumber + "</USER_NO>"
                 + "<CARD_FLAG>1</CARD_FLAG>"
-                + "<START_DATE>" + today + "</START_DATE>"
-                + "<END_DATE>" + today + "</END_DATE>"
+                + "<START_DATE>" + dt + "</START_DATE>"
+                + "<END_DATE>" + dt + "</END_DATE>"
                 + "</WORK_MANPOWER_CARD></root>";
-
-        Document doc = this.getWebServiceDataForDocument(queryString);
         String childTagName = "WORK_ID";
-        Element rootElement = doc.getDocumentElement();
-        String requestQueueName = getString(childTagName, rootElement);
-        return requestQueueName;
+        return super.getFieldValue(queryString, childTagName);
     }
 
     public String getModelNameByPo(String po, Factory f) {
+        super.setWsClient(mClient.getClient(f));
         String queryString = "<root><METHOD ID='WIPSO.QryWipAtt001'/><WIP_ATT><WIP_NO>"
                 + po
                 + "</WIP_NO><ITEM_NO></ITEM_NO></WIP_ATT></root>";
-
-        RvResponse response = mClient.simpleRvSendAndReceive(queryString, f);
-        RvResponse.RvResult result = response.getRvResult();
-        List l = result.getAny();
-
-        Document doc = ((Node) l.get(1)).getOwnerDocument();
         String childTagName = "ITEM_NO";
-        Element rootElement = doc.getDocumentElement();
-        String requestQueueName = getString(childTagName, rootElement);
-        return requestQueueName;
+        return super.getFieldValue(queryString, childTagName);
     }
 
     public String getPoByBarcode(String barcode, Factory f) {
+        super.setWsClient(mClient.getClient(f));
         String queryString = "<root><METHOD ID='WIPSO.QryWipBarcode003'/><WIP_BARCODE><BARCODE_NO>"
                 + barcode
                 + "</BARCODE_NO></WIP_BARCODE></root>";
-
-        RvResponse response = mClient.simpleRvSendAndReceive(queryString, f);
-        RvResponse.RvResult result = response.getRvResult();
-        List l = result.getAny();
-
-        Document doc = ((Node) l.get(1)).getOwnerDocument();
         String childTagName = "WIP_NO";
-        Element rootElement = doc.getDocumentElement();
-        String requestQueueName = getString(childTagName, rootElement);
-        return requestQueueName;
+        return super.getFieldValue(queryString, childTagName);
     }
 
     public UserOnMes getMESUser(String jobnumber) {
         try {
+            super.setWsClient(mClient.getClient(Factory.DEFAULT));
             String queryString = "<root><METHOD ID='PLBSO.QryLogion'/><USER_INFO><USER_NO>"
                     + jobnumber
                     + "</USER_NO><PASSWORD></PASSWORD><STATUS>A</STATUS></USER_INFO></root>";
 
-            List l = this.getWebServiceData(queryString);
-            Document doc = ((Node) l.get(1)).getOwnerDocument();
-            //Skip the <diffgr:diffgram> tag, read QryData tag directly.
-            Node node = doc.getFirstChild().getFirstChild().getFirstChild();
-
-            Object o = this.unmarshalFromList(node, UserOnMes.class);
-
-            return o == null ? null : (UserOnMes) o;
+            return super.getMarshalResult(queryString, UserOnMes.class);
         } catch (Exception ex) {
             log.error(ex.toString());
             return null;
@@ -161,49 +124,29 @@ public class WebServiceRV {
     }
 
     public List<UserInfoOnMes> getUsersInfoOnMes(Factory f) {
-
         try {
+            super.setWsClient(mClient.getClient(f));
             String queryString
                     = "<root><METHOD ID='SYSSO.QryUserInfo001'/><USERS><USER_ID>-1</USER_ID><DEPT_ID>-1</DEPT_ID>"
                     + "<STATUS>A</STATUS><UNIT_NO></UNIT_NO><LINE_ID>-1</LINE_ID></USERS></root>";
-
-            RvResponse response = mClient.simpleRvSendAndReceive(queryString, f);
-            RvResponse.RvResult result = response.getRvResult();
-            List l = result.getAny();
-
-            Document doc = ((Node) l.get(1)).getOwnerDocument();
-            //Skip the <diffgr:diffgram> tag, read QryData tag directly.
-            Node node = doc.getFirstChild().getFirstChild();
-
-            Object o = this.unmarshalFromList(node, UsersInfoOnMes.class);
-            return o == null ? new ArrayList() : ((UsersInfoOnMes) o).getQryData();
+            return super.getMarshalResults(queryString, UsersInfoOnMes.class);
         } catch (JAXBException ex) {
             log.error(ex.toString());
             return new ArrayList();
         }
     }
 
-    public List<PassStationRecord> getPassStationRecords(String po, final Factory f) {
-        String stations = "16";
-
+    public List<PassStationRecord> getPassStationRecords(String po, int mesStationId, final Factory f) {
         try {
+            super.setWsClient(mClient.getClient(f));
             String queryString
                     = "<root><METHOD ID='ETLSO.QryT_SnPassTime001'/><WIP_INFO><WIP_NO>"
                     + po
                     + "</WIP_NO><UNIT_NO></UNIT_NO><LINE_ID></LINE_ID><STATION_ID>"
-                    + stations
+                    + mesStationId
                     + "</STATION_ID></WIP_INFO></root>";
 
-            RvResponse response = mClient.simpleRvSendAndReceive(queryString, f);
-            RvResponse.RvResult result = response.getRvResult();
-            List l = result.getAny();
-
-            Document doc = ((Node) l.get(1)).getOwnerDocument();
-            //Skip the <diffgr:diffgram> tag, read QryData tag directly.
-            Node node = doc.getFirstChild().getFirstChild();
-
-            Object o = this.unmarshalFromList(node, PassStationRecords.class);
-            return o == null ? new ArrayList() : ((PassStationRecords) o).getQryData();
+            return super.getMarshalResults(queryString, PassStationRecords.class);
         } catch (JAXBException ex) {
             log.error(ex.toString());
             return new ArrayList();
@@ -212,14 +155,16 @@ public class WebServiceRV {
 
     public List<TestRecord> getTestLineTypeRecords() {
         try {
-            List l = this.getKanbanUsers();
-            Document doc = ((Node) l.get(1)).getOwnerDocument();
-            //Skip the <diffgr:diffgram> tag, read QryData tag directly.
-            Node node = doc.getFirstChild().getFirstChild();
+            super.setWsClient(mClient.getClient(Factory.DEFAULT));
+            String queryString = "<root>"
+                    + "<METHOD ID='ETLSO.QryProductionKanban4Test'/>"
+                    + "<KANBANTEST>"
+                    + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,04,105</STATION_ID>"
+                    + "</KANBANTEST>"
+                    + "</root>";
 
-            Object o = this.unmarshalFromList(node, TestRecords.class);
+            return super.getMarshalResults(queryString, TestRecords.class);
 
-            return o == null ? new ArrayList() : ((TestRecords) o).getQryData();
         } catch (JAXBException ex) {
             log.error(ex.toString());
             return new ArrayList();
@@ -227,8 +172,9 @@ public class WebServiceRV {
     }
 
     public List<TestPassStationDetail> getTestPassStationDetails(List<String> jobnumbers, Section section, int station, DateTime sD, DateTime eD, final Factory f) {
-
         try {
+            super.setWsClient(mClient.getClient(f));
+
             String jobnumberStr = String.join(",", jobnumbers);
 
             String queryString
@@ -244,16 +190,7 @@ public class WebServiceRV {
                     + "</RPT404>"
                     + "</root>";
 
-            RvResponse response = mClient.simpleRvSendAndReceive(queryString, f);
-            RvResponse.RvResult result = response.getRvResult();
-            List l = result.getAny();
-
-            Document doc = ((Node) l.get(1)).getOwnerDocument();
-            //Skip the <diffgr:diffgram> tag, read QryData tag directly.
-            Node node = doc.getFirstChild().getFirstChild();
-
-            Object o = this.unmarshalFromList(node, TestPassStationDetails.class);
-            return o == null ? new ArrayList() : ((TestPassStationDetails) o).getQryData();
+            return super.getMarshalResults(queryString, TestPassStationDetails.class);
         } catch (JAXBException ex) {
             log.error(ex.toString());
             return new ArrayList();
@@ -266,10 +203,9 @@ public class WebServiceRV {
     }
 
     public List<MesPassCountRecord> getMesPassCountRecords(DateTime sD, DateTime eD, final Factory f) {
-
-        String unit = "B";
-
         try {
+            super.setWsClient(mClient.getClient(f));
+            String unit = "B";
             String queryString
                     = "<root>"
                     + "<METHOD ID='KPISO.QryRPT404'/>"
@@ -282,16 +218,7 @@ public class WebServiceRV {
                     + "</RPT404>"
                     + "</root>";
 
-            RvResponse response = mClient.simpleRvSendAndReceive(queryString, f);
-            RvResponse.RvResult result = response.getRvResult();
-            List l = result.getAny();
-
-            Document doc = ((Node) l.get(1)).getOwnerDocument();
-            //Skip the <diffgr:diffgram> tag, read QryData tag directly.
-            Node node = doc.getFirstChild().getFirstChild();
-
-            Object o = this.unmarshalFromList(node, MesPassCountRecords.class);
-            return o == null ? new ArrayList() : ((MesPassCountRecords) o).getQryData();
+            return super.getMarshalResults(queryString, MesPassCountRecords.class);
         } catch (JAXBException ex) {
             log.error(ex.toString());
             return new ArrayList();
@@ -299,8 +226,8 @@ public class WebServiceRV {
     }
 
     public List<RptStationQty> getRptStationQtys(String modelName, int mesStationId, final Factory f) {
-
         try {
+            super.setWsClient(mClient.getClient(f));
             String queryString
                     = "<root>"
                     + "<METHOD ID='RPTSO.QryRptStationQty001'/>"
@@ -314,43 +241,11 @@ public class WebServiceRV {
                     + "</STATION_QTY>"
                     + "</root>";
 
-            RvResponse response = mClient.simpleRvSendAndReceive(queryString, f);
-            RvResponse.RvResult result = response.getRvResult();
-            List l = result.getAny();
-
-            Document doc = ((Node) l.get(1)).getOwnerDocument();
-            //Skip the <diffgr:diffgram> tag, read QryData tag directly.
-            Node node = doc.getFirstChild().getFirstChild();
-
-            Object o = this.unmarshalFromList(node, RptStationQtys.class);
-            return o == null ? new ArrayList() : ((RptStationQtys) o).getQryData();
+            return super.getMarshalResults(queryString, RptStationQtys.class);
         } catch (JAXBException ex) {
             log.error(ex.toString());
             return new ArrayList();
         }
     }
 
-    private Object unmarshalFromList(Node node, Class clz) throws JAXBException {
-
-        //Unmarshal the data into javaObject.
-        JAXBContext jc = JAXBContext.newInstance(clz);
-        Unmarshaller u = jc.createUnmarshaller();
-
-        return node == null ? null : u.unmarshal(node);
-    }
-
-    private String getString(String tagName, Element element) {
-        NodeList list = element.getElementsByTagName(tagName);
-        if (list != null && list.getLength() > 0) {
-            NodeList subList = list.item(0).getChildNodes();
-            if (subList != null && subList.getLength() > 0) {
-                return subList.item(0).getNodeValue();
-            }
-        }
-        return null;
-    }
-
-    private String getToday() {
-        return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-    }
 }

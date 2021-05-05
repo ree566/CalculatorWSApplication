@@ -18,7 +18,7 @@ import com.advantech.service.db1.LineTypeService;
 import com.advantech.service.db1.PrepareScheduleDailyRemarkService;
 import com.advantech.service.db1.PrepareScheduleService;
 import com.advantech.service.db4.SqlViewService;
-import com.advantech.webservice.Section;
+import com.advantech.webservice.mes.Section;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Lists.newArrayList;
 import java.math.BigDecimal;

@@ -137,7 +137,7 @@ public class FqcService {
         history.setLastUpdateTime(now);
         fqcSettingHistoryService.update(history);
 
-        List<PassStationRecord> records = rv.getPassStationRecords(pojo.getPo(), fqcLine.getFactory());
+        List<PassStationRecord> records = rv.getPassStationRecords(pojo.getPo(), 16, fqcLine.getFactory());
         records.removeIf(rec -> !history.getJobnumber().equals(rec.getUserNo())
                 || rec.getCreateDate().before(pojo.getBeginTime())
                 || rec.getCreateDate().after(pojo.getLastUpdateTime()));

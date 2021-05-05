@@ -7,7 +7,7 @@
 package com.advantech.controller;
 
 import com.advantech.datatable.DataTableResponse;
-import com.advantech.helper.AtmcEmployeeUtils;
+import com.advantech.webservice.atmc.AtmcEmployeeUtils;
 import com.advantech.helper.CustomPasswordEncoder;
 import com.advantech.helper.SecurityPropertiesUtils;
 import com.advantech.model.db1.User;

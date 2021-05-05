@@ -5,71 +5,46 @@
  */
 package com.advantech.webservice;
 
-import static com.google.common.base.Preconditions.checkState;
+import com.advantech.webservice.mes.UploadType;
+import com.advantech.webservice.mes.WsClient;
 import java.io.IOException;
-import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
-import org.tempuri.ObjectFactory;
-import org.tempuri.Rv;
+import java.util.List;
+import javax.xml.transform.TransformerException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.tempuri.RvResponse;
-import org.tempuri.Tx;
 import org.tempuri.TxResponse;
 
 /**
  *
  * @author Wei.Cheng
  */
-public class MultiWsClient extends WebServiceGatewaySupport {
+@Component
+public class MultiWsClient {
 
-    private WebServiceTemplate webServiceTemplate = null;
+    @Autowired
+    @Qualifier("wsClient")
+    private WsClient m3Client;
 
-    private WebServiceTemplate webServiceTemplate1 = null;
+    @Autowired
+    @Qualifier("wsClient1")
+    private WsClient m6Client;
 
-    private WebServiceTemplate webServiceTemplate2 = null;
+    @Autowired
+    @Qualifier("wsClient2")
+    private WsClient m2Client;
 
-    public MultiWsClient(WebServiceTemplate webServiceTemplate) {
-        this.webServiceTemplate = webServiceTemplate;
-    }
-
-    public MultiWsClient(WebServiceTemplate webServiceTemplate, WebServiceTemplate webServiceTemplate1) {
-        this.webServiceTemplate = webServiceTemplate;
-        this.webServiceTemplate1 = webServiceTemplate1;
-    }
-
-    public MultiWsClient(WebServiceTemplate webServiceTemplate, WebServiceTemplate webServiceTemplate1, WebServiceTemplate webServiceTemplate2) {
-        this.webServiceTemplate = webServiceTemplate;
-        this.webServiceTemplate1 = webServiceTemplate1;
-        this.webServiceTemplate2 = webServiceTemplate2;
-    }
-
-    public TxResponse simpleTxSendAndReceive(String v, UploadType type, final Factory f) throws IOException {
-        ObjectFactory factory = new ObjectFactory();
-        Tx tx = factory.createTx();
-        tx.setSParam(v);
-        tx.setSType(type.toString());
-        return (TxResponse) marshalSendAndReceive(tx, f);
-    }
-
-    public RvResponse simpleRvSendAndReceive(String v, final Factory f) {
-        ObjectFactory factory = new ObjectFactory();
-        Rv rv = factory.createRv();
-        rv.setSParam(v);
-        return (RvResponse) marshalSendAndReceive(rv, f);
-    }
-
-    private Object marshalSendAndReceive(Object request, final Factory f) {
+    public WsClient getClient(final Factory f) {
         switch (f) {
             case DEFAULT:
-                checkState(webServiceTemplate != null, "Default webService template is not inject");
-                return webServiceTemplate.marshalSendAndReceive(request);
+                return m3Client;
             case TEMP1:
-                checkState(webServiceTemplate1 != null, "WebService template1 is not inject");
-                return webServiceTemplate1.marshalSendAndReceive(request);
+                return m6Client;
             case TEMP2:
-                checkState(webServiceTemplate2 != null, "WebService template2 is not inject");
-                return webServiceTemplate2.marshalSendAndReceive(request);
+                return m2Client;
             default:
-                throw new UnsupportedOperationException();
+                return null;
         }
     }
 

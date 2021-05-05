@@ -5,8 +5,6 @@
  */
 package com.advantech.test;
 
-import com.advantech.dao.db1.LineDAO;
-import com.advantech.dao.db1.LineUserReferenceDAO;
 import com.advantech.helper.HibernateObjectPrinter;
 import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.BabAlarmHistory;
@@ -24,7 +22,6 @@ import com.advantech.model.db1.FqcModelStandardTime;
 import com.advantech.model.db1.FqcSettingHistory;
 import com.advantech.model.db1.Line;
 import com.advantech.model.db1.LineType;
-import com.advantech.model.db1.LineUserReference;
 import com.advantech.model.db1.ModelSopRemark;
 import com.advantech.model.db1.ModelSopRemarkDetail;
 import com.advantech.model.db1.PreAssyModuleStandardTime;
@@ -37,8 +34,8 @@ import com.advantech.model.db1.User;
 import com.advantech.model.db1.Worktime;
 import com.advantech.service.db1.TestPassStationDetailService;
 import com.advantech.webservice.Factory;
-import com.advantech.webservice.Section;
 import com.advantech.webservice.WebServiceRV;
+import com.advantech.webservice.mes.Section;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
@@ -48,7 +45,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import static java.util.stream.Collectors.toList;
 import javax.transaction.Transactional;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Hibernate;

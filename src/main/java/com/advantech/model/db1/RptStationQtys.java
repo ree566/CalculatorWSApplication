@@ -5,6 +5,7 @@
  */
 package com.advantech.model.db1;
 
+import com.advantech.webservice.mes.RvQueryResult;
 import java.io.Serializable;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -18,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "root")
-public class RptStationQtys implements Serializable{
+public class RptStationQtys implements Serializable, RvQueryResult<RptStationQty>{
 
     @XmlElement(name = "QryRptStationQty001", type = RptStationQty.class)
     private List<RptStationQty> QryData;

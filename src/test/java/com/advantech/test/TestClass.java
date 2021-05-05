@@ -5,7 +5,7 @@
  */
 package com.advantech.test;
 
-import com.advantech.helper.HttpClientUtil;
+import com.advantech.webservice.atmc.HttpClientUtil;
 import static com.google.common.collect.Lists.newArrayList;
 import java.util.ArrayList;
 import java.util.Comparator;

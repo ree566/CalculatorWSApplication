@@ -131,7 +131,7 @@ public class FqcLineTypeFacade extends BasicLineTypeFacade {
                     .max(Comparator.comparing(s -> s.getModelNameCategory().length()))
                     .orElse(null);
 
-            List<PassStationRecord> records = rv.getPassStationRecords(fqc.getPo(), line.getFactory());
+            List<PassStationRecord> records = rv.getPassStationRecords(fqc.getPo(), 16, line.getFactory());
             records.removeIf(rec -> !history.getJobnumber().equals(rec.getUserNo())
                     || rec.getCreateDate().before(fqc.getBeginTime())
                     || rec.getCreateDate().after(now));

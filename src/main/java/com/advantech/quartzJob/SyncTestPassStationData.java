@@ -10,7 +10,7 @@ import com.advantech.model.db1.TestRecord;
 import com.advantech.service.db1.TestPassStationDetailService;
 import com.advantech.service.db1.TestRecordService;
 import com.advantech.webservice.Factory;
-import com.advantech.webservice.Section;
+import com.advantech.webservice.mes.Section;
 import com.advantech.webservice.WebServiceRV;
 import static com.google.common.collect.Lists.newArrayList;
 import java.util.ArrayList;

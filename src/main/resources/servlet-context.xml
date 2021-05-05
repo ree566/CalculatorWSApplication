@@ -307,11 +307,17 @@
     </bean>
     
     <!--Inject webservice-->
-    <bean id="multiWsClient" class="com.advantech.webservice.MultiWsClient">
-        <constructor-arg ref="webServiceTemplate" />
-        <constructor-arg ref="webServiceTemplate1" />
-        <constructor-arg ref="webServiceTemplate2" />
-    </bean>    
+    <bean id="wsClient" class="com.advantech.webservice.mes.WsClient">  
+        <constructor-arg index="0" ref="webServiceTemplate"/>
+    </bean>  
+    
+    <bean id="wsClient1" class="com.advantech.webservice.mes.WsClient">  
+        <constructor-arg index="0" ref="webServiceTemplate1"/>
+    </bean>  
+    
+    <bean id="wsClient2" class="com.advantech.webservice.mes.WsClient">  
+        <constructor-arg index="0" ref="webServiceTemplate2"/>
+    </bean>  
     
     <!--Other file import-->
     <import resource="classpath:spring-security.xml"/>
@@ -324,12 +330,10 @@
     </bean>
     
     <!--RESTful setting-->
-    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
-<!--        <property name="interceptors">
-            <list>
-                <bean class="RestAuthInterceptor" />
-            </list>
-        </property>-->
-    </bean>
+    
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate"></bean>
+    <bean id="WebAccessClient" class="com.advantech.webservice.webaccess.WebAccessClient">  
+        <constructor-arg index="0" ref="restTemplate"/>
+    </bean>  
 
 </beans>

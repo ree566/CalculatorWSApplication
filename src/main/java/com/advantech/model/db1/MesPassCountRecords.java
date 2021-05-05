@@ -5,6 +5,7 @@
  */
 package com.advantech.model.db1;
 
+import com.advantech.webservice.mes.RvQueryResult;
 import java.io.Serializable;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -18,16 +19,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "root")
-public class MesPassCountRecords implements Serializable{
+public class MesPassCountRecords implements Serializable, RvQueryResult<MesPassCountRecord>{
 
     @XmlElement(name = "RPT405", type = MesPassCountRecord.class)
     private List<MesPassCountRecord> QryData;
 
 
+    @Override
     public List<MesPassCountRecord> getQryData() {
         return QryData;
     }
 
+    @Override
     public void setQryData(List<MesPassCountRecord> QryData) {
         this.QryData = QryData;
     }

@@ -11,6 +11,7 @@ import com.advantech.model.db1.TestPassStationDetail;
 import com.advantech.model.db1.TestRecord;
 import com.advantech.model.db1.UserOnMes;
 import com.advantech.service.db1.TestService;
+import com.advantech.webservice.mes.Section;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import static java.lang.System.out;
@@ -64,7 +65,7 @@ public class WebServiceRVTest {
     /**
      * Test of getKanbanUsersForString method, of class WebServiceRV.
      */
-//    @Test
+    @Test
     public void testGetKanbanUsersForString() throws Exception {
         System.out.println("getKanbanUsersForString");
         List<String> result = rv.getKanbanUsersForString();
@@ -74,7 +75,7 @@ public class WebServiceRVTest {
     /**
      * Test of getKanbanWorkId method, of class WebServiceRV.
      */
-//    @Test
+    @Test
     public void testGetKanbanWorkId() throws Exception {
         System.out.println("getKanbanWorkId");
         String jobnumber = "A-7275";
@@ -87,7 +88,7 @@ public class WebServiceRVTest {
     /**
      * Test of getModelnameByPo method, of class WebServiceRV.
      */
-//    @Test
+    @Test
     public void testGetModelnameByPo() throws Exception {
         System.out.println("getModelnameByPo");
         String po = "PAGB079ZA";
@@ -100,7 +101,7 @@ public class WebServiceRVTest {
     /**
      * Test of getMESUser method, of class WebServiceRV.
      */
-//    @Test
+    @Test
     public void testGetMESUser() {
         System.out.println("getMESUser");
         String jobnumber = "A-7275";
@@ -113,11 +114,11 @@ public class WebServiceRVTest {
     /**
      * Test of getPassStationRecords method, of class WebServiceRV.
      */
-//    @Test
+    @Test
     public void testGetPassStationRecords() {
         System.out.println("getPassStationRecords");
-        String po = "AEI5090ZA";
-        List<PassStationRecord> result = rv.getPassStationRecords(po, Factory.TEMP1);
+        String po = "THL007939ZA";
+        List<PassStationRecord> result = rv.getPassStationRecords(po, 2, Factory.DEFAULT);
         assertTrue(!result.isEmpty());
         HibernateObjectPrinter.print(result);
     }
@@ -125,7 +126,7 @@ public class WebServiceRVTest {
     /**
      * Test of getTestLineTypeUsers method, of class WebServiceRV.
      */
-//    @Test
+    @Test
     public void testGetTestLineTypeUsers() {
         System.out.println("getTestLineTypeUsers");
         List<TestRecord> expResult = null;
@@ -136,22 +137,22 @@ public class WebServiceRVTest {
         }
     }
 
-//    @Test
+    @Test
     public void testGetTestLineTypeRecord() throws JsonProcessingException {
         List<TestRecord> l = rv.getTestLineTypeRecords();
         assertNotEquals(0, l.size());
         HibernateObjectPrinter.print(l);
     }
 
-//    @Test
+    @Test
     public void testGetModelNameByBarcode() throws JsonProcessingException {
         String value = rv.getPoByBarcode("TPAB780972", Factory.DEFAULT);
         assertEquals(value, "PSI9412ZA");
     }
 
-//    @Test
+    @Test
     public void testGetMesPassCountRecords() {
-        DateTime eD = new DateTime();
+        DateTime eD = new DateTime("2021-04-29");
         DateTime sD = eD.minusDays(1);
         List l = rv.getMesPassCountRecords(sD, eD, Factory.DEFAULT);
         assertTrue(!l.isEmpty());
@@ -161,7 +162,7 @@ public class WebServiceRVTest {
     @Autowired
     private TestService testService;
 
-//    @Test
+    @Test
     public void testGetTestPassStationDetails() {
         DateTime eD = new DateTime().withTime(8, 0, 0, 0);
         DateTime sD = eD.minusMonths(2).withTime(8, 0, 0, 0);
@@ -172,7 +173,7 @@ public class WebServiceRVTest {
         HibernateObjectPrinter.print(l.get(0));
     }
     
-//    @Test
+    @Test
     public void testGetUsersInfoOnMes(){
         List l = rv.getUsersInfoOnMes(Factory.DEFAULT);
         assertTrue(!l.isEmpty());
@@ -185,7 +186,7 @@ public class WebServiceRVTest {
         DateTime sD = new DateTime().withTime(0, 0, 0, 0);
         DateTime eD = new DateTime().plusDays(1).withTime(0, 0, 0, 0);
         
-        List l = rv.getRptStationQtys("TEST_MODELNAME", 1, Factory.DEFAULT);
+        List l = rv.getRptStationQtys("EKI-1524I-CE", 2, Factory.DEFAULT);
         assertTrue(!l.isEmpty());
         
         HibernateObjectPrinter.print(l.get(0));
