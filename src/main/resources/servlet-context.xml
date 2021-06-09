@@ -57,8 +57,8 @@
         <!-- 指定ORM物件關聯表映射檔的設定檔位置 -->
         <property name="packagesToScan">
             <array>
-                <value>com.advantech.model</value>
-                <value>com.advantech.model.view</value>
+                <value>com.advantech.model.db1</value>
+                <value>com.advantech.model.view.db1</value>
             </array>
         </property>
         
@@ -95,7 +95,7 @@
         <property name="dataSource" ref="dataSource2" /> 
                
         <!-- 指定ORM物件關聯表映射檔的設定檔位置 -->
-        <property name="packagesToScan" value="com.advantech.model" />
+        <property name="packagesToScan" value="com.advantech.model.db2" />
 
         <!-- 捨棄原hibernate.cfg.xml檔或
         覆蓋原hibernate.cfg.xml檔的部份設定 -->
@@ -125,7 +125,7 @@
         <property name="dataSource" ref="dataSource3" /> 
                
         <!-- 指定ORM物件關聯表映射檔的設定檔位置 -->
-        <property name="packagesToScan" value="com.advantech.model" />
+        <property name="packagesToScan" value="com.advantech.model.db3" />
 
         <!-- 捨棄原hibernate.cfg.xml檔或
         覆蓋原hibernate.cfg.xml檔的部份設定 -->
@@ -155,7 +155,12 @@
         <property name="dataSource" ref="dataSource4" /> 
                
         <!-- 指定ORM物件關聯表映射檔的設定檔位置 -->
-        <property name="packagesToScan" value="com.advantech.model" />
+        <property name="packagesToScan">
+            <array>
+                <value>com.advantech.model.db4</value>
+                <value>com.advantech.model.view.db4</value>
+            </array>
+        </property>
 
         <!-- 捨棄原hibernate.cfg.xml檔或
         覆蓋原hibernate.cfg.xml檔的部份設定 -->
@@ -165,10 +170,74 @@
                 <prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</prop>                
                 <prop key="hibernate.query.factory_class">org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory</prop>     
                 <prop key="hibernate.id.new_generator_mappings" >false</prop>      
-<!--                <prop key="hibernate.show_sql">true</prop>
+                <!--                <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.format_sql">true</prop>   -->
                 <prop key="hibernate.default_schema">MES</prop>
                 <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+            </props> 
+        </property> 
+    </bean>
+    
+    <!-- 設定sessionFactory -->
+    <bean id="dataSource5" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <property name="connectionTestQuery" value="SELECT 1" />
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+        <property name="jdbcUrl" value="jdbc:mysql://172.20.131.241:3306/lacking?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8&amp;AllowZeroDatetime=True&amp;" />
+        <property name="username" value="lacking" />
+        <property name="password" value="QQwRQmFQYFwDPSqY" />
+    </bean>
+    
+    <bean id="sessionFactory5" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" destroy-method="destroy"> 
+        <!-- 指定數據源，此處是C3P0連接池 -->
+        
+        <!--setting in spring xml--> 
+        <property name="dataSource" ref="dataSource5" /> 
+               
+        <!-- 指定ORM物件關聯表映射檔的設定檔位置 -->
+        <property name="packagesToScan" value="com.advantech.model.view.db5" />
+
+        <!-- 捨棄原hibernate.cfg.xml檔或
+        覆蓋原hibernate.cfg.xml檔的部份設定 -->
+        <property name="hibernateProperties"> 
+            <props> 
+                <!-- 不要用 <prop key="hibernate.current_session_context_class">thread</prop> -->
+                <prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</prop>                
+                <prop key="hibernate.query.factory_class">org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory</prop>     
+                <prop key="hibernate.id.new_generator_mappings" >false</prop>      
+                <!--                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>   -->
+            </props> 
+        </property> 
+    </bean>
+    
+    <!-- 設定sessionFactory -->
+    <bean id="dataSource6" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <property name="connectionTestQuery" value="SELECT 1" />
+        <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
+        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.20.131.241/TWM3" />
+        <property name="username" value="waychien" />
+        <property name="password" value="m3server" />
+    </bean>
+    
+    <bean id="sessionFactory6" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" destroy-method="destroy"> 
+        <!-- 指定數據源，此處是C3P0連接池 -->
+        
+        <!--setting in spring xml--> 
+        <property name="dataSource" ref="dataSource6" /> 
+               
+        <!-- 指定ORM物件關聯表映射檔的設定檔位置 -->
+        <property name="packagesToScan" value="com.advantech.model.view.db6" />
+
+        <!-- 捨棄原hibernate.cfg.xml檔或
+        覆蓋原hibernate.cfg.xml檔的部份設定 -->
+        <property name="hibernateProperties"> 
+            <props> 
+                <!-- 不要用 <prop key="hibernate.current_session_context_class">thread</prop> -->
+                <prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</prop>                
+                <prop key="hibernate.query.factory_class">org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory</prop>     
+                <prop key="hibernate.id.new_generator_mappings" >false</prop>      
+                <!--                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>   -->
             </props> 
         </property> 
     </bean>
@@ -192,6 +261,16 @@
     <bean name="transactionManager4" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory4" />
         <qualifier value="tx4" />
+    </bean>
+    
+    <bean name="transactionManager5" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory4" />
+        <qualifier value="tx5" />
+    </bean>
+    
+    <bean name="transactionManager6" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory4" />
+        <qualifier value="tx5" />
     </bean>
  
     <!-- 對base-package下及其子資料夾偵測並自動裝配Bean -->

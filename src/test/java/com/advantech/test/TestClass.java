@@ -5,6 +5,7 @@
  */
 package com.advantech.test;
 
+import com.advantech.helper.DatetimeGenerator;
 import com.advantech.webservice.atmc.HttpClientUtil;
 import static com.google.common.collect.Lists.newArrayList;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
+import static com.advantech.helper.ShiftScheduleUtils.*;
 
 /**
  *
@@ -191,7 +193,7 @@ public class TestClass {
         return rest.getStart().compareTo(d) * d.compareTo(rest.getEnd()) >= 0;
     }
 
-    @Test
+//    @Test
     public void testMap() throws Exception {
         String url = "http://172.22.250.120:7878/v1/Employee/" + "A-75068";
         String url2 = "http://172.22.250.120:7878/v1/Employee/login";
@@ -248,11 +250,53 @@ public class TestClass {
         });
 
     }
-    
+
 //    @Test
     public void testDateTime3() {
         DateTime d = new DateTime();
         System.out.println(d.getWeekOfWeekyear());
+    }
+
+    @Test
+    public void testShiftScheduleUtils() {
+        DatetimeGenerator ge = new DatetimeGenerator("yyyy-MM-dd HH:mm");
+
+        DateTime tD1 = new DateTime().withTime(10, 30, 0, 0);
+        DateTime tD2 = new DateTime().withTime(14, 30, 0, 0);
+        DateTime tD3 = new DateTime().withTime(18, 30, 0, 0);
+        DateTime tD4 = new DateTime().withTime(23, 30, 0, 0);
+        DateTime tD5 = new DateTime().plusDays(1).withTime(2, 30, 0, 0);
+        DateTime tD6 = new DateTime().plusDays(1).withTime(6, 30, 0, 0);
+        DateTime tD7 = new DateTime().withTime(21, 30, 0, 0);
+        DateTime tD8 = new DateTime().withTime(22, 30, 0, 0);
+
+        List<DateTime> testDates = newArrayList(tD1, tD2, tD3, tD4, tD5, tD6, tD7, tD8);
+
+        testDates.forEach(tD -> {
+            System.out.println("Testing date " + ge.dateFormatToString(tD));
+
+            Shift shift = getShift(tD);
+
+            if (shift == shift.MORNING_SHIFT) {
+
+                DateTime m_sD = getMorningShiftStart();
+                DateTime m_eD = getMorningShiftEnd();
+
+                System.out.printf("MORNING_SHIFT %s to %s \r\n ", ge.dateFormatToString(m_sD), ge.dateFormatToString(m_eD));
+
+            } else if (shift == shift.NIGHT_SHIFT) {
+
+                DateTime n_sD = getNightShiftStart();
+                DateTime n_eD = getNightShiftEnd();
+
+                System.out.printf("NIGHT_SHIFT %s to %s \r\n ", ge.dateFormatToString(n_sD), ge.dateFormatToString(n_eD));
+
+            } else {
+                System.out.println("Date in unsupported shift...");
+            }
+            
+            System.out.println("------------");
+        });
     }
 
 }

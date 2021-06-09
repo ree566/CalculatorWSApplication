@@ -50,8 +50,11 @@
                 color: red;
                 outline: #4CAF50 solid 2px;
             }
-            .show-read-more .more-text{
+            .morecontent span {
                 display: none;
+            }
+            .morelink {
+                display: block;
             }
         </style>
         <script src="<c:url value="/webjars/jquery/1.12.4/jquery.min.js" />"></script>
@@ -87,7 +90,7 @@
             var stationsTotalSumIndex = [];
 
             var memoIndex = dynamicColIdxMax + 1;
-            var editBtnIndex = memoIndex + 2;
+            var editBtnIndex = memoIndex + 6;
 
             $(function () {
                 for (var i = 0; i < editBtnIndex - 1; i++) {
@@ -211,13 +214,13 @@
                         {
                             extend: 'copyHtml5',
                             exportOptions: {
-                                columns: ':not(:eq(23)):visible'
+                                columns: ':not(.not-export-col):visible, .export-col:hidden'
                             }
                         },
                         {
                             extend: 'excelHtml5',
                             exportOptions: {
-                                columns: ':not(:eq(23)):visible'
+                                columns: ':not(.not-export-col):visible, .export-col:hidden'
                             }
                         }
                     ],
@@ -234,7 +237,7 @@
                         {data: "scheduleQty", title: "當日排程數"},
                         {data: "timeCost", title: "工時"},
                         {data: "otherInfo.changeTimeInfo", title: "換線"},
-                        {data: "otherInfo.changeTimeInfo", title: "MES線別"},
+                        {data: "otherInfo.poDetail", title: "MES線別", visible: true},
                         {data: "otherInfo.passCntQry_PREASSY", title: "過站(Pre-Assy)"},
                         {data: "otherInfo.totalPassCntQry_PREASSY", title: "總過站(Pre-Assy)"},
                         {data: "otherInfo.passCntQry_ASSY", title: "過站(Assy)"},
@@ -253,12 +256,24 @@
                         {data: "otherInfo.totalPassCntQry_PACKAGE", title: "總過站(PACKAGE)"},
                         {data: "memo", title: "人員備註", "width": "15%"},
                         {data: "poMemo", title: "工單備註", "width": "15%"},
+                        {data: "otherInfo.lackingInfo", title: "不良缺", visible: true},
+                        {data: "otherInfo.shortageInfo", title: "來料缺", visible: true},
+                        {data: "otherInfo.lackingInfo", title: "不良缺", visible: false},
+                        {data: "otherInfo.shortageInfo", title: "來料缺", visible: false},
                         {data: "id", title: "#"}
                     ],
                     "columnDefs": [
                         {
                             className: "show-read-more",
-                            "show-read-more": [25]
+                            "targets": [editBtnIndex - 3, editBtnIndex - 4, editBtnIndex - 5]
+                        },
+                        {
+                            className: "not-export-col",
+                            "targets": [0, editBtnIndex - 3, editBtnIndex - 4, editBtnIndex]
+                        },
+                        {
+                            className: "export-col",
+                            "targets": [editBtnIndex - 1, editBtnIndex - 2]
                         },
                         {
                             "type": "html",
@@ -276,12 +291,80 @@
                         },
                         {
                             "type": "html",
+                            "targets": [editBtnIndex - 2],
+                            'render': function (data, type, full, meta) {
+                                if (data.length > 0) {
+                                    var str = "";
+                                    for (var i = 0, j = data.length; i < j; i++) {
+                                        var o = data[i];
+                                        str = str.concat(o.material, " ", o.qty, " pcs ", o.comment, " / ");
+                                    }
+                                    return str;
+                                } else {
+                                    return '---';
+                                }
+                            }
+                        },
+                        {
+                            "type": "html",
+                            "targets": [editBtnIndex - 1],
+                            'render': function (data, type, full, meta) {
+                                if (data.length > 0) {
+                                    var str = "";
+                                    for (var i = 0, j = data.length; i < j; i++) {
+                                        var o = data[i];
+                                        str = str.concat(o.material, " ", o.shortageCnt, " pcs / ");
+                                    }
+                                    return str;
+                                } else {
+                                    return '---';
+                                }
+                            }
+                        },
+                        {
+                            "type": "html",
+                            "targets": [editBtnIndex - 4],
+                            'render': function (data, type, full, meta) {
+                                if (data.length > 0) {
+                                    var str = "<table class='table table-stripped'>";
+                                    str = str.concat("<tr><th>material</th><th>qty</th><th>comment</th></tr>");
+                                    for (var i = 0, j = data.length; i < j; i++) {
+                                        var o = data[i];
+                                        str = str.concat("<tr><td>", o.material, "</td><td>", o.qty, "</td><td>", o.comment, "</td></tr>");
+                                    }
+                                    str = str.concat("</table>");
+                                    return str;
+                                } else {
+                                    return '---';
+                                }
+                            }
+                        },
+                        {
+                            "type": "html",
+                            "targets": [editBtnIndex - 3],
+                            'render': function (data, type, full, meta) {
+                                if (data.length > 0) {
+                                    var str = "<table class='table table-stripped'>";
+                                    str = str.concat("<tr><th>material</th><th>shortageCnt</th></tr>");
+                                    for (var i = 0, j = data.length; i < j; i++) {
+                                        var o = data[i];
+                                        str = str.concat("<tr><td>", o.material, "</td><td>", o.shortageCnt, "</td></tr>");
+                                    }
+                                    str = str.concat("</table>");
+                                    return str;
+                                } else {
+                                    return '---';
+                                }
+                            }
+                        },
+                        {
+                            "type": "html",
                             "targets": stationsDailySumIndex,
                             'render': function (data, type, full, meta) {
                                 if (data == null) {
                                     return '---';
                                 } else {
-                                    return "<p>(" + data + " / " + full["scheduleQty"] + ")</p>" +
+                                    return "<p>" + data + " / " + full["scheduleQty"] + " </p>" +
                                             "<p>" + getPercent(data == 0 ? 0 : data / full["scheduleQty"]) + "</p>";
                                 }
                             }
@@ -293,7 +376,7 @@
                                 if (data == null) {
                                     return '---';
                                 } else {
-                                    return "<p>(" + data + " / " + full["totalQty"] + ")</p>" +
+                                    return "<p>" + data + " / " + full["totalQty"] + " </p>" +
                                             "<p>" + (getPercent(data == 0 ? 0 : data / full["totalQty"])) + "</p>";
                                 }
                             }
@@ -424,7 +507,7 @@
 
                                 // Update footer
                                 $(api.column(i).footer()).html(
-                                        '<p>( ' + pageCurrent + ' / ' + pageTotal + ' )</p>' +
+                                        '<p>' + pageCurrent + ' / ' + pageTotal + '</p>' +
                                         '<p>' + getPercent((pageCurrent == 0 || pageTotal == 0) ? 0 : (pageCurrent / pageTotal)) + '</p>'
                                         );
                             }
@@ -433,7 +516,9 @@
                     filter: false,
                     destroy: false,
                     paginate: false,
-                    retrieve: true
+                    retrieve: true,
+                    "autoWidth": true
+//                    "scrollX": true
                 });
 
                 $('#tb1').on("preXhr.dt", function (e, settings, data) {
@@ -465,20 +550,46 @@
             }
 
             function addLongTextReadmoreEvent() {
-                var maxLength = 300;
-                $(".show-read-more").each(function () {
-                    var myStr = $(this).text();
-                    if ($.trim(myStr).length > maxLength) {
-                        var newStr = myStr.substring(0, maxLength);
-                        var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
-                        $(this).empty().html(newStr);
-                        $(this).append(' <a href="javascript:void(0);" class="read-more">read more...</a>');
-                        $(this).append('<span class="more-text">' + removedStr + '</span>');
+                // Configure/customize these variables.
+                var showChar = 10;  // How many characters are shown by default
+                var ellipsestext = "...";
+                var moretext = "Show more >";
+                var lesstext = "Show less";
+
+
+                $('.show-read-more').each(function () {
+					var t = $(this);
+                    var content = t.html();
+
+                    if (content.length > showChar && t.find('.morecontent:first-child').length == 0) {
+
+                        //var c = content.substr(0, showChar);
+                        //var h = content.substr(showChar, content.length - showChar);
+                        var c = '';
+                        var h = content;
+
+                        var html = c + 
+//                                '<span class="moreellipses">' + ellipsestext + '&nbsp;</span>' + 
+                                '<span class="morecontent"><span>' + h + 
+                                '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+
+                        t.html(html);
                     }
+
                 });
-                $(".read-more").click(function () {
-                    $(this).siblings(".more-text").contents().unwrap();
-                    $(this).remove();
+
+				$(".morelink").unbind('click');
+                $(".morelink").click(function () {
+                    if ($(this).hasClass("less")) {
+                        $(this).removeClass("less");
+                        $(this).html(moretext);
+                    } else {
+                        $(this).addClass("less");
+                        $(this).html(lesstext);
+                    }
+                    $(this).parent().prev().toggle();
+                    $(this).prev().toggle();
+                    return false;
                 });
             }
 

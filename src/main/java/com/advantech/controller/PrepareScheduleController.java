@@ -12,12 +12,14 @@ import com.advantech.model.db1.LineType;
 import com.advantech.model.db1.PrepareSchedule;
 import com.advantech.model.view.db4.MesChangeTimeInfo;
 import com.advantech.model.view.db4.MesPassStationInfo;
+import com.advantech.model.view.db4.MesPoDetail;
+import com.advantech.model.view.db5.LackingInfo;
+import com.advantech.model.view.db6.ShortageInfo;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl;
 import com.advantech.service.db1.FloorService;
 import com.advantech.service.db1.LineTypeService;
 import com.advantech.service.db1.PrepareScheduleDailyRemarkService;
 import com.advantech.service.db1.PrepareScheduleService;
-import com.advantech.service.db4.SqlViewService;
 import com.advantech.webservice.mes.Section;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Lists.newArrayList;
@@ -28,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import org.joda.time.DateTime;
@@ -71,7 +74,15 @@ public class PrepareScheduleController {
 
     @Autowired
     @Qualifier("sqlViewService4")
-    private SqlViewService sqlViewService;
+    private com.advantech.service.db4.SqlViewService sqlViewService4;
+    
+    @Autowired
+    @Qualifier("sqlViewService5")
+    private com.advantech.service.db5.SqlViewService sqlViewService5;
+    
+    @Autowired
+    @Qualifier("sqlViewService6")
+    private com.advantech.service.db6.SqlViewService sqlViewService6;
 
     private class StationInfo {
 
@@ -168,8 +179,11 @@ public class PrepareScheduleController {
             List<String> po = schedules.stream()
                     .map(PrepareSchedule::getPo)
                     .collect(Collectors.toList());
-            List<MesPassStationInfo> passStationInfos = sqlViewService.findMesPassStationInfo(po, startDate);
-            List<MesChangeTimeInfo> changeTimeInfos = sqlViewService.findMesChangeTimeDetail(po);
+            List<MesPassStationInfo> passStationInfos = sqlViewService4.findMesPassStationInfo(po, startDate);
+            List<MesChangeTimeInfo> changeTimeInfos = sqlViewService4.findMesChangeTimeDetail(po);
+            List<MesPoDetail> poDetails = sqlViewService4.findMesPoDetail(po, stationInfo.section);
+            List<LackingInfo> lackingInfos = sqlViewService5.findLackingInfo();
+            List<ShortageInfo> shortageInfos = sqlViewService6.findShortageInfo();
 
             schedules.stream().forEach(p -> {
                 stations.forEach((station) -> {
@@ -191,8 +205,24 @@ public class PrepareScheduleController {
                         .filter(i -> i.getWIP_NO().equals(p.getPo()) && i.getUNIT_NO().equals(stationInfo.section.getCode()))
                         .findFirst()
                         .orElse(null);
+                
+                MesPoDetail poDetail = poDetails.stream()
+                        .filter(i -> i.getWIP_NO().equals(p.getPo()))
+                        .findFirst()
+                        .orElse(null);
+                
+                List<LackingInfo> lackingInfo = lackingInfos.stream()
+                        .filter(i -> i.getPo().equals(p.getPo()))
+                        .collect(toList());
+                
+                List<ShortageInfo> shortageInfo = shortageInfos.stream()
+                        .filter(i -> i.getPo().equals(p.getPo()))
+                        .collect(toList());
 
                 otherInfo.put("changeTimeInfo", changeTimeInfo);
+                otherInfo.put("poDetail", poDetail);
+                otherInfo.put("lackingInfo", lackingInfo);
+                otherInfo.put("shortageInfo", shortageInfo);
 
                 p.setOtherInfo(otherInfo);
 

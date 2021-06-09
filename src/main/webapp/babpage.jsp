@@ -119,7 +119,7 @@
             var firstStation = 1;
 
             var tabreg = /^[0-9a-zA-Z-]+$/;//Textbox check regex.
-            
+
             var smallWindow;
 
             $(function () {
@@ -346,7 +346,7 @@
                 });
 
                 $("#memo-reload").click(findModelSopRemark);
-                
+
                 $("#open-barcode-input").click(function () {
                     var userInfo = $.parseJSON(userInfoCookie);
                     if (userInfo != null) {
@@ -882,8 +882,20 @@
 
             //generate all cookies exist 12 hours
             function generateCookie(name, value) {
-                var d = moment().set({hour: 23, minute: 0, second: 0});
-                $.cookie(name, value, {expires: d.toDate()});
+                var d = moment();
+                var cookie_expired_time;
+                var day_shift_st = moment().set({hour: 8, minute: 0, second: 0});
+                var day_shift_ed = moment().set({hour: 19, minute: 45, second: 0});
+                var night_shift_st = moment().set({hour: 20, minute: 0, second: 0});
+                var night_shift_ed = moment().add(1, 'days').set({hour: 7, minute: 45, second: 0});
+
+                if (d.isBetween(day_shift_st, day_shift_ed)) {
+                    cookie_expired_time = day_shift_ed.add(10, 'minutes');
+                } else {
+                    cookie_expired_time = night_shift_ed.add(10, 'minutes');
+                }
+
+                $.cookie(name, value, {expires: cookie_expired_time.toDate()});
             }
 
             function removeAllStepCookie() {
@@ -1034,13 +1046,13 @@
                         做完時請記得做save。(Please "save" when you finished.)
                         <span class="glyphicon glyphicon-alert"></span>
                     </div>
-                    
-<!--                    <div class="row">
-                        <div class="col col-xs-12">
-                            <label for="open-barcode-input">刷入序號</label>
-                            <input type="button" id="open-barcode-input" class="btn btn-info" value="Open barcode input">
-                        </div>
-                    </div>-->
+
+                    <!--                    <div class="row">
+                                            <div class="col col-xs-12">
+                                                <label for="open-barcode-input">刷入序號</label>
+                                                <input type="button" id="open-barcode-input" class="btn btn-info" value="Open barcode input">
+                                            </div>
+                                        </div>-->
                 </div>
                 <div class="wigetInfo">
                     <h3>步驟2:</h3>

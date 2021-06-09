@@ -26,6 +26,7 @@ import com.advantech.model.db1.MesLine;
 import com.advantech.model.db1.MesPassCountRecord;
 import com.advantech.model.db1.SensorTransform;
 import com.advantech.model.view.db1.BabProcessDetail;
+import com.advantech.model.view.db5.LackingInfo;
 import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -387,13 +388,45 @@ public class TestDAO {
 
     }
     
-    @Test
+//    @Test
     @Transactional
     @Rollback(true)
     public void testPrepareScheduleDailyRemark() {
         List list = preRemarkDAO.findAll();
 
         HibernateObjectPrinter.print(list.get(0));
+
+    }
+    
+    @Autowired
+    @Qualifier("sqlViewDAO5")
+    private com.advantech.dao.db5.SqlViewDAO sqlViewDAO5;
+    
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testFindLackingInfo() {
+        List<LackingInfo> list = sqlViewDAO5.findLackingInfo();
+
+        HibernateObjectPrinter.print(list);
+        
+//        HibernateObjectPrinter.print(list.get(0).getCnt().getClass().getName());
+
+    }
+    
+    @Autowired
+    @Qualifier("sqlViewDAO6")
+    private com.advantech.dao.db6.SqlViewDAO sqlViewDAO6;
+    
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testFindShortageInfo() {
+        List list = sqlViewDAO6.findShortageInfo();
+
+        HibernateObjectPrinter.print(list);
+        
+//        HibernateObjectPrinter.print(list.get(0).getCnt().getClass().getName());
 
     }
 

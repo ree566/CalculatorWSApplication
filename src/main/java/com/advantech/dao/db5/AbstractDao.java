@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.advantech.dao.db4;
+package com.advantech.dao.db5;
 
 import com.advantech.dao.HibernateQueryMainActions;
 import java.io.Serializable;
@@ -18,14 +18,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @param <T>
  */
 public abstract class AbstractDao<PK extends Serializable, T> extends HibernateQueryMainActions<PK, T> {
-
+    
     @Autowired
-    @Qualifier("sessionFactory4")
+    @Qualifier("sessionFactory5")
     private SessionFactory sessionFactory;
-
+    
     @Override
     public void setSessionFactory() {
         super.setSessionFactory(sessionFactory);
     }
-
+    
 }

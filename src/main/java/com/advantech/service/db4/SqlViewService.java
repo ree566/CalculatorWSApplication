@@ -8,6 +8,7 @@ package com.advantech.service.db4;
 import com.advantech.dao.db4.SqlViewDAO;
 import com.advantech.model.view.db4.MesChangeTimeInfo;
 import com.advantech.model.view.db4.MesPassStationInfo;
+import com.advantech.webservice.mes.Section;
 import java.util.List;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,10 @@ public class SqlViewService {
 
     public List<MesChangeTimeInfo> findMesChangeTimeDetail(List<String> po) {
         return sqlViewDAO.findMesChangeTimeDetail(po);
+    }
+
+    public List findMesPoDetail(List<String> po, Section section) {
+        return sqlViewDAO.findMesPoDetail(po, section);
     }
 
 }

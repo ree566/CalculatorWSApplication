@@ -45,7 +45,6 @@
         <script src="<c:url value="/js/cookie.check.js" /> "></script>
         <script src="<c:url value="/js/param.check.js" /> "></script>
         <script>
-            var cookie_expired_time = moment().set({hour: 23, minute: 0, second: 0});
 
             var userInfoCookieName = "userInfo", testLineTypeCookieName = "testLineTypeCookieName", cellCookieName = "cellCookieName";
             var STATION_LOGIN = "LOGIN", STATION_LOGOUT = "LOGOUT", CHANGE_DECK = "CHANGE_DECK";
@@ -295,6 +294,19 @@
 
             //generate all cookies exist 12 hours
             function generateCookie(name, value) {
+                var d = moment();
+                var cookie_expired_time;
+                var day_shift_st = moment().set({hour: 8, minute: 0, second: 0});
+                var day_shift_ed = moment().set({hour: 19, minute: 45, second: 0});
+                var night_shift_st = moment().set({hour: 20, minute: 0, second: 0});
+                var night_shift_ed = moment().add(1, 'days').set({hour: 7, minute: 45, second: 0});
+
+                if (d.isBetween(day_shift_st, day_shift_ed)) {
+                    cookie_expired_time = day_shift_ed.add(10, 'minutes');
+                } else {
+                    cookie_expired_time = night_shift_ed.add(10, 'minutes');
+                }
+
                 $.cookie(name, value, {expires: cookie_expired_time.toDate()});
             }
 
