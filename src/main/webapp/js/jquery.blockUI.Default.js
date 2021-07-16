@@ -14,8 +14,8 @@ function block() {
             opacity: .5,
             color: '#fff'
         },
-        fadeIn: 0
-        , overlayCSS: {
+        fadeIn: 0, 
+        overlayCSS: {
             backgroundColor: '#FFFFFF',
             opacity: .3
         }

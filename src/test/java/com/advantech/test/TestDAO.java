@@ -402,7 +402,7 @@ public class TestDAO {
     @Qualifier("sqlViewDAO5")
     private com.advantech.dao.db5.SqlViewDAO sqlViewDAO5;
     
-    @Test
+//    @Test
     @Transactional
     @Rollback(true)
     public void testFindLackingInfo() {
@@ -418,7 +418,7 @@ public class TestDAO {
     @Qualifier("sqlViewDAO6")
     private com.advantech.dao.db6.SqlViewDAO sqlViewDAO6;
     
-    @Test
+//    @Test
     @Transactional
     @Rollback(true)
     public void testFindShortageInfo() {
@@ -427,6 +427,16 @@ public class TestDAO {
         HibernateObjectPrinter.print(list);
         
 //        HibernateObjectPrinter.print(list.get(0).getCnt().getClass().getName());
+
+    }
+    
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testFindBabProcessing() {
+        List list = babDAO.findProcessing();
+
+        assertEquals(13, list.size());
 
     }
 

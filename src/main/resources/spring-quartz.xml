@@ -44,7 +44,7 @@
     
     <bean id="DataBaseInit-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="DataBaseInit" />
-        <property name="cronExpression" value="0 5 8,20 ? * MON-SAT *" />
+        <property name="cronExpression" value="0 5 8,20 ? * * *" />
     </bean>
     
     <!--
@@ -72,7 +72,7 @@
     
     <bean id="HandleUncloseBab-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="HandleUncloseBab" />
-        <property name="cronExpression" value="0 55 7,19 ? * MON-SAT *" />
+        <property name="cronExpression" value="0 55 7,19 ? * * *" />
     </bean>
     
     <!--
@@ -101,7 +101,7 @@
     
     <bean id="CleanSensorData-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="CleanSensorData" />
-        <property name="cronExpression" value="0 0 0 ? * WED *" />
+        <property name="cronExpression" value="0 0 15 ? * SUN *" />
     </bean>
     
     <!--
@@ -243,7 +243,6 @@
         <property name="jobDetail" ref="SyncTestPassStationData-Job" />
         <property name="cronExpression" value="0 30 7 ? * MON-FRI *" />
     </bean>
-    <!--<property name="cronExpression" value="0 0 12, 18 ? * MON-FRI *" />-->
     
     <!--
         將PMC排程exce儲存到DB(Assy)

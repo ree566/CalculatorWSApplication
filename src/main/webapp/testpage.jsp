@@ -41,17 +41,26 @@
         <script src="<c:url value="/webjars/momentjs/2.18.1/moment.js" /> "></script>
         <script src="<c:url value="/js/jquery.cookie.js" /> "></script>
         <script src="<c:url value="/webjars/jquery-blockui/2.70/jquery.blockUI.js" /> "></script>
-        <script src="<c:url value="/js/jquery.blockUI.Default.js" /> "></script>
         <script src="<c:url value="/js/cookie.check.js" /> "></script>
         <script src="<c:url value="/js/param.check.js" /> "></script>
+        <script src="<c:url value="/js/cookie.generator.js"/>"></script>
+        
         <script>
 
             var userInfoCookieName = "userInfo", testLineTypeCookieName = "testLineTypeCookieName", cellCookieName = "cellCookieName";
             var STATION_LOGIN = "LOGIN", STATION_LOGOUT = "LOGOUT", CHANGE_DECK = "CHANGE_DECK";
             var savedTable, savedJobnumber;
             var tabreg = /^[0-9a-zA-Z-]+$/;//Textbox check regex.
+            
+            shift_retrieve_url = "<c:url value="/UserShiftController/findDateShiftInfo" />";
 
             $(document).ready(function () {
+                $(document).ajaxSend(function () {
+                    block();//Block the screen when ajax is sending, Prevent form submit repeatly.
+                });
+                $(document).ajaxComplete(function () {
+                    $.unblockUI();//Unblock the ajax when success
+                });
 
                 if (!are_cookies_enabled()) {
                     alert(cookie_disabled_message);
@@ -101,6 +110,25 @@
                 });
 
             });
+            
+            function block() {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    },
+                    fadeIn: 0,
+                    overlayCSS: {
+                        backgroundColor: '#FFFFFF',
+                        opacity: .3
+                    }
+                });
+            }
 
             function checkExistCookies() {
                 $("#cookieinfo").html("尚無資料");
@@ -290,24 +318,6 @@
             //auto uppercase the textbox value(PO, ModelName)
             function textBoxToUpperCase(obj) {
                 obj.val(obj.val().trim().toLocaleUpperCase());
-            }
-
-            //generate all cookies exist 12 hours
-            function generateCookie(name, value) {
-                var d = moment();
-                var cookie_expired_time;
-                var day_shift_st = moment().set({hour: 8, minute: 0, second: 0});
-                var day_shift_ed = moment().set({hour: 19, minute: 45, second: 0});
-                var night_shift_st = moment().set({hour: 20, minute: 0, second: 0});
-                var night_shift_ed = moment().add(1, 'days').set({hour: 7, minute: 45, second: 0});
-
-                if (d.isBetween(day_shift_st, day_shift_ed)) {
-                    cookie_expired_time = day_shift_ed.add(10, 'minutes');
-                } else {
-                    cookie_expired_time = night_shift_ed.add(10, 'minutes');
-                }
-
-                $.cookie(name, value, {expires: cookie_expired_time.toDate()});
             }
 
             //Logout the user saving cookie.

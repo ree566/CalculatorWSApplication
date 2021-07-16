@@ -18,6 +18,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
+import static com.advantech.helper.ShiftScheduleUtils.*;
 
 /**
  *
@@ -65,11 +66,11 @@ public class BabSettingHistoryDAO extends AbstractDao<Integer, BabSettingHistory
             return new ArrayList();
         }
 
-        Query q = super.getSession().createQuery(sql);
-        q.setParameter("po", po);
-        q.setParameter("line_id", line_id);
-        q.setParameter("minPcs", minPcs);
-        return q.list();
+        return super.getSession().createQuery(sql)
+                .setParameter("po", po)
+                .setParameter("line_id", line_id)
+                .setParameter("minPcs", minPcs)
+                .list();
     }
 
     @Override
@@ -84,25 +85,27 @@ public class BabSettingHistoryDAO extends AbstractDao<Integer, BabSettingHistory
     }
 
     public BabSettingHistory findByBabAndStation(Bab b, int station) {
-        Criteria c = super.createEntityCriteria();
-        c.add(Restrictions.eq("bab.id", b.getId()));
-        c.add(Restrictions.eq("station", station));
-        return (BabSettingHistory) c.uniqueResult();
+        return (BabSettingHistory) super.createEntityCriteria()
+                .add(Restrictions.eq("bab.id", b.getId()))
+                .add(Restrictions.eq("station", station))
+                .uniqueResult();
     }
 
     public List<BabSettingHistory> findProcessing() {
-        Criteria c = super.createEntityCriteria();
-        c.add(Restrictions.isNull("lastUpdateTime"));
-        return c.list();
+        return super.createEntityCriteria()
+                .add(Restrictions.isNull("lastUpdateTime"))
+                .list();
     }
 
     public BabSettingHistory findProcessingByTagName(SensorTransform tagName) {
-        Criteria c = super.createEntityCriteria();
-        c.add(Restrictions.eq("tagName", tagName));
-        c.add(Restrictions.isNull("lastUpdateTime"));
-        c.add(Restrictions.gt("createTime", new DateTime().withHourOfDay(0).toDate()));
-        c.setMaxResults(1);
-        return (BabSettingHistory) c.uniqueResult();
+        DateTime sD = getCurrentShiftStart();
+
+        return (BabSettingHistory) super.createEntityCriteria()
+                .add(Restrictions.eq("tagName", tagName))
+                .add(Restrictions.isNull("lastUpdateTime"))
+                .add(Restrictions.gt("createTime", sD.toDate()))
+                .setMaxResults(1)
+                .uniqueResult();
     }
 
     //Find the mininum bab_id per tagName
@@ -124,12 +127,14 @@ public class BabSettingHistoryDAO extends AbstractDao<Integer, BabSettingHistory
     }
 
     public List<BabSettingHistory> findProcessingByLine(int line_id) {
+        DateTime sD = getCurrentShiftStart();
+        
         return super.createEntityCriteria()
                 .createAlias("bab", "b")
                 .createAlias("b.line", "l")
                 .createAlias("l.lineType", "lt")
                 .add(Restrictions.isNull("b.babStatus"))
-                .add(Restrictions.gt("b.beginTime", new DateTime().withHourOfDay(0).toDate()))
+                .add(Restrictions.gt("b.beginTime", sD.toDate()))
                 .add(Restrictions.eq("l.id", line_id))
                 .addOrder(Order.asc("b.id"))
                 .list();

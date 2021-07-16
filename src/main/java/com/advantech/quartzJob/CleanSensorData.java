@@ -34,7 +34,7 @@ public class CleanSensorData extends QuartzJobBean {
 
     @Override
     public void executeInternal(JobExecutionContext jec) throws JobExecutionException {
-        DateTime d = new DateTime().minusDays(SPECIFY_DAY).withTime(0, 0, 0, 0);
+        DateTime d = DateTime.now().minusDays(SPECIFY_DAY).withTime(0, 0, 0, 0);
         log.info("Begin clean sensor data date before " + dg.dateFormatToString(d));
         procService.sensorDataClean(d.toDate());
     }

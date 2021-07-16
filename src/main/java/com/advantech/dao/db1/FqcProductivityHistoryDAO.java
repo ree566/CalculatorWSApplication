@@ -35,7 +35,7 @@ public class FqcProductivityHistoryDAO extends AbstractDao<Integer, FqcProductiv
     }
 
     public List<Map> findComplete(DateTime sD, DateTime eD) {
-        DateTime now = new DateTime();
+        DateTime now = DateTime.now();
         Criteria c = super.createEntityCriteria()
                 .createAlias("fqc", "fqc")
                 .createAlias("fqc.fqcLine", "fqcLine")

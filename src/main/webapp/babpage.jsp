@@ -102,6 +102,7 @@
         <script src="<c:url value="/js/param.check.js" /> "></script>
         <script src="<c:url value="/webjars/momentjs/2.18.1/moment.js" /> "></script>
         <script src="<c:url value="/js/select2.min.js"/>"></script>
+        <script src="<c:url value="/js/cookie.generator.js"/>"></script>
 
         <script>
             var hnd;//鍵盤輸入間隔
@@ -121,6 +122,8 @@
             var tabreg = /^[0-9a-zA-Z-]+$/;//Textbox check regex.
 
             var smallWindow;
+            
+            shift_retrieve_url = "<c:url value="/UserShiftController/findDateShiftInfo" />";
 
             $(function () {
                 $(document).ajaxSend(function () {
@@ -878,24 +881,6 @@
             //auto uppercase the textbox value(PO, ModelName)
             function textBoxToUpperCase(obj) {
                 obj.val(obj.val().trim().toLocaleUpperCase());
-            }
-
-            //generate all cookies exist 12 hours
-            function generateCookie(name, value) {
-                var d = moment();
-                var cookie_expired_time;
-                var day_shift_st = moment().set({hour: 8, minute: 0, second: 0});
-                var day_shift_ed = moment().set({hour: 19, minute: 45, second: 0});
-                var night_shift_st = moment().set({hour: 20, minute: 0, second: 0});
-                var night_shift_ed = moment().add(1, 'days').set({hour: 7, minute: 45, second: 0});
-
-                if (d.isBetween(day_shift_st, day_shift_ed)) {
-                    cookie_expired_time = day_shift_ed.add(10, 'minutes');
-                } else {
-                    cookie_expired_time = night_shift_ed.add(10, 'minutes');
-                }
-
-                $.cookie(name, value, {expires: cookie_expired_time.toDate()});
             }
 
             function removeAllStepCookie() {

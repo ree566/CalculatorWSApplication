@@ -261,40 +261,35 @@ public class TestClass {
     public void testShiftScheduleUtils() {
         DatetimeGenerator ge = new DatetimeGenerator("yyyy-MM-dd HH:mm");
 
-        DateTime tD1 = new DateTime().withTime(10, 30, 0, 0);
-        DateTime tD2 = new DateTime().withTime(14, 30, 0, 0);
-        DateTime tD3 = new DateTime().withTime(18, 30, 0, 0);
-        DateTime tD4 = new DateTime().withTime(23, 30, 0, 0);
-        DateTime tD5 = new DateTime().plusDays(1).withTime(2, 30, 0, 0);
-        DateTime tD6 = new DateTime().plusDays(1).withTime(6, 30, 0, 0);
-        DateTime tD7 = new DateTime().withTime(21, 30, 0, 0);
-        DateTime tD8 = new DateTime().withTime(22, 30, 0, 0);
+        List<DateTime> testDates = new ArrayList();
+        DateTime tD = new DateTime().withTime(7, 55, 0, 0);
+        DateTime tD2 = new DateTime().withTime(19, 55, 0, 0);
+        testDates.add(tD);
+        testDates.add(tD2);
 
-        List<DateTime> testDates = newArrayList(tD1, tD2, tD3, tD4, tD5, tD6, tD7, tD8);
+        testDates.forEach(d -> {
+            System.out.println("Testing date " + ge.dateFormatToString(d));
 
-        testDates.forEach(tD -> {
-            System.out.println("Testing date " + ge.dateFormatToString(tD));
+            Shift shift = getShift(d);
 
-            Shift shift = getShift(tD);
-
-            if (shift == shift.MORNING_SHIFT) {
-
-                DateTime m_sD = getMorningShiftStart();
-                DateTime m_eD = getMorningShiftEnd();
-
-                System.out.printf("MORNING_SHIFT %s to %s \r\n ", ge.dateFormatToString(m_sD), ge.dateFormatToString(m_eD));
-
-            } else if (shift == shift.NIGHT_SHIFT) {
-
-                DateTime n_sD = getNightShiftStart();
-                DateTime n_eD = getNightShiftEnd();
-
-                System.out.printf("NIGHT_SHIFT %s to %s \r\n ", ge.dateFormatToString(n_sD), ge.dateFormatToString(n_eD));
-
-            } else {
+            if (null == shift) {
                 System.out.println("Date in unsupported shift...");
+            } else switch (shift) {
+                case MORNING_SHIFT:
+                    DateTime m_sD = getMorningShiftStart(d);
+                    DateTime m_eD = getMorningShiftEnd(d);
+                    System.out.printf("MORNING_SHIFT %s to %s \r\n ", ge.dateFormatToString(m_sD), ge.dateFormatToString(m_eD));
+                    break;
+                case NIGHT_SHIFT:
+                    DateTime n_sD = getNightShiftStart(d);
+                    DateTime n_eD = getNightShiftEnd(d);
+                    System.out.printf("NIGHT_SHIFT %s to %s \r\n ", ge.dateFormatToString(n_sD), ge.dateFormatToString(n_eD));
+                    break;
+                default:
+                    System.out.println("Date in unsupported shift...");
+                    break;
             }
-            
+
             System.out.println("------------");
         });
     }

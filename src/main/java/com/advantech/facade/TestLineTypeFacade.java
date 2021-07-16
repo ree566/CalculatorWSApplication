@@ -152,7 +152,7 @@ public class TestLineTypeFacade extends BasicLineTypeFacade {
     }
 
     private boolean isByPassCurrentHours() {
-        int hours = new DateTime().getHourOfDay();
+        int hours = DateTime.now().getHourOfDay();
         return IntStream.of(testByPassHours).anyMatch(x -> x == hours);
     }
 

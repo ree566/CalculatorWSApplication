@@ -46,13 +46,13 @@ public class FbnService {
     }
 
     public Integer checkLastFBNMinuteDiff() {
-        DateTime now = new DateTime();
+        DateTime now = DateTime.now();
         Fbn f = this.getLastInputData();
         return f == null ? null : Minutes.minutesBetween(convert(getSensorTime(f)), now).getMinutes();
     }
 
     public Integer checkHoursDiff(Fbn f) {
-        DateTime now = new DateTime();
+        DateTime now = DateTime.now();
         return f == null ? null : Hours.hoursBetween(convert(getSensorTime(f)), now).getHours();
     }
 

@@ -18,10 +18,12 @@ public class ShiftScheduleUtils {
         MORNING_SHIFT, NIGHT_SHIFT, UNSUPPORT_SHIFT;
     }
 
-    private static final LocalTime MORNING_SHIFT_STARTTIME = new LocalTime(8, 30, 0);
-    private static final LocalTime MORNING_SHIFT_ENDTIME = new LocalTime(19, 45, 0);
-    private static final LocalTime NIGHT_SHIFT_STARTTIME = new LocalTime(20, 30, 0);
-    private static final LocalTime NIGHT_SHIFT_ENDTIME = new LocalTime(7, 45, 0);
+    private static final LocalTime MORNING_SHIFT_STARTTIME = new LocalTime(8, 0, 1);
+    private static final LocalTime MORNING_SHIFT_ENDTIME = new LocalTime(20, 0, 0);
+    private static final LocalTime NIGHT_SHIFT_STARTTIME = new LocalTime(20, 0, 1);
+    private static final LocalTime NIGHT_SHIFT_ENDTIME = new LocalTime(8, 0, 0);
+    
+    private static final String UNHANDLE_SHIFT_MESSAGE = "Can't handle shift in current datetime.";
 
     public static DateTime getMorningShiftStart() {
         return getMorningShiftStart(DateTime.now());
@@ -60,6 +62,36 @@ public class ShiftScheduleUtils {
             return new DateTime(dt).withTime(NIGHT_SHIFT_ENDTIME);
         } else {
             return new DateTime(dt).plusDays(1).withTime(NIGHT_SHIFT_ENDTIME);
+        }
+    }
+
+    public static DateTime getCurrentShiftStart() {
+        if (null == getShift()) {
+            throw new UnsupportedOperationException(UNHANDLE_SHIFT_MESSAGE);
+        } else {
+            switch (getShift()) {
+                case MORNING_SHIFT:
+                    return getMorningShiftStart();
+                case NIGHT_SHIFT:
+                    return getNightShiftStart();
+                default:
+                    throw new UnsupportedOperationException(UNHANDLE_SHIFT_MESSAGE);
+            }
+        }
+    }
+
+    public static DateTime getCurrentShiftEnd() {
+        if (null == getShift()) {
+            throw new UnsupportedOperationException(UNHANDLE_SHIFT_MESSAGE);
+        } else {
+            switch (getShift()) {
+                case MORNING_SHIFT:
+                    return getMorningShiftEnd();
+                case NIGHT_SHIFT:
+                    return getNightShiftEnd();
+                default:
+                    throw new UnsupportedOperationException(UNHANDLE_SHIFT_MESSAGE);
+            }
         }
     }
 

@@ -17,6 +17,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
+import static com.advantech.helper.ShiftScheduleUtils.*;
 
 /**
  *
@@ -36,35 +37,35 @@ public class BabDAO extends AbstractDao<Integer, Bab> implements BasicDAO_1<Bab>
     }
 
     public List<Bab> findByPrimaryKeys(Integer... obj_ids) {
-        Criteria c = super.createEntityCriteria();
-        c.add(Restrictions.in("id", obj_ids));
-        return c.list();
+        return super.createEntityCriteria()
+                .add(Restrictions.in("id", obj_ids))
+                .list();
     }
 
     public Bab findWithLineInfo(int bab_id) {
-        Criteria c = super.createEntityCriteria();
-        c.add(Restrictions.eq("id", bab_id));
-        c.createAlias("line", "l");
-        c.createAlias("l.lineType", "lt");
-        return (Bab) c.uniqueResult();
+        return (Bab) super.createEntityCriteria()
+                .add(Restrictions.eq("id", bab_id))
+                .createAlias("line", "l")
+                .createAlias("l.lineType", "lt")
+                .uniqueResult();
     }
 
     public List<Bab> findByModelAndDate(String modelName, DateTime sD, DateTime eD) {
         sD = sD.withHourOfDay(0);
         eD = eD.withHourOfDay(23);
-        Criteria c = super.createEntityCriteria();
-        c.add(Restrictions.eq("modelName", modelName));
-        c.add(Restrictions.between("beginTime", sD.toDate(), eD.toDate()));
-        c.setFetchMode("line", FetchMode.JOIN);
-        return c.list();
+        return super.createEntityCriteria()
+                .add(Restrictions.eq("modelName", modelName))
+                .add(Restrictions.between("beginTime", sD.toDate(), eD.toDate()))
+                .setFetchMode("line", FetchMode.JOIN)
+                .list();
     }
 
     public List<Bab> findByDate(DateTime sD, DateTime eD) {
         sD = sD.withHourOfDay(0);
         eD = eD.withHourOfDay(23);
-        Criteria c = super.createEntityCriteria();
-        c.add(Restrictions.between("beginTime", sD.toDate(), eD.toDate()));
-        return c.list();
+        return super.createEntityCriteria()
+                .add(Restrictions.between("beginTime", sD.toDate(), eD.toDate()))
+                .list();
     }
 
     public List<Bab> findByDateAndLineType(DateTime sD, DateTime eD, List<LineType> l) {
@@ -98,47 +99,53 @@ public class BabDAO extends AbstractDao<Integer, Bab> implements BasicDAO_1<Bab>
     }
 
     public List<Bab> findProcessing() {
-        Criteria c = super.createEntityCriteria();
-        c.createAlias("line", "l");
-        c.createAlias("l.lineType", "lineType");
-        c.add(Restrictions.isNull("babStatus"));
-        c.add(Restrictions.gt("beginTime", new DateTime().withHourOfDay(0).toDate()));
-        return c.list();
+        DateTime sD = getCurrentShiftStart();
+
+        return super.createEntityCriteria()
+                .createAlias("line", "l")
+                .createAlias("l.lineType", "lineType")
+                .add(Restrictions.isNull("babStatus"))
+                .add(Restrictions.gt("beginTime", sD.toDate()))
+                .list();
     }
 
     public List<Bab> findProcessingAndNotPre() {
-        Criteria c = super.createEntityCriteria();
-        c.createAlias("line", "l");
-        c.createAlias("l.lineType", "lineType");
-        c.add(Restrictions.isNull("babStatus"));
-        c.add(Restrictions.gt("beginTime", new DateTime().withHourOfDay(0).toDate()));
-        c.add(Restrictions.eq("ispre", 0));
-        return c.list();
+        DateTime sD = getCurrentShiftStart();
+
+        return super.createEntityCriteria()
+                .createAlias("line", "l")
+                .createAlias("l.lineType", "lineType")
+                .add(Restrictions.isNull("babStatus"))
+                .add(Restrictions.gt("beginTime", sD.toDate()))
+                .add(Restrictions.eq("ispre", 0))
+                .list();
     }
 
     public List<Bab> findProcessingByTagName(String tagName) {
-        Criteria c = super.createEntityCriteria();
-        c.createAlias("babSettingHistorys", "setting");
-        c.add(Restrictions.eq("setting.tagName.name", tagName));
-        c.add(Restrictions.gt("setting.createTime", new DateTime().withHourOfDay(0).toDate()));
-        c.add(Restrictions.isNull("setting.lastUpdateTime"));
-        return c.list();
+        DateTime sD = getCurrentShiftStart();
+
+        return super.createEntityCriteria()
+                .createAlias("babSettingHistorys", "setting")
+                .add(Restrictions.eq("setting.tagName.name", tagName))
+                .add(Restrictions.gt("setting.createTime", sD.toDate()))
+                .add(Restrictions.isNull("setting.lastUpdateTime"))
+                .list();
     }
 
     public List<String> findAllModelName() {
-        Criteria c = super.createEntityCriteria();
-        c.setProjection(Projections.distinct(Projections.property("modelName")));
-        return c.list();
+        return super.createEntityCriteria()
+                .setProjection(Projections.distinct(Projections.property("modelName")))
+                .list();
     }
 
     public List<Bab> findUnReplyed(int floor_id, DateTime sD, DateTime eD) {
-        Criteria c = super.createEntityCriteria();
-        c.createAlias("line", "l");
-        c.createAlias("l.lineType", "lt");
-        c.add(Restrictions.eq("replyStatus", ReplyStatus.UNREPLIED));
-        c.add(Restrictions.eq("l.floor.id", floor_id));
-        c.add(Restrictions.between("beginTime", sD.toDate(), eD.toDate()));
-        return c.list();
+        return super.createEntityCriteria()
+                .createAlias("line", "l")
+                .createAlias("l.lineType", "lt")
+                .add(Restrictions.eq("replyStatus", ReplyStatus.UNREPLIED))
+                .add(Restrictions.eq("l.floor.id", floor_id))
+                .add(Restrictions.between("beginTime", sD.toDate(), eD.toDate()))
+                .list();
     }
 
     /*
@@ -166,7 +173,7 @@ public class BabDAO extends AbstractDao<Integer, Bab> implements BasicDAO_1<Bab>
                 .add(Restrictions.in("modelName", modelNames))
                 .list();
     }
-    
+
     public List<Bab> findByModelNamesAndLines(List<String> modelNames, List<Line> lines) {
         return super.createEntityCriteria()
                 .add(Restrictions.in("modelName", modelNames))

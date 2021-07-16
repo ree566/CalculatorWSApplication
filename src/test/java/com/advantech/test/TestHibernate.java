@@ -9,7 +9,9 @@ import com.advantech.dao.db1.AlarmTestActionDAO;
 import com.advantech.dao.db1.BabDAO;
 import com.advantech.dao.db1.BabPassStationRecordDAO;
 import com.advantech.dao.db1.SqlViewDAO;
+import com.advantech.helper.DatetimeGenerator;
 import com.advantech.helper.HibernateObjectPrinter;
+import static com.advantech.helper.ShiftScheduleUtils.*;
 import com.advantech.model.db1.AlarmBabAction;
 import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.BabAlarmHistory;
@@ -46,6 +48,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
+import org.joda.time.DateTime;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -445,7 +448,7 @@ public class TestHibernate {
 
     }
 
-    @Test
+//    @Test
     @Transactional
     @Rollback(true)
     public void testSyncUserDataFromMes() {
@@ -458,6 +461,32 @@ public class TestHibernate {
         for (UserInfoOnMes m : mesData) {
             
         }
+    }
+    
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testHibernateQuery() {
+        DatetimeGenerator ge = new DatetimeGenerator("yyyy-MM-dd HH:mm");
+        Session session = sessionFactory.getCurrentSession();
+        
+        DateTime tD = new DateTime(2021, 6, 11, 19, 55, 0, 0);
+        
+        System.out.printf("%s \r\n ", ge.dateFormatToString(tD));
+        
+        DateTime sD = (getShift(tD) == Shift.MORNING_SHIFT ? getMorningShiftStart(tD) : getNightShiftStart(tD));
+        DateTime eD = (getShift(tD) == Shift.MORNING_SHIFT ? getMorningShiftEnd(tD) : getNightShiftEnd(tD));
+        
+        System.out.printf("%s \r\n ", ge.dateFormatToString(sD));
+
+        List<Bab> l = session.createCriteria(Bab.class)
+                .createAlias("line", "l")
+                .createAlias("l.lineType", "lineType")
+                .add(Restrictions.isNull("babStatus"))
+                .add(Restrictions.between("beginTime", sD.toDate(), eD.toDate()))
+                .list();
+        
+        assertEquals(7, l.size());
     }
 
 }

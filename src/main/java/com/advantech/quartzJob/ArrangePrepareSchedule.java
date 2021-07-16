@@ -80,7 +80,7 @@ public abstract class ArrangePrepareSchedule {
     Line emptyLine;
 
     public void execute() throws Exception {
-        this.execute(new DateTime());
+        this.execute(DateTime.now());
     }
 
     public void execute(DateTime d) throws Exception {

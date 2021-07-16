@@ -28,7 +28,7 @@ public class FbnDAO extends AbstractDao<Integer, Fbn> {
     public List<Fbn> findToday() {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("YY/MM/dd");
         return super.createEntityCriteria()
-                .add(Restrictions.eq("LogDate", dtf.print(new DateTime())))
+                .add(Restrictions.eq("LogDate", dtf.print(DateTime.now())))
                 .list();
     }
 

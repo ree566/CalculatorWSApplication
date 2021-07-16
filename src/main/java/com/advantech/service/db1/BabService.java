@@ -111,7 +111,7 @@ public class BabService {
     }
 
     public List<Bab> findTodays() {
-        DateTime d = new DateTime();
+        DateTime d = DateTime.now();
         return this.findByDate(d, d);
     }
 
