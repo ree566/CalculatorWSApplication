@@ -44,7 +44,7 @@
     
     <bean id="DataBaseInit-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="DataBaseInit" />
-        <property name="cronExpression" value="0 5 8,20 ? * * *" />
+        <property name="cronExpression" value="0 30 6,22 ? * MON-SAT *" />
     </bean>
     
     <!--
@@ -72,7 +72,7 @@
     
     <bean id="HandleUncloseBab-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="HandleUncloseBab" />
-        <property name="cronExpression" value="0 55 7,19 ? * * *" />
+        <property name="cronExpression" value="0 10 22 ? * MON-SAT *" />
     </bean>
     
     <!--
@@ -101,7 +101,7 @@
     
     <bean id="CleanSensorData-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="CleanSensorData" />
-        <property name="cronExpression" value="0 0 15 ? * SUN *" />
+        <property name="cronExpression" value="0 0 0 ? * WED *" />
     </bean>
     
     <!--
