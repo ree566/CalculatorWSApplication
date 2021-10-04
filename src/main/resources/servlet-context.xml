@@ -43,7 +43,7 @@
     <bean id="dataSource1" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
         <property name="connectionTestQuery" value="SELECT 1" />
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.22.3.3/ATMC" />
+        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.20.128.151/ATMC" />
         <property name="username" value="ATMCSa" />
         <property name="password" value="@tmc$a392" />
     </bean>
@@ -337,8 +337,8 @@
     
     <!--Email setting-->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="Relay.advantech.com.tw" />
-        <property name="port" value="2526" />
+        <property name="host" value="Relay.advantech.com" />
+        <property name="port" value="25" />
 
         <property name="javaMailProperties">
             <props>

@@ -124,9 +124,6 @@
                         <li><a href="lineUserReference.jsp?lineType=ASSY">組裝當日線別人員維護</a></li>
                         <li><a href="prepareSchedule.jsp?lineType=ASSY">組裝當日自動排站</a></li>
                         <li class="divider"></li>
-                            <c:if test="${isIeOper || isBackDoor4876 || isAdmin || isMfgLineOwner || isMfgOper}">
-                            <li><a href="prepareSchedule_percentage.jsp">工單完成度列表</a></li>
-                            </c:if>
                     </ul>
                 </li>
                 <li class="dropdown">

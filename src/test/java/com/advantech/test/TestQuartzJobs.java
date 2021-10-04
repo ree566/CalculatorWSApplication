@@ -96,7 +96,7 @@ public class TestQuartzJobs {
         i.executeInternal(null);
     }
 
-//    @Test
+    @Test
     public void testSyncTestPassStationData() throws JobExecutionException {
         job2.execute();
     }
@@ -107,7 +107,7 @@ public class TestQuartzJobs {
     @Autowired
     private ArrangePrepareScheduleImpl_Assy aps;
 
-    @Test
+//    @Test
     public void testSyncPrepareSchedule1() throws Exception {
         //先設定好當日出勤名單, 才會給予字動排站
         //This is assy schedule
