@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html>
     <c:set var="userSitefloor" value="${param.sitefloor}" />
-    <c:if test="${(userSitefloor == null) || (userSitefloor == '' || userSitefloor < 1 || userSitefloor > 7)}">
+    <c:if test="${(userSitefloor == null) || (userSitefloor == '')}">
         <c:redirect url="/" />
     </c:if>
     <head> 
@@ -44,14 +44,14 @@
         <script src="<c:url value="/js/cookie.check.js" /> "></script>
         <script src="<c:url value="/js/param.check.js" /> "></script>
         <script src="<c:url value="/js/cookie.generator.js"/>"></script>
-        
+
         <script>
 
             var userInfoCookieName = "userInfo", testLineTypeCookieName = "testLineTypeCookieName", cellCookieName = "cellCookieName";
             var STATION_LOGIN = "LOGIN", STATION_LOGOUT = "LOGOUT", CHANGE_DECK = "CHANGE_DECK";
             var savedTable, savedJobnumber;
             var tabreg = /^[0-9a-zA-Z-]+$/;//Textbox check regex.
-            
+
             shift_retrieve_url = "<c:url value="/UserShiftController/findDateShiftInfo" />";
 
             $(document).ready(function () {
@@ -110,7 +110,7 @@
                 });
 
             });
-            
+
             function block() {
                 $.blockUI({
                     css: {

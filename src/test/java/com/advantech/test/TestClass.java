@@ -26,6 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
 import static com.advantech.helper.ShiftScheduleUtils.*;
+import com.advantech.webservice.Factory;
+import com.advantech.webservice.mes.UploadType;
 
 /**
  *
@@ -54,11 +56,10 @@ public class TestClass {
         System.out.println(key);
     }
 
-//    @Test
+    @Test
     public void testEnum() {
-        int a = 3;
-        long b = a;
-        System.out.println(b);
+        UploadType ut = UploadType.UPDATE;
+        System.out.println(ut.toString());
     }
 
 //    @Test
@@ -257,7 +258,7 @@ public class TestClass {
         System.out.println(d.getWeekOfWeekyear());
     }
 
-    @Test
+//    @Test
     public void testShiftScheduleUtils() {
         DatetimeGenerator ge = new DatetimeGenerator("yyyy-MM-dd HH:mm");
 

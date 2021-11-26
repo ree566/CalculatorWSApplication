@@ -13,6 +13,7 @@ import com.advantech.model.db1.TestTable;
 import com.advantech.service.db1.AlarmTestActionService;
 import com.advantech.service.db1.TestService;
 import com.advantech.service.db1.TestTableService;
+import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,7 +99,9 @@ public class TestLineTypeFacade extends BasicLineTypeFacade {
             initMap();
             JSONArray userArr = new JSONArray();
 
-            List<TestRecord> kanbanUsersRecord = rv.getTestLineTypeRecords();
+            List<TestRecord> kanbanUsersRecord = rv.getTestLineTypeRecords(Factory.DEFAULT);
+            List<TestRecord> kanbanUsersRecord2 = rv.getTestLineTypeRecords(Factory.TEMP1);
+            kanbanUsersRecord.addAll(kanbanUsersRecord2);
 
             processingJsonObject = new JSONObject();
             boolean isInTheWebService = false;

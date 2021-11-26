@@ -8,6 +8,7 @@ package com.advantech.service.db1;
 import com.advantech.model.db1.Test;
 import com.advantech.dao.db1.TestDAO;
 import com.advantech.model.db1.TestTable;
+import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceTX;
 import static com.google.common.base.Preconditions.*;
 import java.util.List;
@@ -34,7 +35,7 @@ public class TestService {
 
     @Autowired
     private WebServiceTX tx;
-    
+
     private static final Logger log = LoggerFactory.getLogger(TestService.class);
 
     public List<Test> findAll() {
@@ -57,7 +58,11 @@ public class TestService {
         t.setLastUpdateTime(new DateTime().toDate());
         this.insert(t);
         try {
-            tx.kanbanUserLogin(jobnumber);
+            Factory f = Factory.DEFAULT;
+            if (table.getFloor().getId() == 3) {
+                f = Factory.TEMP1;
+            }
+            tx.kanbanUserLogin(jobnumber, f);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
         }
@@ -90,7 +95,11 @@ public class TestService {
     public int delete(String jobnumber) {
         Test t = testDAO.findByJobnumber(jobnumber);
         this.delete(t);
-        tx.kanbanUserLogout(jobnumber);
+        Factory f = Factory.DEFAULT;
+        if (t.getTestTable().getFloor().getId() == 3) {
+            f = Factory.TEMP1;
+        }
+        tx.kanbanUserLogout(jobnumber, f);
         return 1;
     }
 

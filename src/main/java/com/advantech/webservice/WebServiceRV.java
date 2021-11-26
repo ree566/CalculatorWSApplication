@@ -56,8 +56,8 @@ public class WebServiceRV extends SimpleWebServiceRV {
     private void init() {
     }
 
-    public List getKanbanUsers() {
-        super.setWsClient(mClient.getClient(Factory.DEFAULT));
+    public List getKanbanUsers(Factory f) {
+        super.setWsClient(mClient.getClient(f));
         String queryString = "<root>"
                 + "<METHOD ID='ETLSO.QryProductionKanban4Test'/>"
                 + "<KANBANTEST>"
@@ -67,8 +67,8 @@ public class WebServiceRV extends SimpleWebServiceRV {
         return super.getWebServiceData(queryString);
     }
 
-    public List<String> getKanbanUsersForString() throws IOException, TransformerConfigurationException, TransformerException {
-        WsClient client = mClient.getClient(Factory.DEFAULT);
+    public List<String> getKanbanUsersForString(Factory f) throws IOException, TransformerConfigurationException, TransformerException {
+        WsClient client = mClient.getClient(f);
         String queryString = "<root>"
                 + "<METHOD ID='ETLSO.QryProductionKanban4Test'/>"
                 + "<KANBANTEST>"
@@ -78,8 +78,8 @@ public class WebServiceRV extends SimpleWebServiceRV {
         return client.getFormatWebServiceData(queryString);
     }
 
-    public String getKanbanWorkId(String jobnumber) {
-        super.setWsClient(mClient.getClient(Factory.DEFAULT));
+    public String getKanbanWorkId(String jobnumber, Factory f) {
+        super.setWsClient(mClient.getClient(f));
         String dt = fmt.print(new DateTime());
         String queryString = "<root><METHOD ID='WMPSO.QryWorkManPowerCard001'/><WORK_MANPOWER_CARD><WORK_ID>-1</WORK_ID><LINE_ID>-1</LINE_ID><STATION_ID>-1</STATION_ID><FACTORY_NO></FACTORY_NO><UNIT_NO></UNIT_NO>"
                 + "<USER_NO>" + jobnumber + "</USER_NO>"
@@ -109,9 +109,9 @@ public class WebServiceRV extends SimpleWebServiceRV {
         return super.getFieldValue(queryString, childTagName);
     }
 
-    public UserOnMes getMESUser(String jobnumber) {
+    public UserOnMes getMESUser(String jobnumber, Factory f) {
         try {
-            super.setWsClient(mClient.getClient(Factory.DEFAULT));
+            super.setWsClient(mClient.getClient(f));
             String queryString = "<root><METHOD ID='PLBSO.QryLogion'/><USER_INFO><USER_NO>"
                     + jobnumber
                     + "</USER_NO><PASSWORD></PASSWORD><STATUS>A</STATUS></USER_INFO></root>";
@@ -153,9 +153,9 @@ public class WebServiceRV extends SimpleWebServiceRV {
         }
     }
 
-    public List<TestRecord> getTestLineTypeRecords() {
+    public List<TestRecord> getTestLineTypeRecords(Factory f) {
         try {
-            super.setWsClient(mClient.getClient(Factory.DEFAULT));
+            super.setWsClient(mClient.getClient(f));
             String queryString = "<root>"
                     + "<METHOD ID='ETLSO.QryProductionKanban4Test'/>"
                     + "<KANBANTEST>"

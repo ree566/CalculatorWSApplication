@@ -68,7 +68,7 @@ public class WebServiceRVTest {
     @Test
     public void testGetKanbanUsersForString() throws Exception {
         System.out.println("getKanbanUsersForString");
-        List<String> result = rv.getKanbanUsersForString();
+        List<String> result = rv.getKanbanUsersForString(Factory.DEFAULT);
         assertTrue(!result.isEmpty());
     }
 
@@ -80,7 +80,7 @@ public class WebServiceRVTest {
         System.out.println("getKanbanWorkId");
         String jobnumber = "A-7275";
         String expResult = "";
-        String result = rv.getKanbanWorkId(jobnumber);
+        String result = rv.getKanbanWorkId(jobnumber, Factory.DEFAULT);
         assertNotEquals(expResult, result);
         out.println(result);
     }
@@ -106,7 +106,7 @@ public class WebServiceRVTest {
         System.out.println("getMESUser");
         String jobnumber = "A-7275";
         UserOnMes expResult = null;
-        UserOnMes result = rv.getMESUser(jobnumber);
+        UserOnMes result = rv.getMESUser(jobnumber, Factory.DEFAULT);
         assertNotEquals(expResult, result);
         out.println(new Gson().toJson(result));
     }
@@ -130,7 +130,7 @@ public class WebServiceRVTest {
     public void testGetTestLineTypeUsers() {
         System.out.println("getTestLineTypeUsers");
         List<TestRecord> expResult = null;
-        List<TestRecord> result = rv.getTestLineTypeRecords();
+        List<TestRecord> result = rv.getTestLineTypeRecords(Factory.DEFAULT);
         assertNotEquals(expResult, result);
         for (TestRecord t : result) {
             out.println(new Gson().toJson(t));
@@ -139,7 +139,7 @@ public class WebServiceRVTest {
 
     @Test
     public void testGetTestLineTypeRecord() throws JsonProcessingException {
-        List<TestRecord> l = rv.getTestLineTypeRecords();
+        List<TestRecord> l = rv.getTestLineTypeRecords(Factory.DEFAULT);
         assertNotEquals(0, l.size());
         HibernateObjectPrinter.print(l);
     }

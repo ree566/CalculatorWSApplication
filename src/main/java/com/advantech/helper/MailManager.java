@@ -11,6 +11,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
@@ -32,19 +33,22 @@ public class MailManager {
 
     private JavaMailSender mailSender;
 
-    private String hostIp;
+    private String hostName;
 
     @Value("${send.mail.alarm.user: true}")
     private boolean sendMailAlarmUser;
 
     @PostConstruct
-    protected void init() {
-        try {
-            log.info(MailManager.class + " init host address");
-            hostIp = getHostAddr();
-        } catch (UnknownHostException | SocketException ex) {
-            log.error(ex.toString());
+    protected void initHostName() {
+        Map<String, String> env = System.getenv();
+        if (env.containsKey("COMPUTERNAME")) {
+            hostName = env.get("COMPUTERNAME");
+        } else if (env.containsKey("HOSTNAME")) {
+            hostName = env.get("HOSTNAME");
+        } else {
+            hostName = "Unknown";
         }
+        hostName = hostName + "@advantech.com.tw";
     }
 
     public void setMailSender(JavaMailSender mailSender) {
@@ -82,7 +86,7 @@ public class MailManager {
         helper.setTo(to);
         helper.setCc(cc);
         helper.setSubject(subject);
-        helper.setFrom("kevin@" + hostIp);
+        helper.setFrom(hostName);
 
         try {
             this.mailSender.send(mimeMessage);

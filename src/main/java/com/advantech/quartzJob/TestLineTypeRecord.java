@@ -16,6 +16,7 @@ import com.advantech.service.db1.LineTypeConfigService;
 import com.advantech.service.db1.LineTypeService;
 import com.advantech.service.db1.TestRecordService;
 import com.advantech.service.db1.TestService;
+import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import static com.google.common.base.Preconditions.checkState;
 import java.util.ArrayList;
@@ -68,7 +69,10 @@ public class TestLineTypeRecord extends QuartzJobBean {
             log.info("No need to record right now.");
         } else {
             //只存下已經刷入的使用者
-            List<com.advantech.model.db1.TestRecord> testLineTypeStatus = separateOfflineUser(rv.getTestLineTypeRecords());
+            List<com.advantech.model.db1.TestRecord> testLineTypeStatus = separateOfflineUser(rv.getTestLineTypeRecords(Factory.DEFAULT));
+            List<com.advantech.model.db1.TestRecord> testLineTypeStatus2 = separateOfflineUser(rv.getTestLineTypeRecords(Factory.TEMP1));
+            testLineTypeStatus.addAll(testLineTypeStatus2);
+            
             updateReplyFlag(testLineTypeStatus);
             addSaltProductivity(testLineTypeStatus);
             testRecordService.insert(testLineTypeStatus);

@@ -31,8 +31,8 @@ public class TestTableService {
         return testTableDAO.findByPrimaryKey(obj_id);
     }
 
-    public List<TestTable> findBySitefloor(int sitefloor) {
-        return testTableDAO.findBySitefloor(sitefloor);
+    public List<TestTable> findBySitefloor(String floorName) {
+        return testTableDAO.findBySitefloor(floorName);
     }
 
     public TestTable findByJobnumber(String jobnumber) {

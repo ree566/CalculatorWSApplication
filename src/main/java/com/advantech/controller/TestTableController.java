@@ -34,8 +34,9 @@ public class TestTableController {
 
     @RequestMapping(value = "/findBySitefloor", method = {RequestMethod.GET})
     @ResponseBody
-    protected List<TestTable> findBySitefloor(@RequestParam int sitefloor) {
-        return testTableService.findBySitefloor(sitefloor);
+    protected List<TestTable> findBySitefloor(@RequestParam String sitefloor) {
+        String floorName = sitefloor;
+        return testTableService.findBySitefloor(floorName);
     }
     
     @RequestMapping(value = "/findUserNotLogin", method = {RequestMethod.GET})
