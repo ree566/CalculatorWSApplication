@@ -186,7 +186,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
                     + "<USER_NO>" + jobnumberStr + "</USER_NO>"
                     + "<START_DATE>" + fmt.print(sD) + "</START_DATE>"
                     + "<END_DATE>" + fmt.print(eD) + "</END_DATE>"
-                    + "<WERKS>TWM3</WERKS>"
+                    + "<WERKS>TW" + f.token() + "</WERKS>"
                     + "</RPT404>"
                     + "</root>";
 
@@ -210,7 +210,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
                     = "<root>"
                     + "<METHOD ID='KPISO.QryRPT404'/>"
                     + "<RPT404>"
-                    + "<WERKS>TWM3</WERKS>"
+                    + "<WERKS>TW" + f.token() + "</WERKS>"
                     + "<UNIT_NO>" + unit + "</UNIT_NO>"
                     + "<START_DATE>" + fmt.print(sD) + "</START_DATE>"
                     + "<END_DATE>" + fmt.print(eD) + "</END_DATE>"

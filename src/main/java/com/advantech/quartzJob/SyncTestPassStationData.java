@@ -61,7 +61,9 @@ public class SyncTestPassStationData {
         stations.forEach(s -> {
             Section section = (s == 3 ? Section.BAB : Section.TEST);
             List<TestPassStationDetail> l = rv.getTestPassStationDetails(jobnumbers, section, s, sD, eD, Factory.DEFAULT);
+            List<TestPassStationDetail> l2 = rv.getTestPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TEMP1);
             result.addAll(l);
+            result.addAll(l2);
         });
         
         if (!result.isEmpty()) {
