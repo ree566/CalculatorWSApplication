@@ -42,7 +42,7 @@
         <spring.version>5.2.10.RELEASE</spring.version>
         <spring-security.version>5.2.10.RELEASE</spring-security.version>
         <hibernate.version>5.2.18.Final</hibernate.version>
-        <jackson.version>2.9.10</jackson.version>
+        <jackson.version>2.13.1</jackson.version>
         <quartz.version>2.3.2</quartz.version>
         <git-commit-id-plugin.version>2.2.5</git-commit-id-plugin.version>
     </properties>
