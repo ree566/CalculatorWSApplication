@@ -9,13 +9,22 @@ import com.advantech.model.db1.Floor;
 import com.advantech.model.db1.LineType;
 import com.advantech.model.db1.PrepareSchedule;
 import com.advantech.model.db1.Worktime;
+import com.advantech.model.view.db3.WorktimeCobots;
+import com.advantech.service.db1.FloorService;
+import com.advantech.service.db1.LineTypeService;
 import com.advantech.service.db1.PrepareScheduleService;
+import com.advantech.service.db1.WorktimeService;
 import static com.google.common.collect.Lists.newArrayList;
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -23,28 +32,20 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Wei.Cheng For assy
  */
 @Component
-@Transactional
 public class SyncPrepareScheduleForPacking {
 
     private static final Logger logger = LoggerFactory.getLogger(SyncPrepareScheduleForPacking.class);
-
-    @Autowired
-    private SessionFactory sessionFactory;
 
     @Autowired
     private ArrangePrepareScheduleImpl_Packing aps;
@@ -52,9 +53,26 @@ public class SyncPrepareScheduleForPacking {
     @Autowired
     private PrepareScheduleService psService;
 
+    @Autowired
+    private WorktimeService worktimeService;
+
+    @Autowired
+    private LineTypeService lineTypeService;
+
+    @Autowired
+    private FloorService floorService;
+    
+    @Autowired
+    private com.advantech.service.db3.SqlViewService sqlViewService;
+
     public void execute() throws Exception {
-        //Because oom problem on poi, excel sync job set on c# winform project
-//        this.execute(d);
+        /*
+            ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+            Because oom problem on poi, excel sync job set on c# winform project
+            ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+        */
+        //        this.execute(d);
+
         logger.info("Update packing prepareSchedule...");
         aps.execute();
     }
@@ -62,19 +80,15 @@ public class SyncPrepareScheduleForPacking {
     public void execute(DateTime d) throws Exception {
         d = d.withTime(0, 0, 0, 0);
 
-        int[] floors = {5, 6};
+        //1 for floor 5, 2 for floor 6
+        List<Floor> floors = floorService.findByPrimaryKeys(1, 2);
 
-        Session session = sessionFactory.getCurrentSession();
-        List<Worktime> worktimes = session
-                .createCriteria(Worktime.class)
-                .add(Restrictions.ne("packingLeadTime", BigDecimal.ZERO))
-                .list();
-        LineType pkg = session.get(LineType.class, 3);
+        List<Worktime> worktimes = worktimeService.findNotZeroPackingLeadTime();
+        LineType pkg = lineTypeService.findByPrimaryKey(3);
 
-        for (int floor : floors) {
-            String syncFilePath = "\\\\aclfile.advantech.corp\\Group1\\DF\\PMC\\生產日排程\\TWM3 " + floor + "F APS製程排程.xlsx";
-
-            Floor f = session.get(Floor.class, floor == 5 ? 1 : 2);
+        for (Floor f : floors) {
+            String floorNumber = f.getName().replaceAll("^(\\d+).*$", "$1");
+            String syncFilePath = "\\\\aclfile.advantech.corp\\Group1\\DF\\PMC\\生產日排程\\TWM3 " + floorNumber + "F APS製程排程.xlsx";
 
             List nextDaysData = psService.findByFloorAndLineTypeAndDate(f, newArrayList(pkg), d);
             if (!nextDaysData.isEmpty()) {
@@ -82,8 +96,8 @@ public class SyncPrepareScheduleForPacking {
                 continue;
             }
 
-            try (Workbook workbook = WorkbookFactory.create(new File(syncFilePath), "234", true)) {
-                Sheet sheet = workbook.getSheet(floor + "F--包裝");
+            try ( Workbook workbook = WorkbookFactory.create(new File(syncFilePath), "234", true)) {
+                Sheet sheet = workbook.getSheet(floorNumber + "F--包裝");
 
                 int dateIdx = 5;
                 int titleIdx = 6;
@@ -99,6 +113,7 @@ public class SyncPrepareScheduleForPacking {
                 int cnt = 0;
 
                 Iterator<Row> rowIterator = sheet.iterator();
+                List<PrepareSchedule> schedules = new ArrayList<>();
                 while (rowIterator.hasNext()) {
                     try {
                         //Skip row to main data
@@ -132,8 +147,7 @@ public class SyncPrepareScheduleForPacking {
                                     p.setLineType(pkg);
                                     p.setOnBoardDate(d.toDate());
                                     p.setFloor(f);
-                                    session.save(p);
-
+                                    schedules.add(p);
                                 }
                             }
 
@@ -143,6 +157,8 @@ public class SyncPrepareScheduleForPacking {
                         logger.error(e.getMessage(), e);
                     }
                 }
+                this.psService.insert(schedules);
+                this.saveCobotsInfo(schedules);
             }
         }
 
@@ -180,5 +196,20 @@ public class SyncPrepareScheduleForPacking {
         }
 
         return patchColumn;
+    }
+    
+    private void saveCobotsInfo(List<PrepareSchedule> prepareSchedules){
+        List<String> modelNames = prepareSchedules
+                .stream().map(p -> p.getModelName())
+                .collect(toList());
+        Map<String, WorktimeCobots> worktimeCobotSetting = this.sqlViewService
+                .findCobots(modelNames).stream()
+                .collect(Collectors.toMap(WorktimeCobots::getModelName, Function.identity()));
+        prepareSchedules.forEach(p -> {
+            if(worktimeCobotSetting.containsKey(p.getModelName())){
+                p.setHrcMemo(worktimeCobotSetting.get(p.getModelName()).getCobots());
+            }
+        });
+        this.psService.update(prepareSchedules);
     }
 }

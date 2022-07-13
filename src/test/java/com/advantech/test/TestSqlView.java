@@ -8,10 +8,11 @@ package com.advantech.test;
 import com.advantech.dao.db1.BabPcsDetailHistoryDAO;
 import com.advantech.dao.db1.SqlViewDAO;
 import com.advantech.helper.HibernateObjectPrinter;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.advantech.model.view.db3.WorktimeCobots;
+import static com.google.common.collect.Lists.newArrayList;
 import java.util.List;
 import org.joda.time.DateTime;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class TestSqlView {
         HibernateObjectPrinter.print(l);
     }
 
-    @Test
+//    @Test
     @Transactional
     @Rollback(true)
     public void testProc() {
@@ -79,6 +80,18 @@ public class TestSqlView {
 //        sqlViewDAO.findWorktime(st);
 //        sqlViewDAO.findUserInfoRemote();
 //        sqlViewDAO.findUserInfoRemote(st);
+    }
+
+    @Autowired
+    private com.advantech.service.db3.SqlViewService sqlViewService3;
+
+    @Test
+    public void testSqlView3() {
+        List<WorktimeCobots> l = sqlViewService3.findCobots(newArrayList(
+                "HIT-W121-HSKE",
+                "HITW153AP1902-T"));
+        assertTrue(!l.isEmpty());
+        HibernateObjectPrinter.print(l);
     }
 
 }

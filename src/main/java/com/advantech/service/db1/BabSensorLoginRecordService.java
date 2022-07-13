@@ -41,7 +41,7 @@ public class BabSensorLoginRecordService {
         return babSensorLoginRecordDAO.findAll();
     }
 
-    public BabSensorLoginRecord findByPrimaryKey(Object obj_id) {
+    public BabSensorLoginRecord findByPrimaryKey(Integer obj_id) {
         return babSensorLoginRecordDAO.findByPrimaryKey(obj_id);
     }
 
@@ -49,10 +49,14 @@ public class BabSensorLoginRecordService {
         return babSensorLoginRecordDAO.findBySensor(tagName);
     }
 
-    public List<BabSensorLoginRecord> findByLine(int line_id) {
+    public List<BabSensorLoginRecord> findByLine(Integer... line_id) {
         return babSensorLoginRecordDAO.findByLine(line_id);
     }
 
+    public int insert(BabSensorLoginRecord pojo){
+        return this.babSensorLoginRecordDAO.insert(pojo);
+    }
+    
     public int insert(String tagName, String jobnumber) {
         TagNameComparison tag = tagService.findByLampSysTagName(tagName);
         Line l = tag.getLine();

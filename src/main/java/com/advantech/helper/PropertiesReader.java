@@ -71,6 +71,8 @@ public class PropertiesReader {
     private BigDecimal packingLineBalanceStandard = new BigDecimal(0.8);
     private BigDecimal babAlarmPercentStandard = new BigDecimal(0.3);
     private BigDecimal packingAlarmPercentStandard = new BigDecimal(0.3);
+    private BigDecimal assyWorktimeAllowanceStandard = new BigDecimal(0.1);
+    private BigDecimal packingWorktimeAllowanceStandard = new BigDecimal(0.1);
     private BigDecimal testProductivityStandardMin = new BigDecimal(0.8);
     private BigDecimal testProductivityStandardMax = new BigDecimal(1.2);
     private BigDecimal cellProductivityStandardMin = new BigDecimal(0.8);
@@ -86,23 +88,33 @@ public class PropertiesReader {
     private void init() {
         log.info(PropertiesReader.class + " init properties");
         List<LineTypeConfig> configs = lineTypeConfigService.findWithLineType();
+
         List<LineTypeConfig> balanceStandard = configs.stream()
                 .filter(o -> "LINEBALANCE_STANDARD".equals(o.getName())).collect(Collectors.toList());
+
         List<LineTypeConfig> alarmPercentStandard = configs.stream()
                 .filter(o -> "ALARM_PERCENT_STANDARD".equals(o.getName())).collect(Collectors.toList());
+
         List<LineTypeConfig> pStandardMax = configs.stream()
                 .filter(o -> "PRODUCTIVITY_STANDARD_MAX".equals(o.getName())).collect(Collectors.toList());
+
         List<LineTypeConfig> pStandardMin = configs.stream()
                 .filter(o -> "PRODUCTIVITY_STANDARD_MIN".equals(o.getName())).collect(Collectors.toList());
+
+        List<LineTypeConfig> allowance = configs.stream()
+                .filter(o -> "WORKTIME_ALLOWANCE_STANDARD".equals(o.getName())).collect(Collectors.toList());
+
+        List<LineTypeConfig> allowanceMin = configs.stream()
+                .filter(o -> "WORKTIME_ALLOWANCE_MIN".equals(o.getName())).collect(Collectors.toList());
 
         balanceStandard.forEach(o -> {
             String st = o.getLineType().getName();
             switch (st) {
                 case "ASSY":
-                    assyLineBalanceStandard = o.getValue();
+                    this.assyLineBalanceStandard = o.getValue();
                     break;
                 case "Packing":
-                    packingAlarmPercentStandard = o.getValue();
+                    this.packingLineBalanceStandard = o.getValue();
                     break;
                 default:
                     break;
@@ -113,10 +125,10 @@ public class PropertiesReader {
             String st = o.getLineType().getName();
             switch (st) {
                 case "ASSY":
-                    babAlarmPercentStandard = o.getValue();
+                    this.babAlarmPercentStandard = o.getValue();
                     break;
                 case "Packing":
-                    packingLineBalanceStandard = o.getValue();
+                    this.packingAlarmPercentStandard = o.getValue();
                     break;
                 default:
                     break;
@@ -151,6 +163,19 @@ public class PropertiesReader {
             }
         });
 
+        allowance.forEach(o -> {
+            String st = o.getLineType().getName();
+            switch (st) {
+                case "ASSY":
+                    this.assyWorktimeAllowanceStandard = o.getValue();
+                    break;
+                case "Packing":
+                    this.packingWorktimeAllowanceStandard = o.getValue();
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     public Integer getMaxTestTables() {
@@ -223,6 +248,14 @@ public class PropertiesReader {
 
     public BigDecimal getCellProductivityStandardMax() {
         return cellProductivityStandardMax;
+    }
+
+    public BigDecimal getAssyWorktimeAllowanceStandard() {
+        return assyWorktimeAllowanceStandard;
+    }
+
+    public BigDecimal getPackingWorktimeAllowanceStandard() {
+        return packingWorktimeAllowanceStandard;
     }
 
     public LineTypeConfigService getLineTypeConfigService() {

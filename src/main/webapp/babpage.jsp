@@ -122,8 +122,13 @@
             var tabreg = /^[0-9a-zA-Z-]+$/;//Textbox check regex.
 
             var smallWindow;
-            
+
             shift_retrieve_url = "<c:url value="/UserShiftController/findDateShiftInfo" />";
+            let result = retrieveShiftInfo();
+            let shift_endtime = moment(result['SHIFT_END']);
+            let cookie_expired_time = shift_endtime.add(10, 'minutes');
+            console.log(shift_endtime);
+            console.log(cookie_expired_time);
 
             $(function () {
                 $(document).ajaxSend(function () {

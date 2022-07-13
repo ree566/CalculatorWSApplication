@@ -52,4 +52,8 @@ public class QuartzTriggerController {
         return "success";
     }
 
+    @RequestMapping(value = "/resetTestLineTypeQuartz", method = {RequestMethod.POST})
+    protected String resetTestLineTypeQuartz(){
+        return "success";
+    }
 }

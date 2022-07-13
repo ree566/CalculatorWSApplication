@@ -4,7 +4,7 @@
 
     <groupId>com.advantech</groupId>
     <artifactId>CalculatorWSApplication</artifactId>
-    <version>3.8.0</version>
+    <version>3.9.0</version>
     <packaging>war</packaging>
     
     <pluginRepositories>
@@ -39,10 +39,10 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <poi.version>4.1.2</poi.version>
-        <spring.version>5.3.18</spring.version>
-        <spring-security.version>5.2.10.RELEASE</spring-security.version>
+        <spring.version>5.2.22.RELEASE</spring.version>
+        <spring-security.version>4.2.2.RELEASE</spring-security.version>
         <hibernate.version>5.2.18.Final</hibernate.version>
-        <jackson.version>2.13.1</jackson.version>
+        <jackson.version>2.13.3</jackson.version>
         <quartz.version>2.3.2</quartz.version>
         <git-commit-id-plugin.version>2.2.5</git-commit-id-plugin.version>
     </properties>
@@ -365,6 +365,13 @@
             <artifactId>joda-time</artifactId>
             <version>2.9.3</version>
         </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-joda -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+            <version>2.13.3</version>
+        </dependency>
 
         <!-- http://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
         <dependency>
@@ -460,7 +467,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>20.0</version>
+            <version>31.1-jre</version>
         </dependency>
         
         <!-- https://mvnrepository.com/artifact/org.jxls/jxls -->

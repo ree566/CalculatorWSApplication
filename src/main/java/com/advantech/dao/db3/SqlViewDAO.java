@@ -6,7 +6,9 @@
 package com.advantech.dao.db3;
 
 import com.advantech.model.db1.Worktime;
+import com.advantech.model.view.db3.WorktimeCobots;
 import java.util.List;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +26,14 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
                         + "packing packing, totalModule preAssy, assyStation assyPeople, packingStation packingPeople, packingLeadTime "
                         + "from Sheet_Main_view")
                 .setResultTransformer(Transformers.aliasToBean(Worktime.class))
+                .list();
+    }
+
+    public List<WorktimeCobots> findCobots(List<String> modelNames) {
+        String sql = "select modelName, cobots from vw_WorktimeCobots where modelName in (?)";
+        Query query = this.queryIn(sql, modelNames);
+        
+        return query.setResultTransformer(Transformers.aliasToBean(WorktimeCobots.class))
                 .list();
     }
 

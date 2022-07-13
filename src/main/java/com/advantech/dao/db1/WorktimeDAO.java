@@ -7,6 +7,7 @@ package com.advantech.dao.db1;
 
 import static com.advantech.helper.HibernateBatchUtils.flushIfReachFetchSize;
 import com.advantech.model.db1.Worktime;
+import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -35,12 +36,18 @@ public class WorktimeDAO extends AbstractDao<String, Worktime> implements BasicD
                 .uniqueResult();
     }
 
+    public List<Worktime> findNotZeroPackingLeadTime() {
+        return super.createEntityCriteria()
+                .add(Restrictions.ne("packingLeadTime", BigDecimal.ZERO))
+                .list();
+    }
+
     @Override
     public int insert(Worktime pojo) {
         this.getSession().save(pojo);
         return 1;
     }
-    
+
     public int insert(List<Worktime> l) {
         Session session = super.getSession();
         int currentRow = 1;
@@ -56,7 +63,7 @@ public class WorktimeDAO extends AbstractDao<String, Worktime> implements BasicD
         this.getSession().update(pojo);
         return 1;
     }
-    
+
     public int update(List<Worktime> l) {
         Session session = super.getSession();
         int currentRow = 1;
@@ -72,7 +79,7 @@ public class WorktimeDAO extends AbstractDao<String, Worktime> implements BasicD
         this.getSession().delete(pojo);
         return 1;
     }
-    
+
     public int deleteAll() {
         Session session = super.getSession();
         session.createQuery("delete from Worktime").executeUpdate();

@@ -42,9 +42,14 @@
         <property name="durability" value="true" />
     </bean>
     
-    <bean id="DataBaseInit-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <bean id="DataBaseInit-Trig-MorningShift" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="DataBaseInit" />
-        <property name="cronExpression" value="0 30 6,22 ? * MON-SAT *" />
+        <property name="cronExpression" value="0 50 23 ? * MON-SAT *" />
+    </bean>
+    
+    <bean id="DataBaseInit-Trig-NightShift" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="DataBaseInit" />
+        <property name="cronExpression" value="0 10 8 ? * MON-SAT *" />
     </bean>
     
     <!--
@@ -70,11 +75,16 @@
         <property name="durability" value="true" />
     </bean>
     
-    <bean id="HandleUncloseBab-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <bean id="HandleUncloseBab-MorningShift" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="HandleUncloseBab" />
-        <property name="cronExpression" value="0 10 22 ? * MON-SAT *" />
+        <property name="cronExpression" value="0 40 23 ? * MON-SAT *" />
     </bean>
     
+    <bean id="HandleUncloseBab-NightShift" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="HandleUncloseBab" />
+        <property name="cronExpression" value="0 0 8 ? * MON-SAT *" />
+    </bean>
+
     <!--
         Job4 setting
         定時查看sensor是否異常，回報
@@ -92,7 +102,7 @@
     
     <!--
         Job5 setting
-        禮拜三零點固定將Database的sensor unused的資料clean一次
+        禮拜日零點固定將Database的sensor unused的資料clean一次
     --> 
     <bean name="CleanSensorData" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
         <property name="jobClass" value="com.advantech.quartzJob.CleanSensorData" />
@@ -101,7 +111,7 @@
     
     <bean id="CleanSensorData-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="CleanSensorData" />
-        <property name="cronExpression" value="0 0 0 ? * WED *" />
+        <property name="cronExpression" value="0 0 0 ? * SUN *" />
     </bean>
     
     <!--
@@ -320,15 +330,14 @@
         
         <property name="triggers">
             <list>
-                
-                <!--                <ref bean="FqcGenerateData-Trig"/>
-                <ref bean="HandleUncloseFqc-Trig"/>
-                <ref bean="FqcInit-Trig"/>-->
-
                 <ref bean="BabGenerateData-Trig"/>
                 <ref bean="TestGenerateData-Trig"/>
-                <ref bean="DataBaseInit-Trig"/>
-                <ref bean="HandleUncloseBab-Trig"/>
+                
+                <!--<ref bean="DataBaseInit-Trig-MorningShift"/>-->
+                <ref bean="DataBaseInit-Trig-NightShift"/>
+                <!--<ref bean="HandleUncloseBab-MorningShift"/>-->
+                <ref bean="HandleUncloseBab-NightShift"/>
+                
                 <ref bean="CleanSensorData-Trig"/>
                 <ref bean="TestLineTypeRecord-Trig"/>
                 <ref bean="SyncTestPassStationData-Trig"/>

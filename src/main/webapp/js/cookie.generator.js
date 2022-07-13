@@ -2,7 +2,7 @@ var shift_retrieve_url = "";
 
 function generateCookie(name, value) {
     var result = retrieveShiftInfo();
-    var shift_endtime = moment(result['SHIFT_END']['millis']);
+    var shift_endtime = moment(result['SHIFT_END']);
     var cookie_expired_time = shift_endtime.add(10, 'minutes');
     $.cookie(name, value, {expires: cookie_expired_time.toDate()});
 }

@@ -11,20 +11,25 @@ import com.advantech.model.db1.Line;
 import com.advantech.model.db1.AlarmBabAction;
 import com.advantech.model.db1.BabDataCollectMode;
 import com.advantech.model.db1.BabSettingHistory;
+import com.advantech.model.db1.Worktime;
 import com.advantech.model.view.db1.BabLastBarcodeStatus;
 import com.advantech.model.view.db1.BabLastGroupStatus;
 import com.advantech.service.db1.AlarmBabActionService;
 import com.advantech.service.db1.BabService;
 import com.advantech.service.db1.BabSettingHistoryService;
+import com.advantech.service.db1.BabStandardTimeService;
 import com.advantech.service.db2.LineBalancingService;
 import com.advantech.service.db1.LineService;
 import com.advantech.service.db1.SqlProcedureService;
-import com.advantech.service.db1.SqlViewService;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import javax.annotation.PostConstruct;
 import org.json.JSONArray;
@@ -62,24 +67,46 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
     private BabSettingHistoryService babSettingHistoryService;
 
     @Autowired
+    private com.advantech.service.db3.SqlViewService sqlViewService;
+    
+    @Autowired
+    private BabStandardTimeService babStandardTimeService;
+
+    @Autowired
     private PropertiesReader p;
 
     private Double ASSY_STANDARD;
 
     private Double PKG_STANDARD;
 
+    private BigDecimal ASSY_WORKTIME_ALLOWANCE_STANDARD;
+    private BigDecimal PACKING_WORKTIME_ALLOWANCE_STANDARD;
+
     private BabDataCollectMode collectMode;
 
-    private boolean isSomeBabUnderStandard = false;
+    private boolean isWorktimeUnderStandard = false, isSomeBabUnderStandard = false;
+
+    private Map<String, Worktime> worktimeQuickMap = new HashMap();
 
     @PostConstruct
     protected void init() {
         log.info(BabLineTypeFacade.class.getName() + " init inner setting and db object.");
-        ASSY_STANDARD = p.getAssyLineBalanceStandard().doubleValue();
-        PKG_STANDARD = p.getPackingLineBalanceStandard().doubleValue();
-        collectMode = p.getBabDataCollectMode();
+        this.ASSY_STANDARD = p.getAssyLineBalanceStandard().doubleValue();
+        this.PKG_STANDARD = p.getPackingLineBalanceStandard().doubleValue();
+
+        this.ASSY_WORKTIME_ALLOWANCE_STANDARD = p.getAssyWorktimeAllowanceStandard();
+        this.PACKING_WORKTIME_ALLOWANCE_STANDARD = p.getPackingWorktimeAllowanceStandard();
+
+        this.collectMode = p.getBabDataCollectMode();
+
+        this.initWorktimes();
         this.initMap();
 //        this.initAlarmSign();
+    }
+
+    public void initWorktimes() {
+        List<Worktime> worktimes = this.sqlViewService.findWorktime();
+        worktimeQuickMap = worktimes.stream().collect(Collectors.toMap(Worktime::getModelName, Function.identity()));
     }
 
     @Override
@@ -99,6 +126,7 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
     public boolean generateData() {
 
         isSomeBabUnderStandard = false;
+        isWorktimeUnderStandard = false;
 
         List<Bab> processingBabs = babService.findProcessing();
         List<BabSettingHistory> allBabSettings = babSettingHistoryService.findProcessing();
@@ -124,10 +152,10 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
         } else {
             processingJsonObject = null;//drop the data if no data in the database
         }
-        if (isSomeBabUnderStandard) {
+        if (isWorktimeUnderStandard || isSomeBabUnderStandard) {
             babDataToMap(processingJsonObject);
         }
-        return isSomeBabUnderStandard;
+        return isWorktimeUnderStandard || isSomeBabUnderStandard;
     }
 
     private JSONArray getBabLineBalanceResultWithBarcode(List<Bab> processingBabs, List<BabSettingHistory> allBabSettings) {
@@ -160,21 +188,20 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
                         transBabData.put(obj);
                     });
 
+                    isWorktimeUnderStandard = true;
                     isSomeBabUnderStandard = true;
 
                 } else {
+                    //Get diff means get the time cost in current piece of assy/pkg work
                     BabLastBarcodeStatus maxStatus = matchesStatus.stream()
                             .max((p1, p2) -> Double.compare(p1.getDiff(), p2.getDiff())).get();
                     double diffTimeSum = matchesStatus.stream().mapToDouble(BabLastBarcodeStatus::getDiff).sum();
 
-                    boolean isUnderBalance = checkIsUnderBalance(bab, maxStatus.getDiff(), diffTimeSum);
-//
-                    if (isUnderBalance) {
-                        isSomeBabUnderStandard = true;
-                    }
+                    this.isWorktimeUnderStandard = this.checkIsWorktimeExceedTheRange(bab, maxStatus.getDiff());
+                    this.isSomeBabUnderStandard = this.checkIsUnderBalance(bab, maxStatus.getDiff(), diffTimeSum);
 
                     matchesStatus.stream().map((bgs) -> {
-                        bgs.setIsmax(isUnderBalance && Objects.equals(bgs, maxStatus));
+                        bgs.setIsmax((isWorktimeUnderStandard || isSomeBabUnderStandard) && Objects.equals(bgs, maxStatus));
                         return bgs;
                     }).forEachOrdered((bgs) -> {
                         transBabData.put(new JSONObject(bgs));
@@ -214,22 +241,21 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
                         obj.put("station", setting.getStation());
                         transBabData.put(obj);
                     });
-
+                    
+                    isWorktimeUnderStandard = true;
                     isSomeBabUnderStandard = true;
 
                 } else {
+                    //Get diff means get the time cost in current piece of assy/pkg work
                     BabLastGroupStatus maxStatus = matchesStatus.stream()
                             .max((p1, p2) -> Double.compare(p1.getDiff(), p2.getDiff())).get();
                     double diffTimeSum = matchesStatus.stream().mapToDouble(BabLastGroupStatus::getDiff).sum();
 
-                    boolean isUnderBalance = checkIsUnderBalance(bab, maxStatus.getDiff(), diffTimeSum);
-
-                    if (isUnderBalance) {
-                        isSomeBabUnderStandard = true;
-                    }
+                    this.isWorktimeUnderStandard = this.checkIsWorktimeExceedTheRange(bab, maxStatus.getDiff());
+                    this.isSomeBabUnderStandard = this.checkIsUnderBalance(bab, maxStatus.getDiff(), diffTimeSum);
 
                     matchesStatus.stream().map((bgs) -> {
-                        bgs.setIsmax(isUnderBalance && Objects.equals(bgs, maxStatus));
+                        bgs.setIsmax((isWorktimeUnderStandard || isSomeBabUnderStandard) && Objects.equals(bgs, maxStatus));
                         return bgs;
                     }).forEachOrdered((bgs) -> {
                         transBabData.put(new JSONObject(bgs));
@@ -238,6 +264,22 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
             }
         });
         return transBabData;
+    }
+
+    private boolean checkIsWorktimeExceedTheRange(Bab b, double max) {
+        Worktime w = this.worktimeQuickMap.get(b.getModelName());
+        if (w == null) {
+            //Only compare m3's model
+            return true;
+        }
+        
+        BigDecimal[] allowance = babStandardTimeService.findMaxAndMinAllowanceByBabFromWorktime(b, w);
+        BigDecimal value = new BigDecimal(max);
+        
+        //value.compareTo(allowance[0]) == -1 && 
+        //allowance_min < value < allowance_max
+        //get the largest side for now
+        return value.compareTo(allowance[1]) == 1;
     }
 
     /*

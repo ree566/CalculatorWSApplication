@@ -188,6 +188,20 @@
                         </ul>
                     </li>
                 </c:if>
+                <c:if test="${isIeOper || isAdmin || isDebugger}">
+                    <li>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true" /> 
+                            設定
+                            <span class="caret" />
+                        </a>
+                        <ul class="dropdown-menu">
+                            <c:if test="${isAdmin || isMfgOper || isDebugger}">
+                                <li><a href="babSensorLoginRecord.jsp">Sensor登入登出設定</a></li>
+                                </c:if>
+                        </ul>
+                    </li>
+                </c:if>
             </ul>
             <ul class="nav navbar-nav navbar-right pull-right">
                 <c:choose>

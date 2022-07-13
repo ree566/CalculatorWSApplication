@@ -51,8 +51,16 @@ public class PrepareScheduleService {
         return dao.insert(pojo);
     }
 
+    public int insert(List<PrepareSchedule> l) {
+        return dao.insert(l);
+    }
+
     public int update(PrepareSchedule pojo) {
         return dao.update(pojo);
+    }
+
+    public int update(List<PrepareSchedule> l) {
+        return dao.update(l);
     }
 
     public int updateAndResortPriority(PrepareSchedule pojo) {

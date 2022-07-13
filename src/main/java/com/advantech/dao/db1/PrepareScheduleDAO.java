@@ -5,11 +5,13 @@
  */
 package com.advantech.dao.db1;
 
+import static com.advantech.helper.HibernateBatchUtils.flushIfReachFetchSize;
 import com.advantech.model.db1.Floor;
 import com.advantech.model.db1.Line;
 import com.advantech.model.db1.LineType;
 import com.advantech.model.db1.PrepareSchedule;
 import java.util.List;
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
@@ -64,10 +66,30 @@ public class PrepareScheduleDAO extends AbstractDao<Integer, PrepareSchedule> im
         super.getSession().save(pojo);
         return 1;
     }
+    
+    public int insert(List<PrepareSchedule> l) {
+        Session session = super.getSession();
+        int currentRow = 1;
+        for (PrepareSchedule a : l) {
+            session.save(a);
+            flushIfReachFetchSize(session, currentRow++);
+        }
+        return 1;
+    }
 
     @Override
     public int update(PrepareSchedule pojo) {
         super.getSession().update(pojo);
+        return 1;
+    }
+    
+    public int update(List<PrepareSchedule> l) {
+        Session session = super.getSession();
+        int currentRow = 1;
+        for (PrepareSchedule a : l) {
+            session.update(a);
+            flushIfReachFetchSize(session, currentRow++);
+        }
         return 1;
     }
 

@@ -326,14 +326,6 @@
                         },
                         {
                             "type": "html",
-                            "targets": [17],
-                            'render': function (data, type, full, meta) {
-                                var disabled = full.line == null;
-                                return "<input type='text' class='form-control memo' value='" + (data == null ? '' : data) + "' " + (disabled ? "disabled" : "") + ">";
-                            }
-                        },
-                        {
-                            "type": "html",
                             "targets": [19],
                             'render': function (data, type, full, meta) {
                                 return (data == null ? '' : data);

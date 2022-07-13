@@ -7,10 +7,15 @@ package com.advantech.dao;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 
 /**
  *
@@ -47,4 +52,21 @@ public abstract class HibernateQueryMainActions<PK extends Serializable, T> {
         return getSession().createCriteria(persistentClass);
     }
 
+    protected Query queryIn(String qryStr, List<String> params) {
+        Map<String, String> replaceStrings = new HashMap();
+        for (int i = 0; i < params.size(); i++) {
+            replaceStrings.put((":p1" + i), params.get(i));
+        }
+
+        qryStr = qryStr.replace("?", String.join(",", replaceStrings.keySet().stream().sorted().collect(Collectors.toList())));
+        
+        Query query = this.getSession()
+                .createSQLQuery(qryStr);
+
+        replaceStrings.forEach((k, v) -> {
+            query.setParameter(k.replace(":", ""), v);
+        });
+
+        return query;
+    }
 }

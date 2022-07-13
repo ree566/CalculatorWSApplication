@@ -7,6 +7,7 @@ package com.advantech.dao.db1;
 
 import com.advantech.model.db1.BabStandardTimeHistory;
 import java.util.List;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -24,6 +25,12 @@ public class BabStandardTimeHistoryDAO extends AbstractDao<Integer, BabStandardT
     @Override
     public BabStandardTimeHistory findByPrimaryKey(Object obj_id) {
         return super.getByKey((int) obj_id);
+    }
+    
+    public BabStandardTimeHistory findByBab(int babId){
+        return (BabStandardTimeHistory) super.createEntityCriteria()
+                .add(Restrictions.eq("bab.id", babId))
+                .uniqueResult();
     }
 
     @Override

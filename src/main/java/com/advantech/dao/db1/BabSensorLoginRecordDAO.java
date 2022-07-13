@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
  * @author Wei.Cheng
  */
 @Repository
-public class BabSensorLoginRecordDAO extends AbstractDao<String, BabSensorLoginRecord> implements BasicDAO_1<BabSensorLoginRecord> {
+public class BabSensorLoginRecordDAO extends AbstractDao<Integer, BabSensorLoginRecord> implements BasicDAO_1<BabSensorLoginRecord> {
 
     @Override
     public List<BabSensorLoginRecord> findAll() {
@@ -25,7 +25,7 @@ public class BabSensorLoginRecordDAO extends AbstractDao<String, BabSensorLoginR
 
     @Override
     public BabSensorLoginRecord findByPrimaryKey(Object obj_id) {
-        return super.getByKey((String) obj_id);
+        return super.getByKey((Integer) obj_id);
     }
     
     public BabSensorLoginRecord findBySensor(String tagName){
@@ -34,12 +34,12 @@ public class BabSensorLoginRecordDAO extends AbstractDao<String, BabSensorLoginR
         return (BabSensorLoginRecord) c.uniqueResult();
     }
     
-    public List<BabSensorLoginRecord> findByLine(int line_id){
+    public List<BabSensorLoginRecord> findByLine(Integer... line_id){
         Criteria c = super.createEntityCriteria();
         c.createAlias("tagName", "tagName");
         c.createAlias("tagName.tagNameComparisons", "tagNameComparison");
         c.createAlias("tagNameComparison.line", "line");
-        c.add(Restrictions.eq("line.id", line_id));
+        c.add(Restrictions.in("line.id", line_id));
         return c.list();
     }
     

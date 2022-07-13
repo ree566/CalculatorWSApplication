@@ -9,11 +9,9 @@ import com.advantech.model.view.db4.MesChangeTimeInfo;
 import com.advantech.model.view.db4.MesPassStationInfo;
 import com.advantech.model.view.db4.MesPoDetail;
 import com.advantech.webservice.mes.Section;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.hibernate.SQLQuery;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -48,7 +46,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
                 + "HAVING SUM(A.TOTAL_PASS_CNT) > 0 "
                 + "order by c.WIP_NO, C.UNIT_NO, a.STATION_ID ";
 
-        SQLQuery query = this.queryIn(qry, po);
+        Query query = this.queryIn(qry, po);
 
         return query.setResultTransformer(Transformers.aliasToBean(MesPassStationInfo.class))
                 .list();
@@ -61,7 +59,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
                 + "WIP_NO in(?) "
                 + "order by WIP_NO, UNIT_NO ";
 
-        SQLQuery query = this.queryIn(qry, po);
+        Query query = this.queryIn(qry, po);
 
         return query.setResultTransformer(Transformers.aliasToBean(MesChangeTimeInfo.class))
                 .list();
@@ -79,28 +77,10 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
                 + "AND a.WIP_NO = h.WIP_NO "
                 + "AND a.WIP_NO in (?)";
 
-        SQLQuery query = this.queryIn(qry, po);
+        Query query = this.queryIn(qry, po);
 
         return query.setResultTransformer(Transformers.aliasToBean(MesPoDetail.class))
                 .list();
-    }
-
-    private SQLQuery queryIn(String qryStr, List<String> params) {
-        Map<String, String> replaceStrings = new HashMap();
-        for (int i = 0; i < params.size(); i++) {
-            replaceStrings.put((":p1" + i), params.get(i));
-        }
-
-        qryStr = qryStr.replace("?", String.join(",", replaceStrings.keySet().stream().sorted().collect(Collectors.toList())));
-        
-        SQLQuery query = super.getSession()
-                .createSQLQuery(qryStr);
-
-        replaceStrings.forEach((k, v) -> {
-            query.setParameter(k.replace(":", ""), v);
-        });
-
-        return query;
     }
 
 }

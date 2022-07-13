@@ -6,8 +6,12 @@
 package com.advantech.service.db1;
 
 import com.advantech.dao.db1.WorktimeDAO;
+import com.advantech.helper.PropertiesReader;
+import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.Worktime;
+import java.math.BigDecimal;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +37,10 @@ public class WorktimeService {
 
     public Worktime findByModelName(String modelName) {
         return dao.findByModelName(modelName);
+    }
+
+    public List<Worktime> findNotZeroPackingLeadTime() {
+        return dao.findNotZeroPackingLeadTime();
     }
 
     public int insert(Worktime pojo) {

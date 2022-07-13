@@ -9,7 +9,10 @@ import com.advantech.model.db1.BabStatus;
 import com.advantech.service.db1.BabBalanceHistoryService;
 import com.advantech.service.db1.BabPcsDetailHistoryService;
 import com.advantech.service.db1.BabService;
+import com.advantech.service.db1.BabStandardTimeService;
 import com.advantech.service.db1.SqlViewService;
+import com.advantech.service.db1.WorktimeService;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +53,12 @@ public class BabChartController {
     private BabBalanceHistoryService babBalanceHistoryService;
 
     @Autowired
+    private WorktimeService worktimeService;
+
+    @Autowired
+    private BabStandardTimeService babStandardTimeService;
+
+    @Autowired
     private PropertiesReader reader;
 
     private BabDataCollectMode mode;
@@ -82,14 +91,22 @@ public class BabChartController {
                     break;
             }
         } else {
-            switch (b.getBabStatus()) {
-                case CLOSED:
-                    l = babBalanceHistoryService.findByBab(b.getId());
-                    break;
-                default:
-                    l = new ArrayList();
-                    break;
-            }
+            l = (b.getBabStatus() == BabStatus.CLOSED ? babBalanceHistoryService.findByBab(b.getId()) : new ArrayList());
+        }
+        return new DataTableResponse(l);
+    }
+
+    @RequestMapping(value = "/findPcsDetail", method = {RequestMethod.GET})
+    @ResponseBody
+    protected DataTableResponse findPcsDetail(@ModelAttribute Bab bab) {
+        if (bab == null) {
+            return new DataTableResponse(new ArrayList());
+        }
+        List l;
+        if (null == bab.getBabStatus()) { //Still proccessing
+            l = sqlViewService.findSensorStatus(bab.getId());
+        } else {
+            l = (bab.getBabStatus() == BabStatus.CLOSED ? babPcsDetailHistoryService.findByBabForMap(bab.getId()) : new ArrayList());
         }
         return new DataTableResponse(l);
     }
@@ -100,7 +117,9 @@ public class BabChartController {
     protected Map getSensorDiffChart(@ModelAttribute Bab bab) {
         BabStatus status = bab.getBabStatus();
         List<Map> l;
+        BigDecimal[] worktimeAllowances;
         if (null == status) {
+            //The bab still processing
             switch (mode) {
                 case AUTO:
                     l = sqlViewService.findSensorStatus(bab.getId());
@@ -112,21 +131,19 @@ public class BabChartController {
                     l = new ArrayList();
                     break;
             }
+            worktimeAllowances = babStandardTimeService.findMaxAndMinAllowanceByBabFromWorktime(bab.getId());
         } else {
-            switch (status) {
-                case CLOSED:
-                    l = babPcsDetailHistoryService.findByBabForMap(bab.getId());
-                    break;
-                default:
-                    l = new ArrayList();
-                    break;
-            }
+            //The bab is closed
+
+            //closed and with sensor data
+            l = (status == BabStatus.CLOSED ? babPcsDetailHistoryService.findByBabForMap(bab.getId()) : new ArrayList());
+            worktimeAllowances = babStandardTimeService.findMaxAndMinAllowanceByBabFromHistory(bab.getId());
         }
 
-        return this.toChartForm(l);
+        return this.toChartForm(l, worktimeAllowances);
     }
 
-    private Map toChartForm(List<Map> l) {
+    private Map toChartForm(List<Map> l, BigDecimal[] worktimeAllowances) {
         List<Map<String, Object>> total = new ArrayList();
         int diffSum = 0;
         int maxGroup = 0;
@@ -165,6 +182,8 @@ public class BabChartController {
             int people = total.size();
             infoWithAvg.put("avg", (diffSum / people / maxGroup));
         }
+        infoWithAvg.put("worktimeAllowances_min", worktimeAllowances[0]);
+        infoWithAvg.put("worktimeAllowances_max", worktimeAllowances[1]);
         infoWithAvg.put("data", total);
 
         return infoWithAvg;

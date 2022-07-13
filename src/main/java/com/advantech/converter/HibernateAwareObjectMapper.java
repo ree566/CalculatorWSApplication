@@ -8,6 +8,7 @@ package com.advantech.converter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import javax.annotation.PostConstruct;
 
 /**
@@ -22,6 +23,7 @@ public class HibernateAwareObjectMapper extends ObjectMapper {
         hbm.disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION);
         configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         registerModule(hbm);
+        registerModule(new JodaModule());
     }
 
     @PostConstruct

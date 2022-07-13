@@ -41,6 +41,10 @@ public class TagNameComparisonService {
         return tagNameComparisonDAO.findByLampSysTagName(tagName);
     }
 
+    public List<TagNameComparison> findByLine(Integer... line_id) {
+        return tagNameComparisonDAO.findByLine(line_id);
+    }
+
     public TagNameComparison findByLineAndStation(int line_id, int station) {
         return tagNameComparisonDAO.findByLineAndStation(line_id, station);
     }

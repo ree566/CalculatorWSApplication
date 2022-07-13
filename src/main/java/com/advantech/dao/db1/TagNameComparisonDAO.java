@@ -53,6 +53,13 @@ public class TagNameComparisonDAO extends AbstractDao<TagNameComparisonId, TagNa
                 .uniqueResult();
     }
 
+    public List<TagNameComparison> findByLine(Integer... line_id) {
+        return super.createEntityCriteria()
+                .createAlias("line", "l")
+                .add(Restrictions.in("l.id", line_id))
+                .list();
+    }
+
     public TagNameComparison findByLineAndStation(int line_id, int station) {
         return (TagNameComparison) super.createEntityCriteria()
                 .add(Restrictions.eq("line.id", line_id))

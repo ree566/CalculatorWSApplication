@@ -58,7 +58,7 @@
                 background-color: wheat;
             }
             .detail{
-                height: 650px;
+                /*height: 400px;*/
             }
             .balance{
                 text-align: center;
@@ -78,15 +78,19 @@
             #overlay {
                 background:rgba(0,0,0,0.3);
                 display:none;
-                width:100%; height:100%;
+                width:100%;
+                height:100%;
                 position:fixed;
                 top:0;
                 left:0;
                 z-index:99998;
             }
-            u {    
+            u {
                 border-bottom: 1px dotted #000;
                 text-decoration: none;
+            }
+            .detailTables{
+
             }
         </style>
         <script src="<c:url value="/webjars/jquery/1.12.4/jquery.min.js" />"></script>
@@ -126,7 +130,7 @@
             var beginTimeObj, endTimeObj;
 
             var countermeasureType = "Bab_Abnormal_LineBalance";
-            
+
             $("#sitefloor").hide();
 
             function initSelectOption() {
@@ -134,7 +138,58 @@
                 initFloorOptions($("#sitefloor"));
             }
 
-            function getDetail(tableId, id, isused) {
+            function getPcsDetail(tableId, id, isused) {
+                var data = {};
+                if (id != null) {
+                    data = {
+                        id: id,
+                        babStatus: isused
+                    };
+                }
+                $(tableId).DataTable({
+                    "ajax": {
+                        "url": "<c:url value="/BabChartController/findPcsDetail" />",
+                        "type": "GET",
+                        "data": data
+                    },
+                    "columns": [
+                        {data: "bab.id", title: "bab_id", visible: false},
+                        {data: "tagName", title: "感應器"},
+                        {data: "station", title: "站別"},
+                        {data: "groupid", title: "組別"},
+                        {data: "diff", title: "花費時間"},
+                        {data: "lastUpdateTime", title: "最後更新"}
+                    ],
+                    "oLanguage": {
+                        "sLengthMenu": "顯示 _MENU_ 筆記錄",
+                        "sZeroRecords": "無符合資料",
+                        "sInfo": "目前記錄：_START_ 至 _END_, 總筆數：_TOTAL_"
+                    },
+                    bAutoWidth: true,
+                    destroy: true,
+                    ordering: true,
+                    info: false,
+                    bFilter: false,
+                    lengthChange: false,
+                    "processing": true,
+                    "columnDefs": [
+                        {
+                            "type": "html",
+                            "targets": 5,
+                            'render': function (data, type, full, meta) {
+                                return formatDate(moment(data).format('YYYY-MM-DDTHH:mm:ss.SSS'));
+                            }
+                        },
+                        {
+                            "sDefaultContent": "",
+                            "aTargets": ["_all"]
+                        }
+                    ],
+                    "order": [[1, "asc"]]
+                });
+            }
+
+            function getBalanceDetail(tableId, id, isused) {
                 var data;
                 if (id == null) {
                     data = {};
@@ -271,6 +326,9 @@
 //http://canvasjs.com/docs/charts/how-to/hide-unhide-data-series-chart-legend-click/
             function generateChart(d, chartId) {
                 var totalAvg = Math.round(d.avg);
+                var worktimeAllowancesMin = Math.round(d.worktimeAllowances_min);
+                var worktimeAllowancesMax = Math.round(d.worktimeAllowances_max);
+
                 var chart = new CanvasJS.Chart(chartId,
                         {
                             zoomEnabled: true,
@@ -291,8 +349,24 @@
                                 maximum: 600,
                                 stripLines: [
                                     {
+                                        value: worktimeAllowancesMin,
+                                        label: "標工- " + worktimeAllowancesMin,
+                                        labelPlacement: "inside",
+                                        labelBackgroundColor: "white",
+                                        labelFontStyle: "微軟正黑體",
+                                        showOnTop: true
+                                    },
+                                    {
+                                        value: worktimeAllowancesMax,
+                                        label: "標工+ " + worktimeAllowancesMax,
+                                        labelPlacement: "inside",
+                                        labelBackgroundColor: "white",
+                                        labelFontStyle: "微軟正黑體",
+                                        showOnTop: true
+                                    },
+                                    {
                                         value: totalAvg,
-                                        label: totalAvg + "sec",
+                                        label: totalAvg + "sec - avg",
                                         labelPlacement: "outside",
                                         color: "orange",
                                         labelBackgroundColor: "black",
@@ -630,10 +704,12 @@
 
                         $("#totalDetail, #totalDetail > div").show();
 
-                        getDetail("#ctrlDetail", ctrlId, ctrl_isused);
+                        getBalanceDetail("#ctrlBalanceDetail", ctrlId, ctrl_isused);
+                        getPcsDetail("#ctrlPcsDetail", ctrlId, ctrl_isused);
                         getChartData(ctrlId, ctrl_isused, "chartContainer1");
 
-                        getDetail("#expDetail", expId, exp_isused);
+                        getBalanceDetail("#expBalanceDetail", expId, exp_isused);
+                        getPcsDetail("#expPcsDetail", expId, exp_isused);
                         getChartData(expId, exp_isused, "chartContainer2");
 
                         $("#ctrlBalance").html("線平衡率: " + getPercent(ctrlAvgs, round_digit));
@@ -882,7 +958,7 @@
                     block();
                     setTimeout(function () {
                         window.location.hash = "#babDetailSearch";
-                        $(".exp, .expDetail").addClass("expose");
+                        $(".exp, .expBalanceDetail").addClass("expose");
 
                         $('.expose').css('z-index', '99999');
                         $('#overlay').fadeIn(300);
@@ -1086,36 +1162,48 @@
             <div class="wiget-ctrl">
                 <div id="totalDetail" hidden>
                     <div class="ctrlDetail">
-                        <div id="ctrlBalance" class="balance">
-                        </div>
+                        <div id="ctrlBalance" class="balance"></div>
+                        <div id="ctrlWorktime" class="worktime"></div>
                         <h3>上次生產</h3>
-                        <div class="detail">
-                            <table id="ctrlDetail" class="table table-bordered">
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="3" style="text-align:right">Total:</th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                        <div class="detailTables">
+                            <div class="detail">
+                                <table id="ctrlBalanceDetail" class="table table-bordered">
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="3" style="text-align:right">Total:</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="detail">
+                                <table id="ctrlPcsDetail" class="table table-bordered">
+                                </table>
+                            </div>
                         </div>
                         <div id="chartContainer1" class="chartContainer">
                         </div>
                     </div>
 
                     <div class="expDetail">
-                        <div id="expBalance" class="balance">
-                        </div>
+                        <div id="expBalance" class="balance"></div>
+                        <div id="expWorktime" class="worktime"></div>
                         <h3>本次生產</h3>
-                        <div class="detail">
-                            <table id="expDetail" class="table table-bordered">
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="3" style="text-align:right">Total:</th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                        <div class="detailTables">
+                            <div class="detail">
+                                <table id="expBalanceDetail" class="table table-bordered">
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="3" style="text-align:right">Total:</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="detail">
+                                <table id="expPcsDetail" class="table table-bordered">
+                                </table>
+                            </div>
                         </div>
                         <div id="chartContainer2" class="chartContainer">
                         </div>

@@ -6,15 +6,23 @@
  */
 package com.advantech.controller;
 
+import com.advantech.datatable.DataTableResponse;
+import static com.advantech.helper.SecurityPropertiesUtils.retrieveAndCheckUserInSession;
 import com.advantech.model.db1.BabSensorLoginRecord;
 import com.advantech.model.db1.BabSettingHistory;
+import com.advantech.model.db1.Line;
 import com.advantech.model.db1.TagNameComparison;
+import com.advantech.model.db1.User;
 import com.advantech.service.db1.BabSensorLoginRecordService;
 import com.advantech.service.db1.BabSettingHistoryService;
+import com.advantech.service.db1.LineService;
 import com.advantech.service.db1.TagNameComparisonService;
 import static com.google.common.base.Preconditions.*;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +46,9 @@ public class BabSensorLoginController {
 
     @Autowired
     private BabSettingHistoryService babSettingHistoryService;
+
+    @Autowired
+    private LineService lineService;
 
     @RequestMapping(value = "/login", method = {RequestMethod.POST})
     @ResponseBody
@@ -94,4 +105,37 @@ public class BabSensorLoginController {
         return t == null ? new Object() : t;
     }
 
+    @RequestMapping(value = "/findAll", method = {RequestMethod.GET})
+    @ResponseBody
+    public DataTableResponse findAll(HttpServletRequest request) {
+        List l;
+        if (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_OPER_IE")) {
+            l = this.babSensorLoginRecordService.findAll();
+        } else {
+            Integer[] lines = findAvailableLine();
+            l = this.babSensorLoginRecordService.findByLine(lines);
+        }
+        return new DataTableResponse(l);
+    }
+
+    @RequestMapping(value = "/findAvailableTagNameComparison", method = {RequestMethod.GET})
+    @ResponseBody
+    public List<TagNameComparison> findAvailableTagNameComparison(HttpServletRequest request) {
+        if (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_OPER_IE")) {
+            return this.tagNameComparisonService.findAll();
+        } else {
+            Integer[] lines = findAvailableLine();
+            List<TagNameComparison> availableTagName = this.tagNameComparisonService.findByLine(lines);
+            return availableTagName;
+        }
+    }
+
+    private Integer[] findAvailableLine() {
+        User user = retrieveAndCheckUserInSession();
+        List<Line> availableLine = lineService.findByUser(user);
+        Integer[] lines = availableLine.stream()
+                .map(l -> l.getId())
+                .toArray(Integer[]::new);
+        return lines;
+    }
 }

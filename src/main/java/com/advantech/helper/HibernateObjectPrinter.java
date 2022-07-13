@@ -8,6 +8,7 @@ package com.advantech.helper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 /**
  *
@@ -22,6 +23,7 @@ public class HibernateObjectPrinter {
         Hibernate5Module hbm = new Hibernate5Module();
         hbm.enable(Hibernate5Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS);
         mapper.registerModule(hbm);
+        mapper.registerModule(new JodaModule());
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
     }
 

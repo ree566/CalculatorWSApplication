@@ -5,21 +5,15 @@
  */
 package com.advantech.quartzJob;
 
-import com.advantech.dao.db1.LineUserReferenceDAO;
-import com.advantech.model.db1.LineUserReference;
 import com.advantech.model.db1.Worktime;
 import com.advantech.service.db1.WorktimeService;
 import com.advantech.service.db3.SqlViewService;
-import java.util.ArrayList;
 import java.util.List;
-import org.hibernate.SessionFactory;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
