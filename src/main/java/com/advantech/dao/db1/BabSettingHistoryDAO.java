@@ -98,12 +98,9 @@ public class BabSettingHistoryDAO extends AbstractDao<Integer, BabSettingHistory
     }
 
     public BabSettingHistory findProcessingByTagName(SensorTransform tagName) {
-        DateTime sD = getCurrentShiftStart();
-
         return (BabSettingHistory) super.createEntityCriteria()
                 .add(Restrictions.eq("tagName", tagName))
                 .add(Restrictions.isNull("lastUpdateTime"))
-                .add(Restrictions.gt("createTime", sD.toDate()))
                 .setMaxResults(1)
                 .uniqueResult();
     }
@@ -127,14 +124,11 @@ public class BabSettingHistoryDAO extends AbstractDao<Integer, BabSettingHistory
     }
 
     public List<BabSettingHistory> findProcessingByLine(int line_id) {
-        DateTime sD = getCurrentShiftStart();
-        
         return super.createEntityCriteria()
                 .createAlias("bab", "b")
                 .createAlias("b.line", "l")
                 .createAlias("l.lineType", "lt")
                 .add(Restrictions.isNull("b.babStatus"))
-                .add(Restrictions.gt("b.beginTime", sD.toDate()))
                 .add(Restrictions.eq("l.id", line_id))
                 .addOrder(Order.asc("b.id"))
                 .list();

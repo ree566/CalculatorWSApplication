@@ -335,6 +335,26 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
     
+    <!-- Configuring interceptors based on URI -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <!-- 资源文件路径 -->
+        <property name="basename" value="classpath:i18n/messages"/>
+        <!-- 默认编码 -->
+        <property name="defaultEncoding" value="UTF-8"/>
+        <!-- 指定默认资源文件 -->
+        <property name="useCodeAsDefaultMessage" value="true"/>
+    </bean>
+    
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="locale"/>
+        </bean>
+    </mvc:interceptors>
+    
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="zh_TW"></property>
+    </bean> 
+
     <!--Email setting-->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="Relay.advantech.com" />

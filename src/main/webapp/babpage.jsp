@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <c:set var="userSitefloor" value="${param.sitefloor}" />
@@ -25,8 +26,8 @@
                 text-align: center;
             }
             .step{
-                float:left; 
-                width:100%; 
+                float:left;
+                width:100%;
                 /*border-bottom-style:dotted;*/
                 border-left: solid 2px;
                 border-bottom: solid 2px;
@@ -45,8 +46,8 @@
                 background-color: gainsboro;
             }
             .userWiget{
-                float:left; 
-                width:60%; 
+                float:left;
+                width:60%;
                 padding: 10px 10px;
             }
             .wigetInfo{
@@ -107,12 +108,50 @@
         <script>
             var hnd;//鍵盤輸入間隔
             var hnd2;//鍵盤輸入間隔
-            var serverErrorConnMessage = "Error, the textbox can't connect to server now.";
-            var userNotFoundMessage = "使用者不存在，請重新確認，如有問題請通知系統管理人員。",
-                    paramNotVaildMessage = "輸入資料有誤，請重新再確認。";
 
-            var userInfoCookieName = "userInfo", testLineTypeCookieName = "testLineTypeCookieName", cellCookieName = "cellCookieName";
-            var STATION_LOGIN = "LOGIN", STATION_LOGOUT = "LOGOUT", CHANGE_USER = "changeUser";
+            //i18n message paramaters
+            const serverModelNameNotFoundMessage = "data not found";
+            
+            const serverErrorConnMessage = "Error, the textbox can't connect to server now.";
+            const userNotFoundMessage = "<fmt:message key="assy.label.userNotFoundMessage" />";
+            const paramNotVaildMessage = "<fmt:message key="assy.label.paramNotVaildMessage" />";
+            const dialogConfirmButtonText = "<fmt:message key="assy.dialog.ConfirmButtonText" />";
+            const dialogRejectButtonText = "<fmt:message key="assy.dialog.RejectButtonText" />";
+            const leaveStationConfirmMessage = "<fmt:message key="assy.dialog.leaveStationConfirmMessage" />";
+            const firstStationStep2Hint1 = "<fmt:message key="assy.label.step2.firstStationHint1" />";
+            const firstStationStep2Hint2 = "<fmt:message key="assy.label.step2.firstStationHint2" />";
+            const firstStationStep2Hint3 = "<fmt:message key="assy.label.step2.firstStationHint3" />";
+            const firstStationStep2Hint4 = "<fmt:message key="assy.label.step2.firstStationHint4" />";
+            const firstStationStep2Hint5 = "<fmt:message key="assy.label.step2.firstStationHint5" />";
+            const notFirstStationStep2Hint1 = "<fmt:message key="assy.label.step2.notFirstStationHint1" />";
+            const notFirstStationStep2Hint2 = "<fmt:message key="assy.label.step2.notFirstStationHint2" />";
+            const startProcessingMessage1_1 = "<fmt:message key="assy.dialog.step2.startProcessingMessage1_1" />";
+            const startProcessingMessage1_2 = "<fmt:message key="assy.dialog.step2.startProcessingMessage1_2" />";
+            const startProcessingMessage1_3 = "<fmt:message key="assy.dialog.step2.startProcessingMessage1_3" />";
+            const startProcessingMessage1_4 = "<fmt:message key="assy.dialog.step2.startProcessingMessage1_4" />";
+            const notFirstStationStep2Message1 = "<fmt:message key="assy.dialog.step2.notFirstStationMessage1" />";
+            const endProcessingMessage1_1 = "<fmt:message key="assy.dialog.step2.endProcessingMessage1_1" />";
+            const endProcessingMessage1_2 = "<fmt:message key="assy.dialog.step2.endProcessingMessage1_2" />";
+            const endProcessingMessage1_3 = "<fmt:message key="assy.dialog.step2.endProcessingMessage1_3" />";
+            const endProcessingMessage1_4 = "<fmt:message key="assy.dialog.step2.endProcessingMessage1_4" />";
+            const endProcessingMessage2 = "<fmt:message key="assy.dialog.step2.endProcessingMessage2" />";
+            const endProcessingMessage3 = "<fmt:message key="assy.dialog.step2.endProcessingMessage3" />";
+            const searchBabSettingMessage1 = "<fmt:message key="assy.dialog.searchBabSettingMessage1" />";
+            const cellCheckMessage = "<fmt:message key="assy.dialog.cellCheckMessage" />";
+            const floorCheckMessage1 = "<fmt:message key="assy.dialog.floorCheckMessage1" />";
+            const floorCheckMessage2 = "<fmt:message key="assy.dialog.floorCheckMessage2" />";
+            const saveUserInfoMessage1_1 = "<fmt:message key="assy.dialog.saveUserInfoMessage1_1" />";
+            const saveUserInfoMessage1_2 = "<fmt:message key="assy.dialog.saveUserInfoMessage1_2" />";
+            const saveUserInfoMessage1_3 = "<fmt:message key="assy.dialog.saveUserInfoMessage1_3" />";
+            const preAssyModuleTypeDefaultSelectMessage = "<fmt:message key="assy.select.step2.moduleDefault" />";
+            //
+
+            var userInfoCookieName = "userInfo", 
+                    testLineTypeCookieName = "testLineTypeCookieName", 
+                    cellCookieName = "cellCookieName";
+            var STATION_LOGIN = "LOGIN", 
+                    STATION_LOGOUT = "LOGOUT", 
+                    CHANGE_USER = "changeUser";
             var BAB_END = "stationComplete";
 
             var serverMsgTimeout;
@@ -127,8 +166,8 @@
             let result = retrieveShiftInfo();
             let shift_endtime = moment(result['SHIFT_END']);
             let cookie_expired_time = shift_endtime.add(10, 'minutes');
-            console.log(shift_endtime);
-            console.log(cookie_expired_time);
+//            console.log(shift_endtime);
+//            console.log(cookie_expired_time);
 
             $(function () {
                 $(document).ajaxSend(function () {
@@ -143,7 +182,6 @@
 
                 var userInfoCookie = $.cookie(userInfoCookieName);
                 var isUserInfoExist = (userInfoCookie != null);
-
                 var dialogMessage = $("#dialog-message").dialog({
                     autoOpen: false,
                     resizable: false,
@@ -151,7 +189,7 @@
                     width: 400,
                     modal: true,
                     buttons: {
-                        "確定": function () {
+                        "Yes": function () {
                             var newJobnumber = $("#newJobnumber").val();
                             if (!checkVal(newJobnumber) || !checkUserExist(newJobnumber)) {
                                 showMsg(userNotFoundMessage);
@@ -163,7 +201,7 @@
                                 $(this).dialog("close");
                             }
                         },
-                        "取消": function () {
+                        "No": function () {
                             $(this).dialog("close");
                         }
                     }
@@ -203,7 +241,7 @@
 
                 //重設使用者資訊
                 $("#clearInfo").click(function () {
-                    if (confirm("確定離開此站別?")) {
+                    if (confirm(leaveStationConfirmMessage)) {
                         if (!isUserInfoExist) {
                             return false;
                         }
@@ -218,11 +256,11 @@
                         $("#firstStationWiget").show();
                         $("#otherStationWiget, #saveNotice").hide();
                         $("#step2Hint").html("")
-                                .append("<li>輸入工單</li>")
-                                .append("<li class='importantMsg'>確定系統有帶出機種</li>")
-                                .append("<li>選擇人數</li>")
-                                .append("<li>點選<code>Begin</code>開始投入</li>")
-                                .append("<li>如果要更換使用者，請點選<code>換人</code>，填入您的新工號之後進行工號切換</li>");
+                                .append(`<li>` + firstStationStep2Hint1 + `</li>`)
+                                .append(`<li class='importantMsg'>` + firstStationStep2Hint2 + `</li>`)
+                                .append(`<li>` + firstStationStep2Hint3 + `</li>`)
+                                .append(`<li>` + firstStationStep2Hint4 + `</li>`)
+                                .append(`<li>` + firstStationStep2Hint5 + `</li>`);
                         $("#people").show();
                     }
                 });
@@ -236,8 +274,8 @@
                         $("#firstStationWiget").hide();
                         $("#otherStationWiget, #saveNotice").show();
                         $("#step2Hint").html("")
-                                .append("<li>做完最後一台時點擊<code>Save</code>，告知系統您已經做完了</li>")
-                                .append("<li>如果要更換使用者，請點選<code>換人</code>，填入您的新工號之後進行工號切換</li>");
+                                .append(`<li>` + notFirstStationStep2Hint1 + `</li>`)
+                                .append(`<li>` + notFirstStationStep2Hint2 + `</li>`);
 
                         $(".preAssy-pcs-insert").toggle(processData.length != 0 && processData[0].bab.ispre == 1);
                     }
@@ -246,7 +284,7 @@
                 $("#ispre").on("change, click", function () {
                     var sel = $("#pre-moduleType");
                     var modelName = $("#modelName").val();
-                    if ($(this).prop("checked") && modelName != "" && modelName != "data not found") {
+                    if ($(this).prop("checked") && modelName != "" && modelName != serverModelNameNotFoundMessage) {
                         initPreAssyModuleType();
                     }
                     sel.toggle($(this).prop("checked"));
@@ -282,12 +320,18 @@
                     var modelName = $("#modelName").val();
                     var people = $("#people").val();
 
-                    if (checkVal(po, modelName, people) == false || modelName == "data not found") {
+                    if (checkVal(po, modelName, people) == false || modelName == serverModelNameNotFoundMessage) {
                         showMsg(paramNotVaildMessage);
                         return false;
                     }
 
-                    if (confirm("確定開始工單?\n" + "工單:" + po + "\n機種:" + modelName + "\n人數:" + people)) {
+                    if (confirm(startProcessingMessage1_1 + 
+                            startProcessingMessage1_2 + 
+                            po + 
+                            startProcessingMessage1_3 + 
+                            modelName + 
+                            startProcessingMessage1_4 + 
+                            people)) {
                         startBab(po, modelName, people);
                     }
                 });
@@ -304,24 +348,24 @@
                     }
 
                     if (searchResult == null) { //當查第二次還是沒有結果
-                        showMsg("站別一無投入的工單，請重新做確認");
+                        showMsg(notFirstStationStep2Message1);
                     } else {
                         if (confirm(
-                                "確定儲存?\n" +
-                                "工單: " + searchResult.po + "\n" +
-                                "機種: " + searchResult.modelName + "\n" +
-                                "人數: " + searchResult.people
+                                endProcessingMessage1_1 +
+                                endProcessingMessage1_2 + searchResult.po + "\n" +
+                                endProcessingMessage1_3 + searchResult.modelName + "\n" +
+                                 + searchResult.people
                                 )) {
                             var pcsCnt = $("#pcsCnt").val();
                             if (searchResult.ispre == 1) {
                                 $(".preAssy-pcs-insert").show();
                                 if (pcsCnt == "") {
-                                    alert("前置請輸入工單數量");
+                                    alert(endProcessingMessage3);
                                     return false;
                                 }
 
                                 if (/^[0-9]+$/.test(pcsCnt) == false) {
-                                    alert("前置請工單數量 contains illegal character, please try again");
+                                    alert(endProcessingMessage2);
                                     return false;
                                 }
                             }
@@ -343,7 +387,7 @@
                 $("#searchBabSetting").click(function () {
                     var po = $("#po3").val();
                     if (checkVal(po) == false) {
-                        alert("Po is invalid");
+                        alert(searchBabSettingMessage1);
                         return false;
                     }
                     findBabSettingHistory(po);
@@ -422,9 +466,8 @@
 
                 if (testLineTypeCookie != null || cellCookie != null) {
                     lockAllUserInput();
-                    var message = "您已經登入測試或Cell桌";
-                    alert(message);
-                    showMsg(message);
+                    alert(cellCheckMessage);
+                    showMsg(cellCheckMessage);
                     return false;
                 }
 
@@ -432,8 +475,8 @@
                     var cookieMsg = $.parseJSON(babLineTypeCookie);
                     if (cookieMsg["floor.name"] != null && cookieMsg["floor.name"] != $("#userSitefloorSelect").val()) {
                         lockAllUserInput();
-                        alert("您已經登入其他樓層");
-                        showMsg("您已經登入其他樓層");
+                        alert(floorCheckMessage1);
+                        showMsg(floorCheckMessage1);
                         return false;
                     }
                 }
@@ -456,7 +499,7 @@
                     memo.show();
                 } else {
                     $(".stepAfterLogin").block({
-                        message: "請先在步驟一完成相關步驟。",
+                        message: "<fmt:message key="assy.blockUI.hint" />",
                         css: {cursor: 'default'},
                         overlayCSS: {cursor: 'default'}});
                     memo.hide();
@@ -496,11 +539,16 @@
                 }
 
                 if ($("#userSitefloorSelect").val() != tagName.line.floor.name) {
-                    showMsg("Sensor's 不在您所屬的樓層");
+                    showMsg(floorCheckMessage2);
                     return false;
                 }
 
-                if (!confirm("確定您所填入的資料無誤?\n" + "Sensor代號:" + tagName.id.lampSysTagName.name + "\n工號:" + jobnumber + "\n")) {
+                if (!confirm(saveUserInfoMessage1_1 + 
+                        saveUserInfoMessage1_2 + 
+                        tagName.id.lampSysTagName.name + 
+                        saveUserInfoMessage1_3 + 
+                        jobnumber + 
+                        "\n")) {
                     return false;
                 }
 
@@ -870,7 +918,7 @@
                             sel.append("<option value='" + d.id + "'>" + d.name + "</option>");
                         }
                         sel.select2({
-                            placeholder: "請選擇模組",
+                            placeholder: preAssyModuleTypeDefaultSelectMessage,
                             closeOnSelect: false,
                             allowClear: true,
                             tags: true
@@ -919,9 +967,11 @@
     <body>
         <input id="userSitefloorSelect" type="hidden" value="${userSitefloor}">
         <div id="titleAlert">
-            <c:out value="您所選擇的樓層是: ${userSitefloor}" />
+            <fmt:message key="assy.label.step1.content" /><c:out value="${userSitefloor}" />
             <a href="${pageContext.request.contextPath}">
-                <button id="redirectBtn" class="btn btn-default btn-xs" >不是我的樓層?</button>
+                <button id="redirectBtn" class="btn btn-default btn-xs" >
+                    <fmt:message key="assy.label.floor.hint2" />
+                </button>
             </a>
         </div>
         <jsp:include page="temp/head.jsp" />
@@ -934,10 +984,10 @@
         <div id="dialog-message" title="${initParam.pageTitle}">
             <p>
                 <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
-                請再次輸入您的工號。
+                <fmt:message key="assy.btn.step1.changeover" />
             </p>
             <p>
-                <input type="text" id="newJobnumber">
+                <input type="text" id="newJobnumber" placeholder="<fmt:message key="assy.txtbox.step1.jobnumber" />">
             </p>
         </div>
         <!--Dialogs-->
@@ -946,15 +996,15 @@
         <div class="container">
             <div id="step1" class="step">
                 <div class="userWiget form-inline">
-                    <input type="text" id="tagName" placeholder="請輸入Sensor代號" autocomplete="off" maxlength="50"/>
-                    <input type="text" id="jobnumber" placeholder="請輸入工號" autocomplete="off" maxlength="50"/>
+                    <input type="text" id="tagName" placeholder="<fmt:message key="assy.txtbox.step1.sensor" />" autocomplete="off" maxlength="50"/>
+                    <input type="text" id="jobnumber" placeholder="<fmt:message key="assy.txtbox.step1.jobnumber" />" autocomplete="off" maxlength="50"/>
                     <input type="button" id="saveInfo" value="Begin" />
                     <input type="button" id="clearInfo" value="End" />
-                    <input type="button" id="changeUser" value="換人" />
+                    <input type="button" id="changeUser" value="<fmt:message key="assy.btn.step1.changeover" />" />
                 </div>
                 <div class="wigetInfo">
-                    <h3>步驟1:</h3>
-                    <h5>請依序填入您的相關資訊。</h5>
+                    <h3><fmt:message key="assy.label.step1.title" /></h3>
+                    <h5><fmt:message key="assy.label.step1.content" /></h5>
                 </div>
             </div>
 
@@ -965,8 +1015,10 @@
                             <table class="table table-sm">
                                 <tr>
                                     <td>
-                                        <input type="button" class='btn btn-default' id='isFirstStation' value="第一站" /> / 
-                                        <input type="button" class='btn btn-default' id='isNotFirstStation' value="非第一站" />
+                                        <input type="button" class='btn btn-default' 
+                                               id='isFirstStation' value="<fmt:message key="assy.btn.step2.station1" />" /> / 
+                                        <input type="button" class='btn btn-default' 
+                                               id='isNotFirstStation' value="<fmt:message key="assy.btn.step2.notStaion1" />" />
                                     </td>
                                 </tr>
                             </table>
@@ -977,30 +1029,41 @@
                         <div class="col col-xs-12">
                             <table class="table table-sm">
                                 <tr>
-                                    <td>輸入工單</td>
+                                    <td><fmt:message key="assy.label.step2.insertHint.po" /></td>
                                     <td>
-                                        <input type="text" name="po" id="po" placeholder="請輸入工單號碼" autocomplete="off" maxlength="50">  
-                                        <input type="text" name="modelName" id="modelName" placeholder="機種" readonly style="background: #CCC">
-                                        <button class='btn btn-default' id='reSearch'>重新查詢</button>
+                                        <input type="text" name="po" id="po" placeholder="<fmt:message key="assy.txtbox.step2.po" />" autocomplete="off" 
+                                               maxlength="50">  
+                                        <input type="text" name="modelName" id="modelName" placeholder="<fmt:message key="assy.txtbox.step2.material" />" 
+                                               readonly style="background: #CCC">
+                                        <button class='btn btn-default' id='reSearch'>
+                                            <fmt:message key="assy.button.step2.insertHint" />
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>選擇人數</td>
+                                    <td><fmt:message key="assy.label.step2.insertHint.people" /></td>
                                     <td>
                                         <!-- Auto count people by maxLinePeopleSetting - tagName position = maxinum select people-->
                                         <select id='people'>
-                                            <option value="-1">---請選擇人數---</option>
+                                            <option value="-1"><fmt:message key="assy.select.step2.userCnt" /></option>
                                         </select>
-                                        <input type="checkbox" id="ispre" /><label for="ispre">前置</label>
+                                        <input type="checkbox" id="ispre" />
+                                        <label for="ispre">
+                                            <fmt:message key="assy.chkbox.step2.preAssy" />
+                                        </label>
                                         <select id="pre-moduleType" >
                                         </select>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="alarm">※相同的Sensor代號不允許存在兩套不同的作業站別</td>
+                                    <td colspan="2" class="alarm">
+                                        <fmt:message key="assy.label.step2.alert" />
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td>投入工單</td>
+                                    <td>
+                                        <fmt:message key="assy.label.step2.insertHint.begin" />
+                                    </td>
                                     <td>
                                         <div class="col-md-6">
                                             <input type="button" id="babBegin" class="btn-block" value="Begin" />
@@ -1015,14 +1078,18 @@
                         <div class="col col-xs-12">
                             <table>
                                 <tr class="preAssy-pcs-insert">
-                                    <td>輸入前置工單數量</td>
                                     <td>
-                                        <input type="text" id="pcsCnt" placeholder="請輸入工單數量" />
+                                        <fmt:message key="assy.label.step2.userHint.preAssy" />
+                                    </td>
+                                    <td>
+                                        <input type="text" id="pcsCnt" placeholder="<fmt:message key="assy.txtbox.step2.preAssyCnt" />" />
                                         <input type="button" id="open-barcode-input" class="btn btn-info" value="Open barcode input">
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>儲存結束工單</td>
+                                    <td>
+                                        <fmt:message key="assy.label.step2.insertHint.save" />
+                                    </td>
                                     <td>
                                         <input type="button" id="babEnd" value="Save" />
                                     </td>
@@ -1033,20 +1100,13 @@
 
                     <div id="saveNotice" class="alarm">
                         <span class="glyphicon glyphicon-alert"></span>
-                        做完時請記得做save。(Please "save" when you finished.)
+                        <fmt:message key="assy.label.step2.alert2" />
                         <span class="glyphicon glyphicon-alert"></span>
                     </div>
-
-                    <!--                    <div class="row">
-                                            <div class="col col-xs-12">
-                                                <label for="open-barcode-input">刷入序號</label>
-                                                <input type="button" id="open-barcode-input" class="btn btn-info" value="Open barcode input">
-                                            </div>
-                                        </div>-->
                 </div>
                 <div class="wigetInfo">
-                    <h3>步驟2:</h3>
-                    <h5>請依照下列流程操作。</h5>
+                    <h3><fmt:message key="assy.label.step2.title" /></h3>
+                    <h5><fmt:message key="assy.label.step2.content" /></h5>
                     <h5>
                         <ol id="step2Hint">
                         </ol>
@@ -1058,20 +1118,21 @@
                 <div id='serverMsg' class="userWiget">        
                 </div>
                 <div class="wigetInfo">
-                    <h3>步驟3:觀看伺服器訊息。</h3>
-                    <h5>此處會顯示伺服器訊息。</h5>
+                    <h3><fmt:message key="assy.label.step3.title" /></h3>
+                    <h5><fmt:message key="assy.label.step3.content" /></h5>
                 </div>
             </div>
 
             <div id="step4" class="step stepAlarm stepAfterLogin">
                 <div class="form-inline userWiget">
-                    <div><input type="button" id="searchProcessing" value="查詢"></div>
+                    <div>
+                        <input type="button" id="searchProcessing" value="<fmt:message key="assy.btn.step4.search" />">
+                    </div>
                     <div id="processingBab" ></div>
                 </div>
                 <div class="wigetInfo">
-                    <h3>完成:</h3>
-                    <h5>此處可點選查詢按鈕搜尋正在進行的工單。</h5>
-                    <h5>紅色字體代表目前正在進行線平衡量測的工單。</h5>
+                    <h3><fmt:message key="assy.label.step4.title" /></h3>
+                    <h5><fmt:message key="assy.label.step4.content" /></h5>
                 </div>
             </div>
 
@@ -1104,8 +1165,7 @@
             </div>
 
             <div id="hintmsg" style="color:red;font-weight: bold;padding-left: 10px">
-                <p>※第一站人員請先Key入相關資料再把機子放到定位(否則會少一台紀錄)</p>
-                <p>機子擋住Sensor即開始計時，休息時間的操作不列入計算範圍之內。</p>
+                <p><fmt:message key="assy.bottom.hint" /></p>
             </div>
 
             <div id="memo">
@@ -1127,6 +1187,6 @@
             </div>
         </div>
         <jsp:include page="temp/footer.jsp" />
-        <jsp:include page="temp/_debug.jsp" />
+        <%--<jsp:include page="temp/_debug.jsp" />--%>
     </body>
 </html>

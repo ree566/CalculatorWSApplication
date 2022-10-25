@@ -147,6 +147,15 @@
                     };
                 }
                 $(tableId).DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy',
+                        {
+                            extend: 'excelHtml5',
+                            title: 'Pcs detail'
+                        }, 
+                        'print'
+                    ],
                     "ajax": {
                         "url": "<c:url value="/BabChartController/findPcsDetail" />",
                         "type": "GET",
@@ -202,7 +211,12 @@
                 $(tableId).DataTable({
                     dom: 'Bfrtip',
                     buttons: [
-                        'copy', 'excel', 'print'
+                        'copy',
+                        {
+                            extend: 'excelHtml5',
+                            title: 'Line balance detail'
+                        }, 
+                        'print'
                     ],
                     "ajax": {
                         "url": "<c:url value="/BabChartController/findLineBalanceDetail" />",

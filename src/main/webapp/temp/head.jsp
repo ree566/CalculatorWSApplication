@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />">
 <link rel="stylesheet" href="<c:url value="/webjars/font-awesome/4.7.0/css/font-awesome.min.css" />" >
 <link rel="stylesheet" href="<c:url value="/webjars/bootstrap-switch/3.3.4/dist/css/bootstrap3/bootstrap-switch.min.css" />">
@@ -29,5 +30,14 @@
 <c:if test="${initParam.betaMode == 1}">
     <jsp:include page="_beta.jsp" />
 </c:if>
-
+<div class="text-right">
+    <h5>
+        <a href="<c:url value="?locale=en_US" />">
+            <fmt:message key="label.lang.en" />
+        </a>
+        <a href="<c:url value="?locale=zh_TW" />">
+            <fmt:message key="label.lang.tw" />
+        </a>
+    </h5>
+</div>
 <!-- 為了省略include所造成多餘的<html><body>標籤而簡化，encoding會有問題還是要加上開頭 -->

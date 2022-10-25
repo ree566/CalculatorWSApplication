@@ -44,8 +44,8 @@ var babGroup = [
     {people: 3, x: 755, y: 210, lineName: "PKG_L2", straight: true},
     {people: 4, x: 660, y: 170, lineName: "PKG_L3"},
     {people: 3, x: 595, y: 210, lineName: "PKG_L4", straight: true},
-    {people: 3, x: 565, y: 100, lineName: "PKG_L5"},
-    {people: 3, x: 565, y: 20, lineName: "PKG_L6"}
+    {people: 4, x: 565, y: 100, lineName: "PKG_L5"},
+    {people: 4, x: 565, y: 20, lineName: "PKG_L6"}
 ];
 
 var fqcGroup = [

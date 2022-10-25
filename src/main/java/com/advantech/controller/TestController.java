@@ -13,6 +13,7 @@ import com.advantech.quartzJob.CountermeasureAlarm;
 import com.advantech.service.db1.LineService;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -80,6 +81,13 @@ public class TestController {
         System.out.println(path);
         FileInputStream is = new FileInputStream(new File(path));
         is.close();
+        return "OK";
+    }
+    
+    @RequestMapping(value = "/testLocale", method = {RequestMethod.GET})
+    @ResponseBody
+    public String testLocale(Locale locale){
+        System.out.println("Locale is " + locale);
         return "OK";
     }
 }

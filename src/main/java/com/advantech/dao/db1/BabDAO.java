@@ -17,7 +17,6 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
-import static com.advantech.helper.ShiftScheduleUtils.*;
 
 /**
  *
@@ -99,35 +98,26 @@ public class BabDAO extends AbstractDao<Integer, Bab> implements BasicDAO_1<Bab>
     }
 
     public List<Bab> findProcessing() {
-        DateTime sD = getCurrentShiftStart();
-
         return super.createEntityCriteria()
                 .createAlias("line", "l")
                 .createAlias("l.lineType", "lineType")
                 .add(Restrictions.isNull("babStatus"))
-                .add(Restrictions.gt("beginTime", sD.toDate()))
                 .list();
     }
 
     public List<Bab> findProcessingAndNotPre() {
-        DateTime sD = getCurrentShiftStart();
-
         return super.createEntityCriteria()
                 .createAlias("line", "l")
                 .createAlias("l.lineType", "lineType")
                 .add(Restrictions.isNull("babStatus"))
-                .add(Restrictions.gt("beginTime", sD.toDate()))
                 .add(Restrictions.eq("ispre", 0))
                 .list();
     }
 
     public List<Bab> findProcessingByTagName(String tagName) {
-        DateTime sD = getCurrentShiftStart();
-
         return super.createEntityCriteria()
                 .createAlias("babSettingHistorys", "setting")
                 .add(Restrictions.eq("setting.tagName.name", tagName))
-                .add(Restrictions.gt("setting.createTime", sD.toDate()))
                 .add(Restrictions.isNull("setting.lastUpdateTime"))
                 .list();
     }

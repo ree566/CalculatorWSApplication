@@ -10,7 +10,6 @@ import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.BabStatus;
 import com.advantech.helper.ApplicationContextHelper;
 import com.advantech.helper.DatetimeGenerator;
-import static com.advantech.helper.ShiftScheduleUtils.*;
 import com.advantech.service.db1.BabService;
 import java.util.List;
 import org.joda.time.DateTime;
@@ -43,9 +42,7 @@ public class HandleUncloseBab extends QuartzJobBean {
     //Auto save the data to Linebalancing_Main if user is not close the 工單.
     private void saveBABData() {
         DatetimeGenerator ge = new DatetimeGenerator("yyyy-MM-dd HH:mm");
-        log.info("It's " + getShift() + " current time: " + ge.dateFormatToString(new DateTime()));
-        log.info("Shift start: " + ge.dateFormatToString(getCurrentShiftStart()) + 
-                " Shift end: " + ge.dateFormatToString(getCurrentShiftEnd()));
+        log.info("Current time: " + ge.dateFormatToString(new DateTime()));
 
         List<Bab> unClosedBabs = this.getUnclosedBabs();
         log.info("Unclosed babList size = " + unClosedBabs.size());
