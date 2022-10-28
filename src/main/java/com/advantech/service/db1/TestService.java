@@ -75,7 +75,7 @@ public class TestService {
 
     public void checkUserIsAvailable(String jobNumber) {
         Test t = testDAO.findByJobnumber(jobNumber);
-        checkArgument(t == null, "使用者已在桌次 " + 8 + " 使用中");
+        checkArgument(t == null, "使用者已在桌次 " + t.getTestTable().getName() + " 使用中");
     }
 
     public int update(Test pojo) {

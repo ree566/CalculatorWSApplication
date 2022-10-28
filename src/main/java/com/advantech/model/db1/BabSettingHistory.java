@@ -45,7 +45,7 @@ public class BabSettingHistory implements Serializable {
     private Date createTime;
     private Date lastUpdateTime;
 
-    @JsonIgnore
+//    @JsonIgnore
     private Set<BabPreAssyPcsRecord> babPreAssyPcsRecords = new HashSet<BabPreAssyPcsRecord>(0);
 
     public BabSettingHistory() {

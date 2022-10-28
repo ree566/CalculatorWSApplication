@@ -455,4 +455,18 @@ public class TestService {
 
         psesService.insert(newSetting);
     }
+
+    @Autowired
+    private com.advantech.service.db1.TestService testLineTypeService;
+    
+    @Test
+    public void testTestLineTypeUserCheck() {
+        testLineTypeService.checkUserIsAvailable("A-11018");
+    }
+    
+    @Test
+    public void testFindBabByPreAssyModuleType(){
+        List l = babService.findByPreAssyModuleType(1, "");
+        assertEquals(1, l.size());
+    }
 }

@@ -439,5 +439,19 @@ public class TestDAO {
         assertEquals(13, list.size());
 
     }
+    
+    @Autowired
+    @Qualifier("sqlViewDAO7")
+    private com.advantech.dao.db7.SqlViewDAO sqlViewDAO7;
+    
+    @Test
+    @Transactional("transactionManager7")
+    @Rollback(true)
+    public void testFindM6Worktime() {
+        List list = sqlViewDAO7.findWorktime();
+
+        HibernateObjectPrinter.print(list.get(0));
+
+    }
 
 }

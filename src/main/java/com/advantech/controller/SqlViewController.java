@@ -70,17 +70,16 @@ public class SqlViewController {
             @RequestParam int floor_id,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
-            @RequestParam boolean isAboveStandard
-    ) {
+            @RequestParam boolean isAboveStandard) {
+
         List l = procSerice.findBabDetail(lineType_id, floor_id, startDate, endDate, isAboveStandard);
         return new DataTableResponse(l);
+
     }
 
     @RequestMapping(value = "/findLineBalanceCompareByBab", method = {RequestMethod.GET})
     @ResponseBody
-    protected DataTableResponse findLineBalanceCompare(
-            @RequestParam int bab_id
-    ) {
+    protected DataTableResponse findLineBalanceCompare(@RequestParam int bab_id) {
         Bab b = babService.findByPrimaryKey(bab_id);
         List<Map> l = procSerice.findLineBalanceCompareByBab(bab_id);
         Map m = l.get(0);
@@ -102,10 +101,11 @@ public class SqlViewController {
     @ResponseBody
     protected DataTableResponse findLineBalanceCompare(
             @RequestParam String modelName,
-            @RequestParam String lineTypeName
-    ) {
+            @RequestParam String lineTypeName) {
+
         List l = procSerice.findLineBalanceCompare(modelName, lineTypeName);
         return new DataTableResponse(l);
+
     }
 
     @RequestMapping(value = "/findSensorStatusPerStationToday", method = {RequestMethod.GET})
@@ -152,7 +152,9 @@ public class SqlViewController {
             @RequestParam(required = false) Integer minPcs,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate) {
+
         return new DataTableResponse(procSerice.findBabLineProductivity(po, modelName, line_id, jobnumber, minPcs, startDate, endDate));
+
     }
 
     @RequestMapping(value = "/findBabPassStationRecord", method = {RequestMethod.GET})
@@ -162,9 +164,10 @@ public class SqlViewController {
             @RequestParam(required = false) String modelName,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
-            @RequestParam String lineType
-    ) {
+            @RequestParam String lineType) {
+
         return new DataTableResponse(procSerice.findBabPassStationRecord(po, modelName, startDate, endDate, lineType));
+
     }
 
     @RequestMapping(value = "/findBabPassStationExceptionReport", method = {RequestMethod.GET})
@@ -174,9 +177,10 @@ public class SqlViewController {
             @RequestParam(required = false) String modelName,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
-            @RequestParam int lineType_id
-    ) {
+            @RequestParam int lineType_id) {
+
         return new DataTableResponse(procSerice.findBabPassStationExceptionReport(po, modelName, startDate, endDate, lineType_id));
+
     }
 
     @RequestMapping(value = "/findBabPreAssyProductivity", method = {RequestMethod.GET})
@@ -185,9 +189,10 @@ public class SqlViewController {
             @RequestParam(required = false) int lineType_id,
             @RequestParam(required = false) int floor_id,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate
-    ) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate) {
+
         return new DataTableResponse(procSerice.findBabPreAssyProductivity(lineType_id, floor_id, startDate, endDate));
+
     }
 
     @RequestMapping(value = "/findBabBestLineBalanceRecord", method = {RequestMethod.GET})
@@ -195,9 +200,10 @@ public class SqlViewController {
     protected DataTableResponse findBabBestLineBalanceRecord(
             @RequestParam(required = false) int lineType_id,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate
-    ) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate) {
+        
         return new DataTableResponse(procSerice.findBabBestLineBalanceRecord(lineType_id, startDate, endDate));
+        
     }
 
     @RequestMapping(value = "/calculateChangeover", method = {RequestMethod.GET})
@@ -206,8 +212,8 @@ public class SqlViewController {
             @RequestParam String po,
             @RequestParam int maxChangeover,
             @RequestParam(required = false) Integer people,
-            @RequestParam int lineType
-    ) {
+            @RequestParam int lineType) {
+        
         Map m = new HashMap();
         String modelName = modelController.findModelNameByPo(po);
         if (modelName != null) {
@@ -227,15 +233,17 @@ public class SqlViewController {
             }
         }
         return m;
+        
     }
 
     @RequestMapping(value = "/findTestPassStationProductivity", method = {RequestMethod.GET})
     @ResponseBody
     protected DataTableResponse findTestPassStationProductivity(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate
-    ) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate) {
+        
         return new DataTableResponse(procSerice.findTestPassStationProductivity(startDate, endDate));
+        
     }
 
     @RequestMapping(value = "/findBabModuleUsageRate", method = {RequestMethod.GET})
@@ -244,8 +252,8 @@ public class SqlViewController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
             @RequestParam int floor_id,
-            @RequestParam int lineType_id
-    ) {
+            @RequestParam int lineType_id) {
+        
         Floor f = floor_id == -1 ? null : floorService.findByPrimaryKey(floor_id);
         List l;
         if (lineType_id == 1) {
@@ -256,6 +264,19 @@ public class SqlViewController {
             l = new ArrayList();
         }
         return new DataTableResponse(l);
+        
+    }
+    
+    @RequestMapping(value = "/findPreAssyPercentage", method = {RequestMethod.GET})
+    @ResponseBody
+    protected DataTableResponse findPreAssyPercentage(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate) {
+        
+
+        List l = procSerice.findPreAssyPercentage(startDate);
+ 
+        return new DataTableResponse(l);
+        
     }
 
 }

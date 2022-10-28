@@ -240,6 +240,10 @@ public class BabService {
         return bigSearchResults;
     }
 
+    public List<Bab> findByPreAssyModuleType(int preAssyModuleTypeId, String po) {
+        return babDAO.findByPreAssyModuleType(preAssyModuleTypeId, po);
+    }
+
     private boolean isExcludeRecord(Bab b) {
         DateTime t = new DateTime(b.getBeginTime());
         DateTime sT = t.withTime(8, 30, 0, 0);

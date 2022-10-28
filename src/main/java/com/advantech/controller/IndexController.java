@@ -207,6 +207,12 @@ public class IndexController {
         setLanguage(model, request, response, locale);
         return "pages/admin/changePassword";
     }
+    
+    @RequestMapping("/pages/admin/PreAssyPercentage")
+    public String PreAssyPercentage(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
+        setLanguage(model, request, response, locale);
+        return "pages/admin/preAssyPercentage";
+    }
 
     private void setLanguage(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
         if (locale != null && !"".equals(locale)) {

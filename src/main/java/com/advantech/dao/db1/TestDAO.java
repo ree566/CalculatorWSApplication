@@ -39,6 +39,7 @@ public class TestDAO extends AbstractDao<Integer, Test> implements BasicDAO_1<Te
 
     public Test findByJobnumber(String jobnumber) {
         Criteria c = super.createEntityCriteria();
+        c.setFetchMode("testTable", FetchMode.JOIN);
         c.add(Restrictions.eq("userId", jobnumber));
         return (Test) c.uniqueResult();
     }

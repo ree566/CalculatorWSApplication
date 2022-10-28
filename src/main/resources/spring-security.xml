@@ -53,8 +53,10 @@
         <intercept-url pattern="/pages/admin/testTotal.jsp" access="hasAnyRole('BACKDOOR_4876_', 'OPER_IE','ADMIN', 'OPER_MFG')" />
         <intercept-url pattern="/pages/admin/TotalMap" access="permitAll" />
         <intercept-url pattern="/pages/admin/map_totalStatus.jsp" access="permitAll" />
-        <intercept-url pattern="/pages/admin/changeover.jsp" access="permitAll" />
-        <intercept-url pattern="/pages/admin/babLineUsageRate.jsp" access="permitAll" />
+        <intercept-url pattern="/pages/admin/changeover.jsp" access="isAuthenticated()" />
+        <intercept-url pattern="/pages/admin/babLineUsageRate.jsp" access="isAuthenticated()" />
+        <intercept-url pattern="/pages/admin/PreAssyPercentage" access="isAuthenticated()" />
+        <intercept-url pattern="/pages/admin/preAssyPercentage.jsp" access="isAuthenticated()" />
         <intercept-url pattern="/pages/admin/**" access="isAuthenticated()" />
         <!--<intercept-url pattern="/ModelSopRemarkController/**" access="isAuthenticated()" />-->
         <!--<intercept-url pattern="/socket/**" access="isAuthenticated()" />-->

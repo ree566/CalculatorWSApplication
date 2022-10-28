@@ -118,6 +118,7 @@
                             </c:if>
                         <li><a href="BabPreAssyDetail">前置資料查詢</a></li>
                         <li><a href="babModuleUsageRate.jsp?lineType=ASSY">前置機種模組使用狀態</a></li>
+                        <li><a href="PreAssyPercentage">前置完程度查詢</a></li>
                         <li class="divider"></li>
                         <li class="hide-when-auto"><a href="BabPassStationRecord?lineType=ASSY">Barcode過站紀錄</a></li>
                         <li class="hide-when-auto"><a href="BabPassStationExceptionReport?lineType=ASSY">異常資料統計</a></li>

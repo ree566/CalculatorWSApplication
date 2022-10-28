@@ -66,9 +66,19 @@ public class BabController {
     @ResponseBody
     public DataTableResponse findBabTimeGapPerLine(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate
-    ) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate) {
         return new DataTableResponse(babService.findBabTimeGapPerLine(startDate, endDate));
     }
+    
+    @RequestMapping(value = "/findByPreAssyModuleType", method = {RequestMethod.GET})
+    @ResponseBody
+    public DataTableResponse findByPreAssyModuleType(
+            @RequestParam int preAssyModuleTypeId, @RequestParam String po) {
+        
+        return new DataTableResponse(babService.findByPreAssyModuleType(preAssyModuleTypeId, po));
+        
+    }
+    
+    
     
 }

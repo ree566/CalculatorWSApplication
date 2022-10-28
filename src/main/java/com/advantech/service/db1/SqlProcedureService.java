@@ -157,9 +157,13 @@ public class SqlProcedureService {
     public List<Map> findBabModuleUsageRateForAssy(DateTime sD, DateTime eD, Floor f) {
         return sqlProcedureDAO.findBabModuleUsageRateForAssy(sD, eD, f);
     }
-    
+
     public List<Map> findBabModuleUsageRateForPacking(DateTime sD, DateTime eD, Floor f) {
         return sqlProcedureDAO.findBabModuleUsageRateForPacking(sD, eD, f);
+    }
+
+    public List<Map> findPreAssyPercentage(DateTime sD) {
+        return sqlProcedureDAO.findPreAssyPercentage(sD);
     }
 
 }

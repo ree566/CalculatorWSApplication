@@ -13,6 +13,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Query;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
@@ -168,6 +169,20 @@ public class BabDAO extends AbstractDao<Integer, Bab> implements BasicDAO_1<Bab>
         return super.createEntityCriteria()
                 .add(Restrictions.in("modelName", modelNames))
                 .add(Restrictions.in("line", lines))
+                .list();
+    }
+    
+    public List<Bab> findByPreAssyModuleType(int preAssyModuleTypeId, String po) {
+        return super.createEntityCriteria()
+                .createAlias("preAssyModuleTypes", "type")
+                .setFetchMode("line", FetchMode.JOIN)
+                .setFetchMode("babSettingHistorys", FetchMode.JOIN)
+                .setFetchMode("babSettingHistorys.babPreAssyPcsRecords", FetchMode.JOIN)
+                .add(Restrictions.eq("po", po))
+                .add(Restrictions.eq("ispre", 1))
+                .add(Restrictions.eq("type.id", preAssyModuleTypeId))
+                .addOrder(Order.desc("id"))
+                .setMaxResults(5)
                 .list();
     }
 

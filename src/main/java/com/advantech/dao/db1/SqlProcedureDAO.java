@@ -296,5 +296,13 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
     }
+    
+    public List<Map> findPreAssyPercentage(DateTime sD) {
+        return super.getSession()
+                .createSQLQuery("{CALL M3_BW.usp_Excel_PreAssyPercentage(:sD)}")
+                .setParameter("sD", sD == null ? DateTime.now().withHourOfDay(0) : sD.withHourOfDay(0).toDate())
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
 
 }
