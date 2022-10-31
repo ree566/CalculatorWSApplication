@@ -108,7 +108,7 @@
                         <li class="hide-when-manual"><a href="BabDetailInfo">各站機台時間查詢</a></li>
                         <li><a href="BabDetailInfo2?lineType=ASSY">各站時間查詢(報表格式)</a></li>
                         <li class="divider"></li>
-                        <li><a href="BabLineProductivity">線體效率查詢</a></li>
+                        <li><a href="BabLineProductivity?lineType=ASSY">線體效率查詢</a></li>
                         <li><a href="babLineUsageRate.jsp">線體使用率統計</a></li>
                         <li class="divider"></li>
                             <c:if test="${isIeOper || isBackDoor4876 || isAdmin || isMfgLineOwner || isMfgOper}">
@@ -138,6 +138,8 @@
                         <li class="divider"></li>
                         <li class="hide-when-manual"><a href="BabDetailInfo">各站機台時間查詢</a></li>
                         <li><a href="BabDetailInfo2?lineType=Packing">各站時間查詢(報表格式)</a></li>
+                        <li class="divider"></li>
+                        <li><a href="BabLineProductivity?lineType=Packing">線體效率查詢</a></li>
                         <li class="divider"></li>
                             <c:if test="${isIeOper || isBackDoor4876 || isAdmin || isMfgLineOwner || isMfgOper}">
                             <li><a href="modelSopRemark.jsp">Sop維護</a></li>

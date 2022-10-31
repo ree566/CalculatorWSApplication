@@ -37,7 +37,7 @@
                 color:red;
             }
             .title, .subTitle{
-                display: inline !important; 
+                display: inline !important;
             }
             .subTitle{
                 color: red;
@@ -62,8 +62,10 @@
 
         <script>
             var table;
+            const urlLineType = getQueryVariable("lineType");
+            const lineTypeId = (urlLineType == null || urlLineType == "ASSY" ? 1 : 3);
             $(function () {
-                var countermeasureType = "Bab_Abnormal_LineProductivity";
+                const countermeasureType = "Bab_Abnormal_LineProductivity";
 
                 initLineObject();
                 initCountermeasureDialog({
@@ -73,10 +75,10 @@
                     errorCodeQueryUrl: "<c:url value="/CountermeasureController/getErrorCodeOptions" />"
                 }, table, countermeasureType, '${isAuthenticated ? user.jobnumber : null}');
 
-                var momentFormatString = 'YYYY-MM-DD';
+                const momentFormatString = 'YYYY-MM-DD';
                 $(":text,input[type='number'],select").addClass("form-control");
                 $(":button").addClass("btn btn-default");
-                var options = {
+                const options = {
                     defaultDate: moment(),
                     useCurrent: true,
                     //locale: "zh-tw",
@@ -84,28 +86,28 @@
                     extraFormats: [momentFormatString]
                 };
 
-                var beginTimeObj = $('#fini').datetimepicker(options);
-                var endTimeObj = $('#ffin').datetimepicker(options);
+                const beginTimeObj = $('#fini').datetimepicker(options);
+                const endTimeObj = $('#ffin').datetimepicker(options);
 
                 $("#send").click(function () {
                     getDetail();
                 });
 
-                var lockDays = 180;
+                const lockDays = 180;
                 beginTimeObj.on("dp.change", function (e) {
                     endTimeObj.data("DateTimePicker").minDate(e.date);
-                    var beginDate = e.date;
-                    var endDate = endTimeObj.data("DateTimePicker").date();
-                    var dateDiff = endDate.diff(beginDate, 'days');
+                    const beginDate = e.date;
+                    const endDate = endTimeObj.data("DateTimePicker").date();
+                    const dateDiff = endDate.diff(beginDate, 'days');
                     if (dateDiff > 30) {
                         endTimeObj.data("DateTimePicker").date(beginDate.add(lockDays, 'days'));
                     }
                 });
 
                 endTimeObj.on("dp.change", function (e) {
-                    var beginDate = beginTimeObj.data("DateTimePicker").date();
-                    var endDate = e.date;
-                    var dateDiff = endDate.diff(beginDate, 'days');
+                    const beginDate = beginTimeObj.data("DateTimePicker").date();
+                    const endDate = e.date;
+                    const dateDiff = endDate.diff(beginDate, 'days');
                     if (dateDiff > 30) {
                         beginTimeObj.data("DateTimePicker").date(endDate.add(-lockDays, 'days'));
                     }
@@ -130,11 +132,11 @@
                             scroll: true,
                             highlight: false,
                             source: function (request, response) {
-                                var term = $.trim(request.term);
-                                var matcher = new RegExp('^' + $.ui.autocomplete.escapeRegex(term), "i");
+                                const term = $.trim(request.term);
+                                const matcher = new RegExp('^' + $.ui.autocomplete.escapeRegex(term), "i");
 
                                 response($.map(data, function (v, i) {
-                                    var text = v;
+                                    let text = v;
                                     if (text && (!request.term || matcher.test(text))) {
                                         return {
                                             label: v,
@@ -147,7 +149,7 @@
                     }
                 });
 
-                var urlLineType = getQueryVariable("lineType");
+                const urlLineType = getQueryVariable("lineType");
 
                 if (urlLineType != null) {
                     $("#lineType").val(urlLineType);
@@ -158,7 +160,7 @@
                 // Handle click on "Select all" control
                 $('body').on('click', '#select_all', function () {
                     // Get all rows with search applied
-                    var rows = table.rows({'search': 'applied'}).nodes();
+                    const rows = table.rows({'search': 'applied'}).nodes();
                     // Check/uncheck checkboxes for all rows in the table
                     $('input[type="checkbox"]', rows).prop('checked', this.checked);
                 });
@@ -167,7 +169,7 @@
                 $('body').on('change', '#BabDetail tbody', 'input[type="checkbox"]', function () {
                     // If checkbox is not checked
                     if (!this.checked) {
-                        var el = $('#select_all').get(0);
+                        let el = $('#select_all').get(0);
                         // If "Select all" control is checked and has 'indeterminate' property
                         if (el && el.checked && ('indeterminate' in el)) {
                             // Set visual state of "Select all" control
@@ -240,6 +242,7 @@
                             po: $("#po").val(),
                             modelName: $("#modelName").val(),
                             line_id: $("#line").val(),
+                            lineType_id: lineTypeId,
                             jobnumber: $("#jobnumber").val(),
                             minPcs: $("#aboveMinPcs").is(":checked") ? 20 : null,
                             startDate: $('#fini').val(),
@@ -369,11 +372,11 @@
                     url: "<c:url value="/BabLineController/findAll" />",
                     dataType: "json",
                     success: function (response) {
-                        var lineWiget = $("#line");
-                        var arr = response;
-                        for (var i = 0; i < arr.length; i++) {
-                            var line = arr[i];
-                            lineWiget.append("<option value=" + line.id + ">" + line.name + "</option>");
+                        const lineWiget = $("#line");
+                        const arr = response;
+                        for (let i = 0; i < arr.length; i++) {
+                            const {id, name} = arr[i];
+                            lineWiget.append("<option value=" + id + ">" + name + "</option>");
                         }
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -391,7 +394,7 @@
             }
 
             function roundDecimal(val, precision) {
-                var size = Math.pow(10, precision);
+                const size = Math.pow(10, precision);
                 return Math.round(val * size) / size;
             }
 
@@ -465,7 +468,7 @@
         <div class="container">
             <div>
                 <h3 class="title">線體效率查詢</h3>
-                <h5 class="subTitle">※僅會顯示組裝段&機種未排外的紀錄</h5>
+                <h5 class="subTitle">※僅會顯示機種未排外的紀錄</h5>
             </div>
             <div class="row form-inline">
                 <div class="col form-group">

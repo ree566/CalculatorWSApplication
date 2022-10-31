@@ -138,12 +138,13 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
-    public List<Map> findBabLineProductivity(String po, String modelName, Integer line_id, String jobnumber, Integer minPcs, DateTime sD, DateTime eD) {
+    public List<Map> findBabLineProductivity(String po, String modelName, Integer line_id, Integer lineTypeId, String jobnumber, Integer minPcs, DateTime sD, DateTime eD) {
         return super.getSession()
-                .createSQLQuery("{CALL M3_BW.usp_Excel_LineProductivity(:po, :modelName, :lineId, :jobnumber, :minPcs, :sD, :eD)}")
+                .createSQLQuery("{CALL M3_BW.usp_Excel_LineProductivity(:po, :modelName, :lineId, :lineTypeId, :jobnumber, :minPcs, :sD, :eD)}")
                 .setParameter("po", po)
                 .setParameter("modelName", modelName)
                 .setParameter("lineId", line_id)
+                .setParameter("lineTypeId", lineTypeId)
                 .setParameter("jobnumber", jobnumber)
                 .setParameter("minPcs", minPcs)
                 .setParameter("sD", sD.withHourOfDay(0).toDate())

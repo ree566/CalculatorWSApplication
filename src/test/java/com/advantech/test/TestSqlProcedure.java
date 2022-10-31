@@ -79,7 +79,7 @@ public class TestSqlProcedure {
         procDAO.findBabLastBarcodeStatus(123);
         procDAO.findBabLastGroupStatus(123);
         
-        assertTrue(!procDAO.findBabLineProductivity(null, null, 1, null, 1, sD, eD).isEmpty());
+        assertTrue(!procDAO.findBabLineProductivity(null, null, 1, 1, null, 1, sD, eD).isEmpty());
         procDAO.findBabLineProductivityWithBarcode(null, null, 1, null, 1, sD, eD);
         
         procDAO.findBabPassStationExceptionReport(null, null, sD, eD, 0); 

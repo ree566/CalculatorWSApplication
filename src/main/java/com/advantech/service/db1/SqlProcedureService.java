@@ -95,10 +95,10 @@ public class SqlProcedureService {
         }
     }
 
-    public List<Map> findBabLineProductivity(String po, String modelName, int line_id, String jobnumber, Integer minPcs, DateTime sD, DateTime eD) {
+    public List<Map> findBabLineProductivity(String po, String modelName, int line_id, int lineTypeId, String jobnumber, Integer minPcs, DateTime sD, DateTime eD) {
         switch (reader.getBabDataCollectMode()) {
             case AUTO:
-                return sqlProcedureDAO.findBabLineProductivity(po, modelName, line_id, jobnumber, minPcs, sD, eD);
+                return sqlProcedureDAO.findBabLineProductivity(po, modelName, line_id, lineTypeId, jobnumber, minPcs, sD, eD);
             case MANUAL:
                 return sqlProcedureDAO.findBabLineProductivityWithBarcode(po, modelName, line_id, jobnumber, minPcs, sD, eD);
             default:
