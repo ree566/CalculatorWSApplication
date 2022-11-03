@@ -243,7 +243,7 @@
             }
 
             function formatDate(dateString) {
-                return moment(dateString).format('YYYY-MM-DD hh:mm');
+                return dateString.substring(0, 16);
             }
         </script>
     </head>

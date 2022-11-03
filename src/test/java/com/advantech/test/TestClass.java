@@ -6,6 +6,7 @@
 package com.advantech.test;
 
 import com.advantech.helper.DatetimeGenerator;
+import com.advantech.helper.HibernateObjectPrinter;
 import com.advantech.helper.ShiftScheduleUtils;
 import com.advantech.webservice.atmc.HttpClientUtil;
 import static com.google.common.collect.Lists.newArrayList;
@@ -197,13 +198,13 @@ public class TestClass {
         return rest.getStart().compareTo(d) * d.compareTo(rest.getEnd()) >= 0;
     }
 
-//    @Test
+    @Test
     public void testMap() throws Exception {
-        String url = "http://172.22.250.120:7878/v1/Employee/" + "A-75068";
+        String url = "http://172.22.250.120:7878/v1/Employee/" + "A-7568";
         String url2 = "http://172.22.250.120:7878/v1/Employee/login";
         Map m = new HashMap();
         m.put("empNo", "A-7568");
-        m.put("password", "www756878568");
+        m.put("password", "ww75687568");
         String charset = "UTF-8";
         
         String result = HttpClientUtil.doGet(url, m, charset);
@@ -212,8 +213,7 @@ public class TestClass {
 //        String result = AtmcEmployeeUtils.getUser("A-75s68");
 //        Boolean result2 = AtmcEmployeeUtils.userLogin("A-7568", "www757687568");
 //
-        System.out.println("".equals(result) ? "No data" : result);
-//        System.out.println(result2 == false);
+        HibernateObjectPrinter.print(result, result2);
     }
 
 //    @Test

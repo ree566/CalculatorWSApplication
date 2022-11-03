@@ -5,10 +5,7 @@
  */
 package com.advantech.quartzJob;
 
-import com.advantech.dao.db1.FloorDAO;
-import com.advantech.dao.db1.UnitDAO;
 import com.advantech.dao.db1.UserDAO;
-import com.advantech.dao.db1.UserProfileDAO;
 import com.advantech.dao.db3.SqlViewDAO;
 import com.advantech.helper.CustomPasswordEncoder;
 import com.advantech.model.db1.Floor;
@@ -17,6 +14,9 @@ import com.advantech.model.db1.User;
 import com.advantech.model.db1.UserInfoOnMes;
 import com.advantech.model.db1.UserProfile;
 import com.advantech.security.State;
+import com.advantech.service.db1.FloorService;
+import com.advantech.service.db1.UnitService;
+import com.advantech.service.db1.UserProfileService;
 import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import static com.google.common.collect.Lists.newArrayList;
@@ -53,13 +53,13 @@ public class SyncUserFromRemote {
     private CustomPasswordEncoder pswEncoder;
 
     @Autowired
-    private FloorDAO floorDAO;
+    private FloorService floorService;
 
     @Autowired
-    private UnitDAO unitDAO;
+    private UnitService unitService;
 
     @Autowired
-    private UserProfileDAO userProfileDAO;
+    private UserProfileService userProfileService;
 
     private List<UserProfile> userProfiles;
 
@@ -74,11 +74,11 @@ public class SyncUserFromRemote {
 
         List<User> users = userDAO.findByRole("PREASSY_USER", "ASSY_USER", "TEST_USER", "PACKING_USER");
 
-        Floor f = floorDAO.findByPrimaryKey(4);
+        Floor f = floorService.findByPrimaryKey(4);
 
-        Unit mfg = unitDAO.findByPrimaryKey(1);
+        Unit mfg = unitService.findByPrimaryKey(1);
 
-        userProfiles = userProfileDAO.findAll();
+        userProfiles = userProfileService.findAll();
 
         //Compare which jobnumber is new and which number is old
         //沒在User_Profile_REF的User會被insert進去

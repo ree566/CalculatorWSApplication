@@ -7,8 +7,11 @@ package com.advantech.service.db1;
 
 import com.advantech.model.db1.User;
 import com.advantech.security.State;
+import com.advantech.webservice.atmc.AtmcEmployeeUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,12 +30,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AtmcEmployeeUtils employeeUtils;
+
     @Override
     public UserDetails loadUserByUsername(String jobnumber) throws UsernameNotFoundException {
         User user = userService.findByJobnumber(jobnumber);
         if (user == null) {
-            System.out.println("User not found");
-            throw new UsernameNotFoundException("Username not found");
+            if (!isUserExistInEmployeeZone(jobnumber)) {
+                System.out.println("User not found");
+                throw new UsernameNotFoundException("Username not found");
+            }
+            userService.insert(jobnumber);
+            user = userService.findByJobnumber(jobnumber);
         }
 
         user.addSecurityInfo(user.getState() == State.ACTIVE, true, true, true, getGrantedAuthorities(user));
@@ -45,9 +55,17 @@ public class CustomUserDetailsService implements UserDetailsService {
         user.getUserProfiles().forEach((userProfile) -> {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + userProfile.getName()));
         });
-        
+
         System.out.println("authorities :" + authorities);
         return authorities;
+    }
+
+    private boolean isUserExistInEmployeeZone(String jobnumber) {
+        try {
+            return !"".equals(employeeUtils.getUser(jobnumber));
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
 }

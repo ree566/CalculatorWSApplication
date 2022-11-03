@@ -1,9 +1,7 @@
 package com.advantech.model.db1;
 // Generated 2017/4/7 下午 02:26:06 by Hibernate Tools 4.3.1
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;

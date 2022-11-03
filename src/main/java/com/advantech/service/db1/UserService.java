@@ -6,10 +6,15 @@
 package com.advantech.service.db1;
 
 import com.advantech.dao.db1.UserDAO;
+import com.advantech.helper.CustomPasswordEncoder;
 import com.advantech.model.db1.Floor;
+import com.advantech.model.db1.Unit;
 import com.advantech.model.db1.User;
+import com.advantech.model.db1.UserProfile;
 import com.advantech.security.State;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.hibernate.Hibernate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +30,18 @@ public class UserService {
 
     @Autowired
     private UserDAO userDAO;
+    
+    @Autowired
+    private CustomPasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private FloorService floorService;
+    
+    @Autowired
+    private UnitService unitService;
+    
+    @Autowired
+    private UserProfileService userProfileService;
 
     public List<User> findAll() {
         return userDAO.findAll();
@@ -86,6 +103,28 @@ public class UserService {
 
     public int insert(User pojo) {
         return userDAO.insert(pojo);
+    }
+    
+    public int insert(String jobnumber) {
+        User user = new User();
+        user.setJobnumber(jobnumber);
+        user.setUsername(jobnumber);
+        user.setUsernameCh(jobnumber);
+        user.setPassword(this.passwordEncoder.encode(jobnumber));
+        user.setState(State.ACTIVE);
+        
+        Unit defaultUnit = unitService.findByPrimaryKey(1);
+        Floor defaultFloor = floorService.findByPrimaryKey(1);
+        
+        user.setUnit(defaultUnit);
+        user.setFloor(defaultFloor);
+        
+        UserProfile defaultUserProfile = userProfileService.findByPrimaryKey(3);
+        Set<UserProfile> s = new HashSet<>(1);
+        s.add(defaultUserProfile);
+        user.setUserProfiles(s);
+        
+        return userDAO.insert(user);
     }
 
     public int update(User pojo) {
