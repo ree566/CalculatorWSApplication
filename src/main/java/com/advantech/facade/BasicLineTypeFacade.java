@@ -42,7 +42,7 @@ public abstract class BasicLineTypeFacade implements com.advantech.service.db1.A
 
     @Autowired
     private PropertiesReader p;
-
+    
     @PostConstruct
     protected void initValues() {
         log.info("BasicLineTypeFacade init");

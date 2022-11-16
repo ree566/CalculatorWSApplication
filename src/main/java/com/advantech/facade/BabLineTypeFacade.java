@@ -68,7 +68,7 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
 
     @Autowired
     private com.advantech.service.db3.SqlViewService sqlViewService;
-    
+
     @Autowired
     private BabStandardTimeService babStandardTimeService;
 
@@ -241,7 +241,7 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
                         obj.put("station", setting.getStation());
                         transBabData.put(obj);
                     });
-                    
+
                     isWorktimeUnderStandard = true;
                     isSomeBabUnderStandard = true;
 
@@ -272,10 +272,10 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
             //Only compare m3's model
             return true;
         }
-        
+
         BigDecimal[] allowance = babStandardTimeService.findMaxAndMinAllowanceByBabFromWorktime(b, w);
         BigDecimal value = new BigDecimal(max);
-        
+
         //value.compareTo(allowance[0]) == -1 && 
         //allowance_min < value < allowance_max
         //get the largest side for now
