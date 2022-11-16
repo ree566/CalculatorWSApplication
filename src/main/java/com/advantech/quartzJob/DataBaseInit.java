@@ -12,6 +12,7 @@ import com.advantech.service.db1.BabSensorLoginRecordService;
 import com.advantech.service.db1.BabSettingHistoryService;
 import com.advantech.facade.TestLineTypeFacade;
 import com.advantech.service.db1.TestService;
+import com.advantech.webservice.WaGetTagValue;
 import java.io.IOException;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -30,9 +31,11 @@ public class DataBaseInit extends QuartzJobBean {
     private final BabSettingHistoryService babSettingHistoryService;
     private final BabSensorLoginRecordService babSensorLoginRecordService;
     private final TestService testService;
-    
+
     private final BabLineTypeFacade bF;
     private final TestLineTypeFacade tF;
+
+    private final WaGetTagValue waGetTagValue;
 
     public DataBaseInit() {
         babSettingHistoryService = (BabSettingHistoryService) ApplicationContextHelper.getBean("babSettingHistoryService");
@@ -40,6 +43,7 @@ public class DataBaseInit extends QuartzJobBean {
         testService = (TestService) ApplicationContextHelper.getBean("testService");
         tF = (TestLineTypeFacade) ApplicationContextHelper.getBean("testLineTypeFacade");
         bF = (BabLineTypeFacade) ApplicationContextHelper.getBean("babLineTypeFacade");
+        waGetTagValue = (WaGetTagValue) ApplicationContextHelper.getBean("waGetTagValue");
     }
 
     @Override
@@ -54,6 +58,7 @@ public class DataBaseInit extends QuartzJobBean {
             testService.cleanTests();
             bF.resetAlarm();
             tF.resetAlarm();
+            waGetTagValue.initActiveTagNodes();
             log.info("Data has been initialized.");
         } catch (IOException ex) {
             log.error("Data initialized fail because: " + ex);

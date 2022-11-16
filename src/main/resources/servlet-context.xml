@@ -452,6 +452,20 @@
     <bean id="wsClient2" class="com.advantech.webservice.mes.WsClient">  
         <constructor-arg index="0" ref="webServiceTemplate2"/>
     </bean>  
+
+    <!--WaWebService port-->    
+    <bean id="waSetTagValue" class="com.advantech.webservice.WaSetTagValue" parent="waTagValue">
+        <property name="urlSetTagValue" value="http://172.20.128.235/WaWebService/Json/SetTagValue/DongHuSystem" />
+    </bean>
+    
+    <bean id="waGetTagValue" class="com.advantech.webservice.WaGetTagValue" parent="waTagValue">
+        <property name="urlGetTagValue" value="http://172.20.128.235/WaWebService/Json/GetTagValue/DongHuSystem" />
+    </bean>
+                        
+    <bean id="waTagValue" class="com.advantech.webservice.WaTagValue">
+        <property name="username" value="admin" />
+        <property name="password" value=""/>
+    </bean>
     
     <!--Other file import-->
     <import resource="classpath:spring-security.xml"/>

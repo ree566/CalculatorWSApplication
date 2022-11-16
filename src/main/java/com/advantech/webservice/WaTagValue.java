@@ -1,0 +1,91 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.advantech.webservice;
+
+import com.google.gson.Gson;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.PostConstruct;
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ *
+ * @author Justin.Yeh
+ */
+@Component
+public class WaTagValue {
+
+    protected String username;
+    protected String password;
+    protected HttpHeaders headers;
+
+    protected static Map<String, Integer> map = new HashMap<>();
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public HttpHeaders getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(HttpHeaders headers) {
+        this.headers = headers;
+    }
+
+    //Authorization config
+    @PostConstruct
+    private void setHeaders() {
+        String logonCredentials = username + ":" + password;// id:password
+        String base64Credentials = new String(Base64.encodeBase64(logonCredentials.getBytes()));
+
+        HttpHeaders myHeaders = new HttpHeaders();
+        myHeaders.add("Authorization", "Basic " + base64Credentials);
+        myHeaders.setContentType(MediaType.APPLICATION_JSON);// necessary 
+        this.headers = myHeaders;
+    }
+
+    public static Map<String, Integer> getMap() {
+        return map;
+    }
+
+    public static void setMap(Map<String, Integer> map) {
+        WaTagValue.map = map;
+    }
+
+    public String getJsonString(Object obj) {
+        return new Gson().toJson(obj);
+    }
+
+    public <C> C jsonToObj(String st, Class<C> clazz) {
+        return new Gson().fromJson(st, clazz);
+    }
+    
+    // POST method
+    protected String postJson(String url, String json) {
+        HttpEntity<String> request = new HttpEntity<>(json, getHeaders());
+        ResponseEntity<String> responseEntity
+                = new RestTemplate().postForEntity(url, request, String.class);
+        return responseEntity.getBody();
+    }
+}
