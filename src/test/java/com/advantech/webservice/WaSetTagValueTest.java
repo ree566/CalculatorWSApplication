@@ -11,11 +11,9 @@ import com.advantech.model.db1.AlarmBabAction;
 import com.advantech.model.db1.AlarmDO;
 import com.advantech.model.db1.AlarmTestAction;
 import com.advantech.model.db1.TagNameComparison;
-import com.advantech.quartzJob.DataBaseInit;
 import com.advantech.service.db1.AlarmBabActionService;
 import com.advantech.service.db1.AlarmDOService;
 import com.google.gson.Gson;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -154,7 +152,7 @@ public class WaSetTagValueTest {
     }
 
 
-    @Test
+//    @Test
     public void setTagValue() {
         List<AlarmBabAction> alarmBabs = new ArrayList<>();
         alarmBabs.add(new AlarmBabAction("L1-2-L-5", 1));
