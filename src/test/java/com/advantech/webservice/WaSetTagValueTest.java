@@ -11,11 +11,9 @@ import com.advantech.model.db1.AlarmBabAction;
 import com.advantech.model.db1.AlarmDO;
 import com.advantech.model.db1.AlarmTestAction;
 import com.advantech.model.db1.TagNameComparison;
-import com.advantech.quartzJob.DataBaseInit;
 import com.advantech.service.db1.AlarmBabActionService;
 import com.advantech.service.db1.AlarmDOService;
 import com.google.gson.Gson;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,9 +69,9 @@ public class WaSetTagValueTest {
     @Qualifier("testLineTypeFacade2")
     private TestLineTypeFacade2 tF;
 
-//    @Test
-//    @Transactional
-//    @Rollback(true)
+    @Test
+    @Transactional
+    @Rollback(true)
     public void testBabLineTypeFacade() throws JobExecutionException {
 //        String st = "";
 //        try {
@@ -113,7 +111,7 @@ public class WaSetTagValueTest {
         System.out.println("findDOByTables.size=======" + lDO.size());
 
         waGetTagValue.initActiveTagNodes();
-        Map tagNodes = WaTagValue.getMap();
+        Map tagNodes = WaGetTagValue.getMap();// static map with active Tags while DataBaseInit.java
         List<WaSetTagRequestModel> requestModels = lDO.stream()
                 .filter(e -> tagNodes.containsKey(e.getCorrespondDO()))
                 .map(alarmDo -> new WaSetTagRequestModel(alarmDo.getCorrespondDO(), 0))
@@ -135,7 +133,7 @@ public class WaSetTagValueTest {
 
 //    @Test
     public void getTagValue() {
-        
+
         waGetTagValue.initActiveTagNodes();
         System.out.println("map.size:= " + waGetTagValue.getMap().size());
     }
@@ -144,7 +142,7 @@ public class WaSetTagValueTest {
     public void setTagValueSubList(String param) {
 
         Objects.requireNonNull(param);
-        
+
 //        int arrLen = 10;
 //        List<List<WaSetTagRequestModel>> subL = Lists.partition(l, arrLen);
 //        subL.forEach(c -> {
@@ -153,8 +151,7 @@ public class WaSetTagValueTest {
 //        System.out.println("getJsonString" + waSetTagValue.getJsonString());
     }
 
-
-    @Test
+//    @Test
     public void setTagValue() {
         List<AlarmBabAction> alarmBabs = new ArrayList<>();
         alarmBabs.add(new AlarmBabAction("L1-2-L-5", 1));
@@ -181,7 +178,7 @@ public class WaSetTagValueTest {
 //
 //            //filter
 //            waGetTagValue.initActiveTagNodes();
-//            Map tagNodes = WaTagValue.getMap();
+//            Map tagNodes = WaGetTagValue.getMap();
 //            requestModels.stream().peek(e -> {
 //                tagNodes.containsKey(e.getName());
 //            }).collect(Collectors.toList());

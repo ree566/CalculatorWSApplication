@@ -10,7 +10,7 @@ import com.advantech.model.db1.AlarmDO;
 import com.advantech.model.db1.AlarmTestAction;
 import com.advantech.service.db1.AlarmDOService;
 import com.advantech.service.db1.AlarmTestActionService;
-import com.advantech.webservice.WaTagValue;
+import com.advantech.webservice.WaGetTagValue;
 import com.google.common.collect.Streams;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,13 +48,13 @@ public class TestLineTypeFacade2 extends TestLineTypeFacade {
             //find DO
             List<AlarmDO> listDO = findDOByTables(alarmActions);
             //get active DO and alarmValue
-            Map tagNodes = WaTagValue.getMap();// static map with active Tags while DataBaseInit.java
+            Map tagNodes = WaGetTagValue.getMap();
             List<WaSetTagRequestModel> requestModels = Streams
                     .zip(listDO.stream(), alarmActions.stream(),
                             (tag, alarm) -> new WaSetTagRequestModel(tag.getCorrespondDO(), alarm.getAlarm()))
                     .filter(model -> tagNodes.containsKey(model.getName()))
                     .collect(Collectors.toList());
-            
+
             waSetTagValue.exchange(requestModels);
         }
     }
@@ -65,7 +65,7 @@ public class TestLineTypeFacade2 extends TestLineTypeFacade {
         List<AlarmDO> listDO = findDOByTables(alarmActions);
 
         //filter
-        Map tagNodes = WaTagValue.getMap();
+        Map tagNodes = WaGetTagValue.getMap();
         List<WaSetTagRequestModel> requestModels = listDO.stream()
                 .filter(e -> tagNodes.containsKey(e.getCorrespondDO()))
                 .map(alarmDo -> new WaSetTagRequestModel(alarmDo.getCorrespondDO(), 0))

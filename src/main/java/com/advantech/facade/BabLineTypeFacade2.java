@@ -8,11 +8,10 @@ import com.advantech.model.db1.AlarmBabAction;
 import com.advantech.model.db1.AlarmDO;
 import com.advantech.service.db1.AlarmBabActionService;
 import com.advantech.service.db1.AlarmDOService;
+import com.advantech.webservice.WaGetTagValue;
 import com.advantech.webservice.WaSetTagRequestModel;
 import com.advantech.webservice.WaSetTagValue;
-import com.advantech.webservice.WaTagValue;
 import com.google.common.collect.Streams;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,7 +46,7 @@ public class BabLineTypeFacade2 extends BabLineTypeFacade {
             List<AlarmDO> listDO = findDOByTables(alarmBabs);
 
             //get active DO and alarmValue
-            Map tagNodes = WaTagValue.getMap();// static map with active Tags while DataBaseInit.java
+            Map tagNodes = WaGetTagValue.getMap();// static map with active Tags while DataBaseInit.java
             List<WaSetTagRequestModel> requestModels = Streams
                     .zip(listDO.stream(), alarmBabs.stream(),
                             (tag, alarm) -> new WaSetTagRequestModel(tag.getCorrespondDO(), alarm.getAlarm()))
@@ -65,7 +64,7 @@ public class BabLineTypeFacade2 extends BabLineTypeFacade {
         List<AlarmDO> listDO = findDOByTables(alarmBabs);
 
         //filter
-        Map tagNodes = WaTagValue.getMap();
+        Map tagNodes = WaGetTagValue.getMap();
         List<WaSetTagRequestModel> requestModels = listDO.stream()
                 .filter(e -> tagNodes.containsKey(e.getCorrespondDO()))
                 .map(alarmDo -> new WaSetTagRequestModel(alarmDo.getCorrespondDO(), 0))

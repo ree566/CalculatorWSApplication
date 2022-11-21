@@ -5,8 +5,6 @@
 package com.advantech.webservice;
 
 import com.google.gson.Gson;
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
@@ -26,8 +24,6 @@ public class WaTagValue {
     protected String username;
     protected String password;
     protected HttpHeaders headers;
-
-    protected static Map<String, Integer> map = new HashMap<>();
 
     public String getUsername() {
         return username;
@@ -63,14 +59,6 @@ public class WaTagValue {
         myHeaders.add("Authorization", "Basic " + base64Credentials);
         myHeaders.setContentType(MediaType.APPLICATION_JSON);// necessary 
         this.headers = myHeaders;
-    }
-
-    public static Map<String, Integer> getMap() {
-        return map;
-    }
-
-    public static void setMap(Map<String, Integer> map) {
-        WaTagValue.map = map;
     }
 
     public String getJsonString(Object obj) {

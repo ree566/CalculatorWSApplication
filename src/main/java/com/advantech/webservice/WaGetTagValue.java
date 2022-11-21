@@ -6,6 +6,7 @@ package com.advantech.webservice;
 
 import com.advantech.service.db1.AlarmDOService;
 import com.advantech.webservice.WaGetTagResponseModel.TagNode;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -25,6 +26,8 @@ public class WaGetTagValue extends WaTagValue {
 
     private String urlGetTagValue;
 
+    private static Map<String, Integer> map = new HashMap<>();
+
     @Autowired
     private AlarmDOService alarmDOService;
 
@@ -36,6 +39,14 @@ public class WaGetTagValue extends WaTagValue {
         this.urlGetTagValue = urlGetTagValue;
     }
 
+    public static Map<String, Integer> getMap() {
+        return map;
+    }
+
+    public static void setMap(Map<String, Integer> map) {
+        WaGetTagValue.map = map;
+    }
+    
     public void initActiveTagNodes() {
         List<String> allTagNames = alarmDOService.findCorrespondDOAll();
         String json = getJsonString(allTagNames);
