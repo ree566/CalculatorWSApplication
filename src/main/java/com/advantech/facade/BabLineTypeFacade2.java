@@ -8,10 +8,9 @@ import com.advantech.model.db1.AlarmBabAction;
 import com.advantech.model.db1.AlarmDO;
 import com.advantech.service.db1.AlarmBabActionService;
 import com.advantech.service.db1.AlarmDOService;
+import com.advantech.webservice.WaGetTagValue;
 import com.advantech.webservice.WaSetTagRequestModel;
 import com.advantech.webservice.WaSetTagValue;
-import com.advantech.webservice.WaTagValue;
-import com.google.common.collect.Streams;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,21 +41,26 @@ public class BabLineTypeFacade2 extends BabLineTypeFacade {
 
         List<AlarmBabAction> alarmBabs = (List<AlarmBabAction>) l;
 
-        if (alarmBabs != null) {
-            //find DO
-            List<AlarmDO> listDO = findDOByTables(alarmBabs);
+        //find DO
+        List<AlarmDO> listDO = findDOByTables(alarmBabs);
 
-            //get active DO and alarmValue
-            Map tagNodes = WaTagValue.getMap();// static map with active Tags while DataBaseInit.java
-            List<WaSetTagRequestModel> requestModels = Streams
-                    .zip(listDO.stream(), alarmBabs.stream(),
-                            (tag, alarm) -> new WaSetTagRequestModel(tag.getCorrespondDO(), alarm.getAlarm()))
-                    .filter(model -> tagNodes.containsKey(model.getName()))
-                    .collect(Collectors.toList());
+        //change list to map only including active TableIds-DOs
+        Map allActiveTags = WaGetTagValue.getMap();
+        Map<String, String> mapTablesDOs = listDO.stream()
+                .filter(e -> allActiveTags.containsKey(e.getCorrespondDO()))
+                .collect(Collectors.toMap(AlarmDO::getProcessName, AlarmDO::getCorrespondDO));
 
-            //call webApi
-            waSetTagValue.exchange(requestModels);
-        }
+        //set requestBody
+        List<WaSetTagRequestModel> requestModels = new ArrayList<>();
+        alarmBabs.forEach(e -> {
+            if (mapTablesDOs.containsKey(e.getTableId())) {
+                requestModels.add(
+                        new WaSetTagRequestModel(mapTablesDOs.get(e.getTableId()), e.getAlarm())
+                );
+            }
+        });
+
+        waSetTagValue.exchange(requestModels);
     }
 
     @Override
@@ -65,11 +69,15 @@ public class BabLineTypeFacade2 extends BabLineTypeFacade {
         List<AlarmDO> listDO = findDOByTables(alarmBabs);
 
         //filter
-        Map tagNodes = WaTagValue.getMap();
-        List<WaSetTagRequestModel> requestModels = listDO.stream()
-                .filter(e -> tagNodes.containsKey(e.getCorrespondDO()))
-                .map(alarmDo -> new WaSetTagRequestModel(alarmDo.getCorrespondDO(), 0))
-                .collect(Collectors.toList());
+        Map allActiveTags = WaGetTagValue.getMap();
+        List<WaSetTagRequestModel> requestModels = new ArrayList<>();
+        listDO.forEach(e -> {
+            if (allActiveTags.containsKey(e.getCorrespondDO())) {
+                requestModels.add(
+                        new WaSetTagRequestModel(e.getCorrespondDO(), 0)
+                );
+            }
+        });
 
         //reset
         waSetTagValue.exchange(requestModels);
