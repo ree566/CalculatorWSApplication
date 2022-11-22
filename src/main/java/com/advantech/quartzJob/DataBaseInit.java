@@ -56,9 +56,9 @@ public class DataBaseInit extends QuartzJobBean {
             babSettingHistoryService.init();
             babSensorLoginRecordService.init();
             testService.cleanTests();
+            waGetTagValue.initActiveTagNodes();
             bF.resetAlarm();
             tF.resetAlarm();
-            waGetTagValue.initActiveTagNodes();
             log.info("Data has been initialized.");
         } catch (IOException ex) {
             log.error("Data initialized fail because: " + ex);

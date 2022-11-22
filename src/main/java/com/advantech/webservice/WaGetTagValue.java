@@ -46,7 +46,7 @@ public class WaGetTagValue extends WaTagValue {
     public static void setMap(Map<String, Integer> map) {
         WaGetTagValue.map = map;
     }
-    
+
     public void initActiveTagNodes() {
         List<String> allTagNames = alarmDOService.findCorrespondDOAll();
         String json = getJsonString(allTagNames);
@@ -54,7 +54,7 @@ public class WaGetTagValue extends WaTagValue {
     }
 
     private WaGetTagResponseModel getResponseBodys(String json) {
-        String jsonResponse = postJson(getUrlGetTagValue(), json);
+        String jsonResponse = postJson(urlGetTagValue, json);
         return jsonToObj(jsonResponse, WaGetTagResponseModel.class);
     }
 
