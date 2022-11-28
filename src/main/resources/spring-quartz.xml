@@ -11,7 +11,7 @@
     -->
     <!--Bab linetype job-->
     <bean name="BabGenerateData" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="babLineTypeFacade" />
+        <property name="targetObject" ref="babLineTypeFacade2" />
         <property name="targetMethod" value="processingDataAndSave"/>  
         <property name="concurrent" value="false"/>
     </bean>
@@ -23,7 +23,7 @@
     
     <!--Test linetype job-->
     <bean name="TestGenerateData" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="testLineTypeFacade" />
+        <property name="targetObject" ref="testLineTypeFacade2" />
         <property name="targetMethod" value="processingDataAndSave"/>  
         <property name="concurrent" value="false"/>
     </bean>
