@@ -59,6 +59,7 @@ public class WaSetTagValueTest {
 
     @Autowired
     private WaSetTagValue waSetTagValue;
+
     @Autowired
     private WaGetTagValue waGetTagValue;
 
@@ -73,7 +74,7 @@ public class WaSetTagValueTest {
 //    @Test
 //    @Transactional
 //    @Rollback(true)
-    public void testBabLineTypeFacade()  {
+    public void testBabLineTypeFacade() {
 //        String st = "";
 //        try {
 //            AlarmDO rs = alarmDOService.findByPrimaryKey("LD-L-8");// key LD-L-8 one to many
@@ -92,14 +93,13 @@ public class WaSetTagValueTest {
 //        waGetTagValue.initActiveTagNodes();
 //        bF.setAlarmSign(alarmActions);
 //        bF.resetAlarmSign();
-
         List<AlarmTestAction> alarmBabs = almService.findAll();
 //        List<AlarmTestAction> alarmActions = Arrays.asList(
 //                new AlarmTestAction("T6", 0));
         waGetTagValue.initActiveTagNodes();
         tF.setAlarmSign(alarmBabs);
         tF.resetAlarmSign();
-        
+
 //        bF.initMap();
 //        bF.initAlarmSign();
 //        List l = bF.mapToAlarmSign(bF.getMap());
@@ -124,7 +124,7 @@ public class WaSetTagValueTest {
         List<AlarmDO> lDO = alarmDOService.findDOByTables(tableIds);
 //        System.out.println("findDOByTables.size=======" + lDO.size());
 
-        Map tagNodes = WaGetTagValue.getMap();// static map with active Tags while DataBaseInit.java
+        Map tagNodes = waGetTagValue.getMap();// map with active Tags while DataBaseInit.java
         List<WaSetTagRequestModel> requestModels = lDO.stream()
                 .filter(e -> tagNodes.containsKey(e.getCorrespondDO()))
                 .map(alarmDo -> new WaSetTagRequestModel(alarmDo.getCorrespondDO(), 0))
@@ -199,5 +199,12 @@ public class WaSetTagValueTest {
 //        exchange(l);
 //        System.out.println("getJsonString" + rb.getJsonString());
         }
+    }
+
+    @Test
+    public void testGetJsonString() {
+        String[] testValues = new String[] {"a", "b", "c", "d"};
+        String result = this.waGetTagValue.getJsonString(Arrays.asList(testValues));
+        System.out.println(result);
     }
 }

@@ -12,7 +12,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,11 +29,6 @@ public class WaGetTagValue extends WaTagValue {
 
     private String urlGetTagValue;
 
-    private static Map<String, Integer> map = new HashMap<>();
-
-    @Autowired
-    private AlarmDOService alarmDOService;
-
     public String getUrlGetTagValue() {
         return urlGetTagValue;
     }
@@ -39,16 +37,21 @@ public class WaGetTagValue extends WaTagValue {
         this.urlGetTagValue = urlGetTagValue;
     }
 
-    public static Map<String, Integer> getMap() {
+    private Map<String, Integer> map = new HashMap<>();
+
+    public Map<String, Integer> getMap() {
         return map;
     }
 
-    public static void setMap(Map<String, Integer> map) {
-        WaGetTagValue.map = map;
+    public void setMap(Map<String, Integer> map) {
+        this.map = map;
     }
 
+    @Autowired
+    private AlarmDOService alarmDOService;
+
     public void initActiveTagNodes() {
-        List<String> allTagNames = alarmDOService.findCorrespondDOAll();
+        List<String> allTagNames = alarmDOService.findAllDistinctCorrespondDO();
         String json = getJsonString(allTagNames);
         setTagToMap(getResponseBodys(json));
     }
@@ -67,15 +70,17 @@ public class WaGetTagValue extends WaTagValue {
         return map;
     }
 
-    private String getJsonString(List<String> l) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{\"Tags\":[");
+    public String getJsonString(List<String> l) {
+        JSONObject result = new JSONObject();
+        JSONArray tags = new JSONArray();
+
         for (String s : l) {
-            sb.append("{\"Name\":\"");
-            sb.append(s);
-            sb.append("\"},");
+            JSONObject tag = new JSONObject();
+            tag.put("Name", s);
+            tags.put(tag);
         }
-        sb.append("]}");
-        return sb.toString();
+
+        result.put("Tags", tags);
+        return result.toString();
     }
 }

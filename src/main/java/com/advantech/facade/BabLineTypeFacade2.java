@@ -34,6 +34,9 @@ public class BabLineTypeFacade2 extends BabLineTypeFacade {
     private AlarmBabActionService babService;
 
     @Autowired
+    private WaGetTagValue waGetTagValue;
+    
+    @Autowired
     private WaSetTagValue waSetTagValue;
 
     @Override
@@ -45,7 +48,7 @@ public class BabLineTypeFacade2 extends BabLineTypeFacade {
         List<AlarmDO> listDO = findDOByTables(alarmBabs);
 
         //change list to map only including active TableIds-DOs
-        Map allActiveTags = WaGetTagValue.getMap();
+        Map allActiveTags = waGetTagValue.getMap();
         Map<String, String> mapTablesDOs = listDO.stream()
                 .filter(e -> allActiveTags.containsKey(e.getCorrespondDO()))
                 .collect(Collectors.toMap(AlarmDO::getProcessName, AlarmDO::getCorrespondDO));
@@ -69,7 +72,7 @@ public class BabLineTypeFacade2 extends BabLineTypeFacade {
         List<AlarmDO> listDO = findDOByTables(alarmBabs);
 
         //filter
-        Map allActiveTags = WaGetTagValue.getMap();
+        Map allActiveTags = waGetTagValue.getMap();
         List<WaSetTagRequestModel> requestModels = new ArrayList<>();
         listDO.forEach(e -> {
             if (allActiveTags.containsKey(e.getCorrespondDO())) {

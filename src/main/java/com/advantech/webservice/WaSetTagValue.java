@@ -7,6 +7,7 @@ package com.advantech.webservice;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,7 +30,7 @@ public class WaSetTagValue extends WaTagValue {
     }
 
     public void exchange(List<WaSetTagRequestModel> l) {
-        String json = "{\"Tags\":" + super.getJsonString(l) + "}";
+        String json = String.format("{\"Tags\":{0}}", super.getJsonString(l));
         log.log(Level.INFO, "SetJsonString======={0}", json);
         postJson(urlSetTagValue, json);
     }

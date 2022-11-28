@@ -34,6 +34,9 @@ public class TestLineTypeFacade2 extends TestLineTypeFacade {
     @Autowired
     @Qualifier("alarmTestActionService")
     private AlarmTestActionService almService;
+    
+    @Autowired
+    private WaGetTagValue waGetTagValue;
 
     @Autowired
     private WaSetTagValue waSetTagValue;
@@ -48,7 +51,7 @@ public class TestLineTypeFacade2 extends TestLineTypeFacade {
             List<AlarmDO> listDO = findDOByTables(alarmActions);
 
             //change list to map only including active TableIds-DOs
-            Map allActiveTags = WaGetTagValue.getMap();
+            Map allActiveTags = waGetTagValue.getMap();
             Map<String, String> mapTablesDOs = listDO.stream()
                     .filter(e -> allActiveTags.containsKey(e.getCorrespondDO()))
                     .collect(Collectors.toMap(AlarmDO::getProcessName, AlarmDO::getCorrespondDO));
@@ -73,7 +76,7 @@ public class TestLineTypeFacade2 extends TestLineTypeFacade {
         List<AlarmDO> listDO = findDOByTables(alarmActions);
 
         //filter
-        Map allActiveTags = WaGetTagValue.getMap();
+        Map allActiveTags = waGetTagValue.getMap();
         List<WaSetTagRequestModel> requestModels = new ArrayList<>();
         listDO.forEach(e -> {
             if (allActiveTags.containsKey(e.getCorrespondDO())) {

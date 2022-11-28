@@ -21,28 +21,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlarmDOService {
 
     @Autowired
-    private AlarmDODAO alarmDODAO;
+    private AlarmDODAO dao;
 
     public List<AlarmDO> findAll() {
-        return alarmDODAO.findAll();
+        return dao.findAll();
     }
 
-    public List<String> findProcessNameAll() {
-        return findUniqueColumnAll("processName");
+    public List<String> findAllDistinctProcessName() {
+        return dao.findAllDistinctProcessName();
     }
 
-    public List<String> findCorrespondDOAll() {
-        return findUniqueColumnAll("correspondDO");
-    }
-
-    private <T> List<T> findUniqueColumnAll(String colName) {
-        return alarmDODAO.findUniqueColumnAll(colName);
+    public List<String> findAllDistinctCorrespondDO() {
+        return dao.findAllDistinctCorrespondDO();
     }
 
     public List<AlarmDO> findDOByTables(List<String> tableIds) {
         List<AlarmDO> list = new ArrayList<>();
         try {
-            list = alarmDODAO.findDOByTables(tableIds);        
+            list = dao.findDOByTables(tableIds);        
         } catch (Exception ex) {
             throw ex;
         }
@@ -50,19 +46,19 @@ public class AlarmDOService {
     }
 
     public AlarmDO findByPrimaryKey(Object obj_id) {
-        return alarmDODAO.findByPrimaryKey(obj_id);
+        return dao.findByPrimaryKey(obj_id);
     }
 
     public int insert(AlarmDO pojo) {
-        return alarmDODAO.insert(pojo);
+        return dao.insert(pojo);
     }
 
     public int update(AlarmDO pojo) {
-        return alarmDODAO.update(pojo);
+        return dao.update(pojo);
     }
 
     public int delete(AlarmDO pojo) {
-        return alarmDODAO.delete(pojo);
+        return dao.delete(pojo);
     }
 
 }

@@ -21,10 +21,16 @@ public class AlarmDODAO extends AbstractDao<String, AlarmDO> implements BasicDAO
     public List<AlarmDO> findAll() {
         return super.createEntityCriteria().list();
     }
-
-    public <T> List<T> findUniqueColumnAll(String colName) {
+    
+    public List<String> findAllDistinctProcessName() {
         return super.createEntityCriteria()
-                .setProjection(Projections.distinct(Projections.property(colName)))
+                .setProjection(Projections.distinct(Projections.property("processName")))
+                .list();
+    }
+    
+    public List<String> findAllDistinctCorrespondDO() {
+        return super.createEntityCriteria()
+                .setProjection(Projections.distinct(Projections.property("correspondDO")))
                 .list();
     }
 
@@ -36,12 +42,7 @@ public class AlarmDODAO extends AbstractDao<String, AlarmDO> implements BasicDAO
 
     @Override
     public AlarmDO findByPrimaryKey(Object obj_id) {
-        try {
-            return super.getByKey((String) obj_id);
-        } catch (Exception ex) {
-            System.out.println("AlarmDO.findByPrimaryKey Exception : " + ex);
-            throw ex;
-        }
+        return super.getByKey((String) obj_id);
     }
 
     @Override

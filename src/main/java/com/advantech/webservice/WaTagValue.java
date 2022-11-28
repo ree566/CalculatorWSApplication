@@ -7,6 +7,7 @@ package com.advantech.webservice;
 import com.google.gson.Gson;
 import javax.annotation.PostConstruct;
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,9 +22,9 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class WaTagValue {
 
-    protected String username;
-    protected String password;
-    protected HttpHeaders headers;
+    private String username;
+
+    private String password;
 
     public String getUsername() {
         return username;
@@ -41,13 +42,7 @@ public class WaTagValue {
         this.password = password;
     }
 
-    public HttpHeaders getHeaders() {
-        return headers;
-    }
-
-    public void setHeaders(HttpHeaders headers) {
-        this.headers = headers;
-    }
+    protected HttpHeaders headers;
 
     //Authorization config
     @PostConstruct
@@ -68,10 +63,10 @@ public class WaTagValue {
     public <C> C jsonToObj(String st, Class<C> clazz) {
         return new Gson().fromJson(st, clazz);
     }
-    
+
     // POST method
     protected String postJson(String url, String json) {
-        HttpEntity<String> request = new HttpEntity<>(json, getHeaders());
+        HttpEntity<String> request = new HttpEntity<>(json, this.headers);
         ResponseEntity<String> responseEntity
                 = new RestTemplate().postForEntity(url, request, String.class);
         return responseEntity.getBody();
