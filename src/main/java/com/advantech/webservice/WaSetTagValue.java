@@ -30,7 +30,7 @@ public class WaSetTagValue extends WaTagValue {
     }
 
     public void exchange(List<WaSetTagRequestModel> l) {
-        String json = String.format("{\"Tags\":{0}}", super.getJsonString(l));
+        String json = String.format("{\"Tags\":%s}", super.getJsonString(l));
         log.log(Level.INFO, "SetJsonString======={0}", json);
         postJson(urlSetTagValue, json);
     }

@@ -46,16 +46,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class WaSetTagValueTest {
 
-    private String uriSetTagValue = "http://172.20.128.235/WaWebService/Json/SetTagValue/DongHuSystem";
-    private String uriGetTagValue = "http://172.20.128.235/WaWebService/Json/GetTagValue/DongHuSystem";
-    private String username = "admin";
-    private String password = "";
-
     @Autowired
     private AlarmDOService alarmDOService;
-
-    @Autowired
-    private AlarmBabActionService babService;
 
     @Autowired
     private WaSetTagValue waSetTagValue;
@@ -164,10 +156,10 @@ public class WaSetTagValueTest {
 //        System.out.println("getJsonString" + waSetTagValue.getJsonString());
     }
 
-//    @Test
+    @Test
     public void setTagValue() {
         List<AlarmBabAction> alarmBabs = new ArrayList<>();
-        alarmBabs.add(new AlarmBabAction("L1-2-L-5", 1));
+        alarmBabs.add(new AlarmBabAction("T6", 1));
 
         waGetTagValue.initActiveTagNodes();
         bF.setAlarmSign(alarmBabs);
