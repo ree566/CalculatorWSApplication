@@ -159,7 +159,8 @@ public class WaSetTagValueTest {
     @Test
     public void setTagValue() {
         List<AlarmBabAction> alarmBabs = new ArrayList<>();
-        alarmBabs.add(new AlarmBabAction("T6", 1));
+        alarmBabs.add(new AlarmBabAction("L4-L-1", 0));
+        alarmBabs.add(new AlarmBabAction("L3-L-2", 0));
 
         waGetTagValue.initActiveTagNodes();
         bF.setAlarmSign(alarmBabs);

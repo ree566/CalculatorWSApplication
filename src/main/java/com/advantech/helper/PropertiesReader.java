@@ -48,8 +48,8 @@ public class PropertiesReader {
     @Value("${sensorDetect.period: 30}")
     private Integer sensorDetectExpriePeriod;
 
-    @Value("${result.write.to.database: true}")
-    private Boolean isCalculateResultWriterToDatabase;
+    @Value("${result.write.to.somewhere: true}")
+    private Boolean isCalculateResultWriterOutput;
 
     @Value("${result.save.to.oldServer: false}")
     private Boolean isResultWriteToOldDatabase;
@@ -206,8 +206,8 @@ public class PropertiesReader {
         return sensorDetectExpriePeriod;
     }
 
-    public Boolean getIsCalculateResultWriterToDatabase() {
-        return isCalculateResultWriterToDatabase;
+    public Boolean getIsCalculateResultOutput() {
+        return isCalculateResultWriterOutput;
     }
 
     public Boolean getIsResultWriteToOldDatabase() {

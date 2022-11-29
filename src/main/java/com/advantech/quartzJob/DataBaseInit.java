@@ -8,9 +8,11 @@ package com.advantech.quartzJob;
 
 import com.advantech.helper.ApplicationContextHelper;
 import com.advantech.facade.BabLineTypeFacade;
+import com.advantech.facade.BabLineTypeFacade2;
 import com.advantech.service.db1.BabSensorLoginRecordService;
 import com.advantech.service.db1.BabSettingHistoryService;
 import com.advantech.facade.TestLineTypeFacade;
+import com.advantech.facade.TestLineTypeFacade2;
 import com.advantech.service.db1.TestService;
 import com.advantech.webservice.WaGetTagValue;
 import java.io.IOException;
@@ -32,8 +34,8 @@ public class DataBaseInit extends QuartzJobBean {
     private final BabSensorLoginRecordService babSensorLoginRecordService;
     private final TestService testService;
 
-    private final BabLineTypeFacade bF;
-    private final TestLineTypeFacade tF;
+    private final BabLineTypeFacade2 bF;
+    private final TestLineTypeFacade2 tF;
 
     private final WaGetTagValue waGetTagValue;
 
@@ -41,8 +43,8 @@ public class DataBaseInit extends QuartzJobBean {
         babSettingHistoryService = (BabSettingHistoryService) ApplicationContextHelper.getBean("babSettingHistoryService");
         babSensorLoginRecordService = (BabSensorLoginRecordService) ApplicationContextHelper.getBean("babSensorLoginRecordService");
         testService = (TestService) ApplicationContextHelper.getBean("testService");
-        tF = (TestLineTypeFacade) ApplicationContextHelper.getBean("testLineTypeFacade");
-        bF = (BabLineTypeFacade) ApplicationContextHelper.getBean("babLineTypeFacade");
+        tF = (TestLineTypeFacade2) ApplicationContextHelper.getBean("testLineTypeFacade2");
+        bF = (BabLineTypeFacade2) ApplicationContextHelper.getBean("babLineTypeFacade2");
         waGetTagValue = (WaGetTagValue) ApplicationContextHelper.getBean("waGetTagValue");
     }
 

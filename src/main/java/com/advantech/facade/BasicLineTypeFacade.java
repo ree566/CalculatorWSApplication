@@ -29,7 +29,7 @@ public abstract class BasicLineTypeFacade implements com.advantech.service.db1.A
 
     protected Boolean controlJobFlag = true;//Change the flag if you want to pause the job outside.
 
-    protected Boolean isWriteToDB;
+    protected Boolean isOutputSomewhere;
 
     protected final int ALARM_SIGN = 1, NORMAL_SIGN = 0;
 
@@ -42,11 +42,11 @@ public abstract class BasicLineTypeFacade implements com.advantech.service.db1.A
 
     @Autowired
     private PropertiesReader p;
-    
+
     @PostConstruct
     protected void initValues() {
         log.info("BasicLineTypeFacade init");
-        isWriteToDB = p.getIsCalculateResultWriterToDatabase();
+        isOutputSomewhere = p.getIsCalculateResultOutput();
         resetFlag = true;
         dataMap = new HashMap();
     }
@@ -75,32 +75,30 @@ public abstract class BasicLineTypeFacade implements com.advantech.service.db1.A
     protected abstract boolean generateData();
 
     private void outputResult(Map m) {
-        if (isWriteToDB) {
-            saveAlarmSignToDb(m);
+        if (isOutputSomewhere) {
+            outputAlarmSign(m);
             resetFlag = true;
         }
     }
 
     protected void resetOutputResult() {
-        if (isWriteToDB) {
+        if (isOutputSomewhere) {
             if (resetFlag == true) {
                 initMap();
-                if (isWriteToDB) {
-                    resetAlarmSign();
-                }
                 resetFlag = false;
             }
+            resetAlarmSign();
         }
     }
 
-    private void saveAlarmSignToDb(Map map) {
+    private void outputAlarmSign(Map map) {
         setAlarmSign(mapToAlarmSign(map));
     }
 
     protected abstract List<com.advantech.model.db1.AlarmAction> mapToAlarmSign(Map map);
 
     public void resetAlarm() throws IOException {
-        if (isWriteToDB) {
+        if (isOutputSomewhere) {
             resetAlarmSign();
         }
         initInnerObjs();

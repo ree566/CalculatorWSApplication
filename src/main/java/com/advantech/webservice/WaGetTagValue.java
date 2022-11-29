@@ -12,10 +12,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -50,6 +50,7 @@ public class WaGetTagValue extends WaTagValue {
     @Autowired
     private AlarmDOService alarmDOService;
 
+    @PostConstruct
     public void initActiveTagNodes() {
         List<String> allTagNames = alarmDOService.findAllDistinctCorrespondDO();
         String json = getJsonString(allTagNames);
