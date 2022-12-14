@@ -421,7 +421,7 @@
         <constructor-arg ref="soapMessageFactory"/>
         <property name="marshaller" ref="marshaller" />
         <property name="unmarshaller" ref="marshaller" />
-        <property name="defaultUri" value="http://172.20.131.245/auto_testing_service/Service.asmx?WSDL"/>
+        <property name="defaultUri" value="http://172.20.131.205/FIMPWS/SFIS_WS.asmx?WSDL"/>
     </bean>
     
     <!--M6 WebService port-->

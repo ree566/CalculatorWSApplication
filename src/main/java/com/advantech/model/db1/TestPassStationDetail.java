@@ -30,7 +30,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "TestPassStationDetail")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "QryData")
+@XmlRootElement(name = "Table1")
 public class TestPassStationDetail implements Serializable {
 
     private int id;

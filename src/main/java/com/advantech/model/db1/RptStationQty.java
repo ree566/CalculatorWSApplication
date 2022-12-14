@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Wei.Cheng
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "QryUserInfo001")
+@XmlRootElement(name = "Table1")
 public class RptStationQty implements Serializable {
 
     @XmlElement(name = "WIP_NO")

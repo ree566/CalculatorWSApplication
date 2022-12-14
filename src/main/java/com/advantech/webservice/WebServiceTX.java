@@ -46,7 +46,7 @@ public class WebServiceTX extends SimpleWebServiceTX {
         UserOnMes user = rv.getMESUser(jobnumber, f);
         checkUserIsAvailable(user);
         String lineId = "21", stationId = "-1";// 目前暫時寫死，等待有固定查詢來源
-        String data = "<root><METHOD ID='WMPSO.TxWorkManPowerCard001'/><WORK_MANPOWER_CARD>"
+        String data = "<root><METHOD ID='Advantech.SFC.PBD.BLL.TxWorkManPowerCard001'/><WORK_MANPOWER_CARD>"
                 + "<WORK_ID>-1</WORK_ID>"
                 + "<LINE_ID>" + lineId + "</LINE_ID>"
                 + "<STATION_ID>" + stationId + "</STATION_ID>"
@@ -66,7 +66,7 @@ public class WebServiceTX extends SimpleWebServiceTX {
         UserOnMes user = rv.getMESUser(jobnumber, f);
         checkUserIsAvailable(user);
         String lineId = "21", stationId = "-1";// 目前暫時寫死，等待有固定查詢來源
-        String data = "<root><METHOD ID='WMPSO.TxWorkManPowerCard001'/><WORK_MANPOWER_CARD>"
+        String data = "<root><METHOD ID='Advantech.SFC.PBD.BLL.TxWorkManPowerCard001'/><WORK_MANPOWER_CARD>"
                 + "<WORK_ID>" + workId + "</WORK_ID>"
                 + "<LINE_ID>" + lineId + "</LINE_ID>"
                 + "<STATION_ID>" + stationId + "</STATION_ID>"

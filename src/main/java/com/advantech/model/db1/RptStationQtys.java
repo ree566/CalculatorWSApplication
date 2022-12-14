@@ -18,10 +18,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Wei.Cheng
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "root")
+@XmlRootElement(name = "NewDataSet")
 public class RptStationQtys implements Serializable, RvQueryResult<RptStationQty>{
 
-    @XmlElement(name = "QryRptStationQty001", type = RptStationQty.class)
+    @XmlElement(name = "Table1", type = RptStationQty.class)
     private List<RptStationQty> QryData;
 
 
