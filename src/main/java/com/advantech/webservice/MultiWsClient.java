@@ -37,11 +37,11 @@ public class MultiWsClient {
 
     public WsClient getClient(final Factory f) {
         switch (f) {
-            case DEFAULT:
+            case TWM3:
                 return m3Client;
-            case TEMP1:
+            case TWM6:
                 return m6Client;
-            case TEMP2:
+            case TWM2:
                 return m2Client;
             default:
                 return null;

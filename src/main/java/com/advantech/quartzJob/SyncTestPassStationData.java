@@ -31,50 +31,70 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Component
 public class SyncTestPassStationData {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(SyncTestPassStationData.class);
-    
+
     @Autowired
     private WebServiceRV rv;
-    
+
     @Autowired
     private TestRecordService testRecordService;
-    
+
     @Autowired
     private TestPassStationDetailService testPassStationDetailService;
-    
+
     private final List<Integer> stations = newArrayList(3, 11, 30, 151);
-    
+
     @Transactional
     public void execute() {
-        List<TestPassStationDetail> result = new ArrayList();
-        
+
         DateTime today = new DateTime();
-        
         DateTime sD = new DateTime(today).minusDays(today.getDayOfWeek() == 1 ? 3 : 1).withTime(8, 0, 0, 0);
         DateTime eD = new DateTime(today).withTime(8, 0, 0, 0);
-        
+
+        syncPassStationDetail(sD, eD);
+    }
+
+    public void syncPassStationDetail(DateTime sD, DateTime eD) {
+        List<TestPassStationDetail> remoteData = new ArrayList();
+
         List<TestPassStationDetail> dbData = testPassStationDetailService.findByDate(sD, eD);
+
+        List<String> jobnumbers = findTestedJobnumber(sD, eD);
+
+        findRvTestPassStationDetails(remoteData, jobnumbers, sD, eD);
+
+        if (remoteData.isEmpty()) {
+            return;
+        }
+        syncTestPassStationDetail(dbData, remoteData);
+    }
+
+    //找到所有有上線測試的工號
+    private List<String> findTestedJobnumber(DateTime sD, DateTime eD) {
         List<TestRecord> records = testRecordService.findByDate(sD, eD, false);
         List<String> jobnumbers = records.stream().map(t -> "'" + t.getUserId() + "'").distinct().collect(Collectors.toList());
-        
+        return jobnumbers;
+    }
+
+    private List<TestPassStationDetail> findRvTestPassStationDetails(List<TestPassStationDetail> result, List<String> jobnumbers, DateTime sD, DateTime eD) {
         stations.forEach(s -> {
             Section section = (s == 3 ? Section.BAB : Section.TEST);
-            List<TestPassStationDetail> l = rv.getTestPassStationDetails(jobnumbers, section, s, sD, eD, Factory.DEFAULT);
-            List<TestPassStationDetail> l2 = rv.getTestPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TEMP1);
+            List<TestPassStationDetail> l = rv.getTestPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TWM3);
+            List<TestPassStationDetail> l2 = rv.getTestPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TWM6);
             result.addAll(l);
             result.addAll(l2);
         });
-        
-        if (!result.isEmpty()) {
-            List<TestPassStationDetail> delData = (List<TestPassStationDetail>) CollectionUtils.subtract(dbData, result);
-            testPassStationDetailService.delete(delData);
-            logger.info("Delete data cnt " + delData.size());
-            
-            List<TestPassStationDetail> newData = (List<TestPassStationDetail>) CollectionUtils.subtract(result, dbData);
-            testPassStationDetailService.insert(newData);
-            logger.info("New data cnt " + newData.size());
-        }
+        return result;
     }
-    
+
+    private void syncTestPassStationDetail(List<TestPassStationDetail> dbData, List<TestPassStationDetail> remoteData) {
+        List<TestPassStationDetail> delData = (List<TestPassStationDetail>) CollectionUtils.subtract(dbData, remoteData);
+        testPassStationDetailService.delete(delData);
+        logger.info("Delete data cnt " + delData.size());
+
+        List<TestPassStationDetail> newData = (List<TestPassStationDetail>) CollectionUtils.subtract(remoteData, dbData);
+        testPassStationDetailService.insert(newData);
+        logger.info("New data cnt " + newData.size());
+    }
 }

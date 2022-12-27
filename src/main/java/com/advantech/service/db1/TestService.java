@@ -58,9 +58,9 @@ public class TestService {
         t.setLastUpdateTime(new DateTime().toDate());
         this.insert(t);
         try {
-            Factory f = Factory.DEFAULT;
+            Factory f = Factory.TWM3;
             if (table.getFloor().getId() == 3) {
-                f = Factory.TEMP1;
+                f = Factory.TWM6;
             }
             tx.kanbanUserLogin(jobnumber, f);
         } catch (Exception ex) {
@@ -95,9 +95,9 @@ public class TestService {
     public int delete(String jobnumber) {
         Test t = testDAO.findByJobnumber(jobnumber);
         this.delete(t);
-        Factory f = Factory.DEFAULT;
+        Factory f = Factory.TWM3;
         if (t.getTestTable().getFloor().getId() == 3) {
-            f = Factory.TEMP1;
+            f = Factory.TWM6;
         }
         tx.kanbanUserLogout(jobnumber, f);
         return 1;

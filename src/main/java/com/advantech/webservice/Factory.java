@@ -18,15 +18,15 @@ public enum Factory implements Encodeable {
     /**
      * Default useing M3's webService
      */
-    DEFAULT("M3"),
+    TWM3("M3"),
     /**
      * Temp1: M6
      */
-    TEMP1("M6"),
+    TWM6("M6"),
     /**
      * Temp2: M2
      */
-    TEMP2("M2");
+    TWM2("M2");
 
     private final String s;
     private static final Map<String, Factory> map = new HashMap<>();

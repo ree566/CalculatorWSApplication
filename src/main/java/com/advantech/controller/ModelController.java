@@ -44,7 +44,7 @@ public class ModelController {
     @RequestMapping(value = "/findModelNameByPo", method = {RequestMethod.GET})
     @ResponseBody
     protected String findModelNameByPo(@RequestParam String po) {
-        return this.findModelName(po, Factory.DEFAULT);
+        return this.findModelName(po, Factory.TWM3);
     }
 
     @RequestMapping(value = "/findModelNameByPoAndFactory", method = {RequestMethod.GET})

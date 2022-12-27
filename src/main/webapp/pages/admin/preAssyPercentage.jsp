@@ -27,10 +27,15 @@
         <script src="<c:url value="/js/bootstrap-datetimepicker.min.js" />"></script>
         <script src="<c:url value="/webjars/datatables/1.10.16/js/jquery.dataTables.min.js" /> "></script>
         <script src="<c:url value="/js/dataTables.fixedHeader.min.js" />"></script>
+        <script src="<c:url value="/js/ajax-option-select-loader/babLineType.loader.js" />"></script>
 
         <script>
             var table;
             $(function () {
+
+                lineTypeLoaderUrl = "<c:url value="/BabLineController/findLineType" />";
+                setLineObject();
+                initOptions($("#lineType"));
 
                 var momentFormatString = 'YYYY-MM-DD';
                 $(":text,input[type='number'],select").addClass("form-control");
@@ -97,7 +102,8 @@
                         "url": "<c:url value="/SqlViewController/findPreAssyPercentage" />",
                         "type": "Get",
                         data: {
-                            startDate: $('#fini').val()
+                            startDate: $('#fini').val(),
+                            lineTypeId: $('#lineType').val()
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
                             alert(xhr.responseText);
@@ -115,7 +121,8 @@
                             "data": "preAssyModuleTypeId",
                             title: "近期上線紀錄",
                             "render": function (data, type, full, meta) { //this column is redefinied to show the action buttons
-                                return '<button class="btn btn-sm btn-primary searchBtn">Search</button>';
+//                                return '<button class="btn btn-sm btn-primary searchBtn">Search</button>';
+                                return "<input type='button' class='searchBtn btn btn-primary btn-sm' data-toggle= 'modal' data-target='#myModal' value='檢視' />";
                             }
                         }
                     ],
@@ -150,6 +157,8 @@
                 $("#tb2").DataTable({
                     "processing": true,
                     "serverSide": false,
+                    searching: false,
+                    paging: false,
                     "ajax": {
                         "url": "<c:url value="/BabController/findByPreAssyModuleType" />",
                         "type": "Get",
@@ -187,7 +196,7 @@
                     destroy: true,
                     "initComplete": function (settings, json) {
                         $(".searchBtn").attr("disabled", false);
-                        $("#tb2").show();
+                        $("#tb1").show();
                     },
                     "order": [[1, "asc"]]
                 });
@@ -230,26 +239,50 @@
                         <input type="text" id="ffin" placeholder="請選擇結束時間"> 
                     </div>
                 </div>
-
-            </div>
-
-            <div class="row form-inline">
                 <div class="col form-group">
-                    <input type="button" id="send" value="確定(Ok)">
+                    <select id="lineType">
+                    </select>
                 </div>
+                <div class="col form-group">
+                    <div class="col form-group">
+                        <input type="button" id="send" value="確定(Ok)">
+                    </div>
+                </div>
+
             </div>
 
             <div class="row">
                 <table id="tb1" class="table table-striped" cellspacing="0" width="100%" style="text-align: center" hidden>
                 </table>
             </div>
-            <div class="row">
-                <h5>近五次生產紀錄</h5>
-                <table id="tb2" class="table table-striped" cellspacing="0" width="100%" style="text-align: center" hidden>
-                </table>
+
+        </div>
+        <div>
+            <!-- Modal -->
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog" style="width:1250px;">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 id="titleMessage" class="modal-title">近五次生產紀錄</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <table id="tb2" class="table table-bordered" cellspacing="0" width="100%" style="text-align: center">
+                                </table>
+                                <div id="dialog-msg" class="alarm"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
-
         <c:import url="/temp/admin-footer.jsp" />
     </body>
 </html>

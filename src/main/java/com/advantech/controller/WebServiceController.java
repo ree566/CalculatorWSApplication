@@ -32,13 +32,13 @@ public class WebServiceController {
         Factory f;
         switch (factory) {
             case "M6":
-                f = Factory.TEMP1;
+                f = Factory.TWM6;
                 break;
             case "M2":
-                f = Factory.TEMP2;
+                f = Factory.TWM2;
                 break;
             default:
-                f = Factory.DEFAULT;
+                f = Factory.TWM3;
                 break;
         }
         return rv.getKanbanUsersForString(f).get(1);

@@ -99,8 +99,8 @@ public class TestLineTypeFacade extends BasicLineTypeFacade {
             initMap();
             JSONArray userArr = new JSONArray();
 
-            List<TestRecord> kanbanUsersRecord = rv.getTestLineTypeRecords(Factory.DEFAULT);
-            List<TestRecord> kanbanUsersRecord2 = rv.getTestLineTypeRecords(Factory.TEMP1);
+            List<TestRecord> kanbanUsersRecord = rv.getTestLineTypeRecords(Factory.TWM3);
+            List<TestRecord> kanbanUsersRecord2 = rv.getTestLineTypeRecords(Factory.TWM6);
             kanbanUsersRecord.addAll(kanbanUsersRecord2);
 
             processingJsonObject = new JSONObject();

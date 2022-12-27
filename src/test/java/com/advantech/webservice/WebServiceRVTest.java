@@ -71,7 +71,7 @@ public class WebServiceRVTest {
 //    @Test
     public void testGetKanbanUsersForString() throws Exception {
         System.out.println("getKanbanUsersForString");
-        List<String> result = rv.getKanbanUsersForString(Factory.DEFAULT);
+        List<String> result = rv.getKanbanUsersForString(Factory.TWM3);
         assertTrue(!result.isEmpty());
     }
 
@@ -83,7 +83,7 @@ public class WebServiceRVTest {
         System.out.println("getKanbanWorkId");
         String jobnumber = "A-7275";
         String expResult = "";
-        String result = rv.getKanbanWorkId(jobnumber, Factory.DEFAULT);
+        String result = rv.getKanbanWorkId(jobnumber, Factory.TWM3);
         assertNotEquals(expResult, result);
         out.println(result);
     }
@@ -96,7 +96,7 @@ public class WebServiceRVTest {
         System.out.println("getModelnameByPo");
         String po = "PAGB079ZA";
         String expResult = "";
-        String result = rv.getModelNameByPo(po, Factory.DEFAULT);
+        String result = rv.getModelNameByPo(po, Factory.TWM3);
         assertNotEquals(expResult, result);
         out.println(result);
     }
@@ -109,7 +109,7 @@ public class WebServiceRVTest {
         System.out.println("getMESUser");
         String jobnumber = "A-7275";
         UserOnMes expResult = null;
-        UserOnMes result = rv.getMESUser(jobnumber, Factory.DEFAULT);
+        UserOnMes result = rv.getMESUser(jobnumber, Factory.TWM3);
         assertNotEquals(expResult, result);
         out.println(new Gson().toJson(result));
     }
@@ -121,7 +121,7 @@ public class WebServiceRVTest {
     public void testGetPassStationRecords() {
         System.out.println("getPassStationRecords");
         String po = "THL007939ZA";
-        List<PassStationRecord> result = rv.getPassStationRecords(po, 2, Factory.DEFAULT);
+        List<PassStationRecord> result = rv.getPassStationRecords(po, 2, Factory.TWM3);
         assertTrue(!result.isEmpty());
         HibernateObjectPrinter.print(result);
     }
@@ -133,7 +133,7 @@ public class WebServiceRVTest {
     public void testGetTestLineTypeUsers() {
         System.out.println("getTestLineTypeUsers");
         List<TestRecord> expResult = null;
-        List<TestRecord> result = rv.getTestLineTypeRecords(Factory.DEFAULT);
+        List<TestRecord> result = rv.getTestLineTypeRecords(Factory.TWM3);
         assertNotEquals(expResult, result);
         for (TestRecord t : result) {
             out.println(new Gson().toJson(t));
@@ -142,14 +142,14 @@ public class WebServiceRVTest {
 
 //    @Test
     public void testGetTestLineTypeRecord() throws JsonProcessingException {
-        List<TestRecord> l = rv.getTestLineTypeRecords(Factory.DEFAULT);
+        List<TestRecord> l = rv.getTestLineTypeRecords(Factory.TWM3);
         assertNotEquals(0, l.size());
         HibernateObjectPrinter.print(l);
     }
 
 //    @Test
     public void testGetModelNameByBarcode() throws JsonProcessingException {
-        String value = rv.getPoByBarcode("TPAB780972", Factory.DEFAULT);
+        String value = rv.getPoByBarcode("TPAB780972", Factory.TWM3);
         assertEquals(value, "PSI9412ZA");
     }
 
@@ -157,7 +157,7 @@ public class WebServiceRVTest {
     public void testGetMesPassCountRecords() {
         DateTime eD = new DateTime("2021-04-29");
         DateTime sD = eD.minusDays(1);
-        List l = rv.getMesPassCountRecords(sD, eD, Factory.DEFAULT);
+        List l = rv.getMesPassCountRecords(sD, eD, Factory.TWM3);
         assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l);
     }
@@ -180,7 +180,7 @@ public class WebServiceRVTest {
 
         stations.forEach(s -> {
             Section section = (s == 3 ? Section.BAB : Section.TEST);
-            List<TestPassStationDetail> l = rv.getTestPassStationDetails(users, section, s, sD, eD, Factory.TEMP1);
+            List<TestPassStationDetail> l = rv.getTestPassStationDetails(users, section, s, sD, eD, Factory.TWM6);
             //assertTrue(!l.isEmpty());
             HibernateObjectPrinter.print(l);
         });
@@ -188,7 +188,7 @@ public class WebServiceRVTest {
 
 //    @Test
     public void testGetUsersInfoOnMes() {
-        List l = rv.getUsersInfoOnMes(Factory.DEFAULT);
+        List l = rv.getUsersInfoOnMes(Factory.TWM3);
         assertTrue(!l.isEmpty());
 
         HibernateObjectPrinter.print(l.get(0));
@@ -199,7 +199,7 @@ public class WebServiceRVTest {
         DateTime sD = new DateTime().withTime(0, 0, 0, 0);
         DateTime eD = new DateTime().plusDays(1).withTime(0, 0, 0, 0);
 
-        List l = rv.getRptStationQtys("EKI-1524I-CE", 2, Factory.DEFAULT);
+        List l = rv.getRptStationQtys("EKI-1524I-CE", 2, Factory.TWM3);
         assertTrue(!l.isEmpty());
 
         HibernateObjectPrinter.print(l.get(0));

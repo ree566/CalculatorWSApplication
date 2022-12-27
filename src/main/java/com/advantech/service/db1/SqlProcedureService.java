@@ -162,8 +162,8 @@ public class SqlProcedureService {
         return sqlProcedureDAO.findBabModuleUsageRateForPacking(sD, eD, f);
     }
 
-    public List<Map> findPreAssyPercentage(DateTime sD) {
-        return sqlProcedureDAO.findPreAssyPercentage(sD);
+    public List<Map> findPreAssyPercentage(int lineTypeId, DateTime sD) {
+        return sqlProcedureDAO.findPreAssyPercentage(lineTypeId, sD);
     }
 
 }

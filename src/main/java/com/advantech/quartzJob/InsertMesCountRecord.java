@@ -50,7 +50,7 @@ public class InsertMesCountRecord extends QuartzJobBean {
 
         List<Integer> lineId = lines.stream().map(MesLine::getId).collect(toList());
 
-        List<MesPassCountRecord> l = rv.getMesPassCountRecords(sD, eD, Factory.DEFAULT);
+        List<MesPassCountRecord> l = rv.getMesPassCountRecords(sD, eD, Factory.TWM3);
 
         List<MesPassCountRecord> newData = l.stream()
                 .filter(e -> lineId.contains(e.getMesLineId()) && !existData.contains(e))

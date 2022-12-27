@@ -201,17 +201,17 @@ public class TestController {
 //-------------------Other controller testing part-------------------    
 //    @Test
     public void testM3Model() throws Exception {
-        assertEquals("UPOS540FP1801-T", getModel("PSI6484ZA", Factory.DEFAULT)); //Test M3 model
+        assertEquals("UPOS540FP1801-T", getModel("PSI6484ZA", Factory.TWM3)); //Test M3 model
     }
 
 //    @Test
     public void testM2Model() throws Exception {
-        assertEquals("APAX-5580-433AE", getModel("FII6245ZA", Factory.TEMP2)); //Test M2 model
+        assertEquals("APAX-5580-433AE", getModel("FII6245ZA", Factory.TWM2)); //Test M2 model
     }
 
 //    @Test
     public void testM6Model() throws Exception {
-        assertEquals("IDK-C15G-IEXGA2E", getModel("AEI6068RQ", Factory.TEMP1)); //Test M6 model
+        assertEquals("IDK-C15G-IEXGA2E", getModel("AEI6068RQ", Factory.TWM6)); //Test M6 model
     }
 
     private String getModel(String po, Factory f) throws Exception {

@@ -152,7 +152,7 @@ public class TestSqlBeans {
 //        assertNotNull(fqcLine);
 //        assertEquals(Factory.DEFAULT, fqcLine.getFactory());
 
-        List l = session.createCriteria(FqcLine.class).add(Restrictions.eq("factory", Factory.TEMP1)).list();
+        List l = session.createCriteria(FqcLine.class).add(Restrictions.eq("factory", Factory.TWM6)).list();
         assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l);
     }
@@ -385,7 +385,7 @@ public class TestSqlBeans {
 
         stations.forEach(s -> {
             Section section = (s == 3 ? Section.BAB : Section.TEST);
-            List<TestPassStationDetail> l = rv.getTestPassStationDetails2(users, section, s, sD, eD, Factory.DEFAULT);
+            List<TestPassStationDetail> l = rv.getTestPassStationDetails2(users, section, s, sD, eD, Factory.TWM3);
             result.addAll(l);
         });
 

@@ -454,7 +454,7 @@ public class TestHibernate {
     public void testSyncUserDataFromMes() {
         Session session = sessionFactory.getCurrentSession();
         
-        List<UserInfoOnMes> mesData = rv.getUsersInfoOnMes(Factory.DEFAULT);
+        List<UserInfoOnMes> mesData = rv.getUsersInfoOnMes(Factory.TWM3);
         List<User> users = session.createCriteria(User.class).list();
         
         
