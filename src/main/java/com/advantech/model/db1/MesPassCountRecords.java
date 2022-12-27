@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Wei.Cheng
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "root")
+@XmlRootElement(name = "NewDataSet")
 public class MesPassCountRecords implements Serializable, RvQueryResult<MesPassCountRecord>{
 
     @XmlElement(name = "RPT405", type = MesPassCountRecord.class)
