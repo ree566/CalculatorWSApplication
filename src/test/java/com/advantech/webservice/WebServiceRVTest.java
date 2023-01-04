@@ -36,7 +36,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class WebServiceRVTest {
-    
+
     @Autowired
     private WebServiceRV rv;
 
@@ -101,10 +101,9 @@ public class WebServiceRVTest {
     @Test
     public void testGetMESUser() {
         System.out.println("getMESUser");
-        String jobnumber = "A-7275";
-        UserOnMes expResult = null;
+        String jobnumber = "A-0651";
         UserOnMes result = rv.getMESUser(jobnumber);
-        assertNotEquals(expResult, result);
+        assertTrue(result != null);
         out.println(new Gson().toJson(result));
     }
 
@@ -139,9 +138,9 @@ public class WebServiceRVTest {
     }
 
     @Test
-    public void testGetTestLineTypeRecord() throws JsonProcessingException{
+    public void testGetTestLineTypeRecord() throws JsonProcessingException {
         List<TestRecord> l = rv.getTestLineTypeRecords();
-        assertNotEquals(0, l.size());
+        assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l);
     }
 }

@@ -6,13 +6,9 @@
 package com.advantech.webservice;
 
 import com.advantech.model.UserOnMes;
-import java.net.URL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tempuri.Service;
-import org.tempuri.ServiceSoap;
 import static com.google.common.base.Preconditions.*;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tempuri.TxResponse;
@@ -49,7 +45,7 @@ public class WebServiceTX {
 
         String lineId = "21", stationId = "-1";// 目前暫時寫死，等待有固定查詢來源
 
-        String data = "<root><METHOD ID='WMPSO.TxWorkManPowerCard001'/><WORK_MANPOWER_CARD>"
+        String data = "<root><METHOD ID='Advantech.SFC.PBD.BLL.TxWorkManPowerCard001'/><WORK_MANPOWER_CARD>"
                 + "<WORK_ID>-1</WORK_ID>"
                 + "<LINE_ID>" + lineId + "</LINE_ID>"
                 + "<STATION_ID>" + stationId + "</STATION_ID>"
@@ -70,7 +66,7 @@ public class WebServiceTX {
 
         checkUserIsAvailable(user);
 
-        String data = "<root><METHOD ID='WMPSO.TxWorkManPowerCard001'/><WORK_MANPOWER_CARD>"
+        String data = "<root><METHOD ID='Advantech.SFC.PBD.BLL.TxWorkManPowerCard001'/><WORK_MANPOWER_CARD>"
                 + "<WORK_ID>" + workId + "</WORK_ID>"
                 + "<LINE_ID>-1</LINE_ID>"
                 + "<STATION_ID>-1</STATION_ID>"

@@ -43,7 +43,7 @@
     <bean id="dataSource1" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
         <property name="connectionTestQuery" value="SELECT 1" />
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.22.3.27/TWM9;loginTimeout=15" />
+        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.22.250.151/TWM9;loginTimeout=15" />
         <property name="username" value="ATMCSa" />
         <property name="password" value="@tmc$a392" />
     </bean>
@@ -168,7 +168,7 @@
         <constructor-arg ref="soapMessageFactory"/>
         <property name="marshaller" ref="marshaller" />
         <property name="unmarshaller" ref="marshaller" />
-        <property name="defaultUri" value="http://172.21.236.249/auto_testing_service/Service.asmx?WSDL"/>
+        <property name="defaultUri" value="http://172.22.246.200/FIMPWS_MS/SFIS_WS.asmx?WSDL"/>
     </bean>
     
     <!--Other file import-->

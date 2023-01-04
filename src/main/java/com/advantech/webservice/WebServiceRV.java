@@ -57,7 +57,7 @@ public class WebServiceRV {
 
     private List getKanbanUsers() {
         String queryString = "<root>"
-                + "<METHOD ID='ETLSO.QryProductionKanban4Test'/>"
+                + "<METHOD ID='Advantech.ETL.ETL.BLL.QryProductionKanban4Test'/>"
                 + "<KANBANTEST>"
                 + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,04,105</STATION_ID>"
                 + "</KANBANTEST>"
@@ -67,7 +67,7 @@ public class WebServiceRV {
 
     public List<String> getKanbanUsersForString() throws IOException, TransformerConfigurationException, TransformerException{
         String queryString = "<root>"
-                + "<METHOD ID='ETLSO.QryProductionKanban4Test'/>"
+                + "<METHOD ID='Advantech.ETL.ETL.BLL.QryProductionKanban4Test'/>"
                 + "<KANBANTEST>"
                 + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,04,105</STATION_ID>"
                 + "</KANBANTEST>"
@@ -77,7 +77,7 @@ public class WebServiceRV {
 
     public String getKanbanWorkId(String jobnumber) {
         String today = getToday();
-        String queryString = "<root><METHOD ID='WMPSO.QryWorkManPowerCard001'/><WORK_MANPOWER_CARD><WORK_ID>-1</WORK_ID><LINE_ID>-1</LINE_ID><STATION_ID>-1</STATION_ID><FACTORY_NO></FACTORY_NO><UNIT_NO></UNIT_NO>"
+        String queryString = "<root><METHOD ID='Advantech.SFC.PBD.BLL.QryWorkManPowerCard001'/><WORK_MANPOWER_CARD><WORK_ID>-1</WORK_ID><LINE_ID>-1</LINE_ID><STATION_ID>-1</STATION_ID><FACTORY_NO></FACTORY_NO><UNIT_NO></UNIT_NO>"
                 + "<USER_NO>" + jobnumber + "</USER_NO>"
                 + "<CARD_FLAG>1</CARD_FLAG>"
                 + "<START_DATE>" + today + "</START_DATE>"
@@ -92,7 +92,7 @@ public class WebServiceRV {
     }
 
     public String getModelnameByPo(String po) {
-        String queryString = "<root><METHOD ID='WIPSO.QryWipAtt001'/><WIP_ATT><WIP_NO>"
+        String queryString = "<root><METHOD ID='Advantech.QAM.IPQ.BLL.QryWipAtt001'/><WIP_ATT><WIP_NO>"
                 + po
                 + "</WIP_NO><ITEM_NO></ITEM_NO></WIP_ATT></root>";
         Document doc = this.getWebServiceDataForDocument(queryString);
@@ -104,7 +104,7 @@ public class WebServiceRV {
 
     public UserOnMes getMESUser(String jobnumber) {
         try {
-            String queryString = "<root><METHOD ID='PLBSO.QryLogion'/><USER_INFO><USER_NO>"
+            String queryString = "<root><METHOD ID='Advantech.SFC.SNM.BLL.QryLogion'/><USER_INFO><USER_NO>"
                     + jobnumber
                     + "</USER_NO><PASSWORD></PASSWORD><STATUS>A</STATUS></USER_INFO></root>";
 
@@ -134,7 +134,7 @@ public class WebServiceRV {
 
         try {
             String queryString
-                    = "<root><METHOD ID='ETLSO.QryT_SnPassTime001'/><WIP_INFO><WIP_NO>"
+                    = "<root><METHOD ID='Advantech.ETL.ETL.BLL.QryT_SnPassTime001'/><WIP_INFO><WIP_NO>"
                     + po
                     + "</WIP_NO><UNIT_NO></UNIT_NO><LINE_ID></LINE_ID><STATION_ID>"
                     + stations
