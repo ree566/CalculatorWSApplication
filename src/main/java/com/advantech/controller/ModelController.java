@@ -32,6 +32,8 @@ public class ModelController {
 
     private static final Logger log = LoggerFactory.getLogger(ModelController.class);
 
+    private final String MODELNAME_NOT_FOUND_MESSAGE = "data not found";
+
     @Autowired
     private WebServiceRV rv;
 
@@ -41,10 +43,11 @@ public class ModelController {
     }
 
     //Default find M3's modelName when user not present factory name
+    //
     @RequestMapping(value = "/findModelNameByPo", method = {RequestMethod.GET})
     @ResponseBody
     protected String findModelNameByPo(@RequestParam String po) {
-        return this.findModelName(po, Factory.TWM3);
+        return this.findModelName(po, Factory.TWM3, Factory.TWM6);
     }
 
     @RequestMapping(value = "/findModelNameByPoAndFactory", method = {RequestMethod.GET})
@@ -53,9 +56,14 @@ public class ModelController {
         return this.findModelName(po, factory);
     }
 
-    private String findModelName(String po, Factory f) {
-        String modelname = rv.getModelNameByPo(po, f);
-        return (modelname == null ? "data not found" : convertString(modelname));
+    private String findModelName(String po, Factory... factorys) {
+        for (Factory f : factorys) {
+            String result = rv.getModelNameByPo(po, f);
+            if (result != null && !"".equals(result)) {
+                return convertString(result);
+            }
+        }
+        return MODELNAME_NOT_FOUND_MESSAGE;
     }
 
     private String convertString(String input) {
